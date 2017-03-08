@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+	<head>
+		<title>index</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+	</head>
+	<body>
+		<h1>Main page</h1>
+		<% if (name.length > 0 ) { %>
+			<a>你好 ， <%= name %> </a>
+			<a href="/user">個人資料</a>
+			<a href="/Ddata"> 填寫系所表單</a>
+			<br>
+		<% }else{ %>
+			<a href="/register">register</a>
+		<% } %>
+		<a href='/<%= log %>'><%= log %></a>
+		<hr>
+
+		<% school.forEach( function ( sch ){ %>
+		  <a href="/school/<%= sch.department_id %>"><%= sch.name %></a><br>
+		<% }); %>
+
+
+	</body>
 </html>
