@@ -8,13 +8,13 @@
 		<h1>Main page</h1>
 		<% if (name.length > 0 ) { %>
 			<a>你好 ， <%= name %> </a>
-			<a href="/user">個人資料</a>
-			<a href="/Ddata"> 填寫系所表單</a>
+			<a href="/users/me">個人資料</a>
+			<a href="/departments"> 填寫系所表單</a>
 			<br>
 		<% }else{ %>
-			<a href="/register">register</a>
+			<a href="/users">register</a>
 		<% } %>
-		<a href='/<%= log %>'><%= log %></a>
+		<a href='/users/<%= log %>'><%= log %></a>
 		<hr>
 
 		<% school.forEach( function ( sch ){ %>

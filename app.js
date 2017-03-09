@@ -1,18 +1,22 @@
 // dependencies
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var flash = require('connect-flash');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
 const Promise = require('bluebird');
+
+
+const app = express();
+
 
 // express config
 const CONFIG = require('config');
+
 
 // redis
 const redis = require('redis');
@@ -28,18 +32,41 @@ client.on("error", function(err) {
   console.log(`Error: ${err}`);
 });
 
+
+//session
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+app.use(session({
+  store: new RedisStore({client : client}),
+  secret: 'keyboard cat',
+  key: 'express.sid',
+  resave: true,
+  saveUninitialized: false,
+  cookie: {path: '/', httpOnly: true, maxAge: null},
+}));
 
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// passport config
+app.use(passport.initialize());
+app.use(flash());
+app.use(passport.session());
 
-var app = express();
+const Account = require('./api/models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+
+// mongoose
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+mongoose.connect(CONFIG.mongo);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -47,59 +74,47 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({
-    store: new RedisStore({client : client}),
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: false,
-     cookie: {path: '/', httpOnly: true, maxAge: null},
-}));
-app.use(passport.initialize());
-app.use(flash());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'dest')));
 
+
+// routes
+const routes = require('./routes/index');
+const users = require('./routes/users');
 
 app.use('/', routes);
+app.use('/users', users);
 
-// passport config
-var Account = require('./models/account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
-
-// mongoose
-mongoose.connect(CONFIG.mongo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  let err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
+
 
 // error handlers
 
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
     });
+  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
 
 
