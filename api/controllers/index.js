@@ -1,6 +1,5 @@
 const express = require('express');
 const Department = require('../models/department');  //department data
-const router = express.Router();
 const passport = require('passport');
 
 
@@ -33,42 +32,38 @@ exports.index = function ( req, res, next ){
   }
 };
 
+/*
 exports.school = function ( req, res, next ){
 	Department.findOne({
-    department_id : req.params.id
+    deptID : req.params.id
   }, function (err, user) {
     if(!err && user){  //if find the data , go to edit page
       res.render('school',{
-        name: user.name,
-        url : user.url,
-        form : user.form,
-        note : user.note
+        title : user.title,
+        body : user.body
       });
     } else {
       console.log('something wrong');
     }
   });
 }
+*/
 
 exports.departments = function ( req, res, next ){
 	Department.findOne({
-    department_id : req.user.username
+    deptID : req.user.username
   }, function (err, user) {
     if(!err && user){  //if find the data , go to edit page
       res.render('departments',{
-        name : user.name,
-        url : user.url,
-        form : user.form,
-        note : user.note,
+        title : user.title,
+        body : user.body,
         error:''
       })  //if find the data , go to edit page
       console.log('edit');
     } else {
       res.render('departments', {
-        name : '' ,
-        url : '' ,
-        form : '',
-        note : '' ,
+        title : '' ,
+        body : '' ,
         error:''
       });
     }
@@ -77,23 +72,19 @@ exports.departments = function ( req, res, next ){
 
 exports.departments_form = function ( req, res, next ){
 	Department.findOne({
-    department_id : req.user.username
+    deptID : req.user.username
   }, function (err, user) {
-    if(!err && user){
-      if(req.body.name.length < 1 || req.body.url.length < 1 || req.body.form.length <1 || req.body.note.length <1 ){    //must to filled the blank
+    if(!err && user){   //edit department files
+      if(req.body.title.length < 1 || req.body.body.length < 1 ){    //must to filled the blank
         res.render('departments',{
-          name : req.body.name,
-          url : req.body.url,
-          form : req.body.form,
-          note : req.body.note,
+          title : req.body.title,
+          body : req.body.body,
           error : '*字號的填寫處不能為空!'
         })
       } else {
-        user.department_id = req.user.username,
-        user.name = req.body.name,
-        user.url = req.body.url,
-        user.form = req.body.form,
-        user.note = req.body.note
+        user.deptID = req.user.username,
+        user.title = req.body.title,
+        user.body = req.body.body
 
         user.save(function (err) {
           if(err) {
@@ -104,21 +95,17 @@ exports.departments_form = function ( req, res, next ){
       }
 
     } else {
-      if(req.body.name.length < 1 || req.body.url.length < 1 || req.body.form.length <1 || req.body.note.length <1 ){    //must to filled the blank
+      if(req.body.title.length < 1 || req.body.body.length < 1){    //must to filled the blank
         res.render('departments',{
-          name : req.body.name,
-          url : req.body.url,
-          form : req.body.form,
-          note : req.body.note,
+          title : req.body.title,
+          body : req.body.body,
           error : '*字號的填寫處不能為空!'
         })
       } else {
         new Department({
-          department_id : req.user.username,
-          name : req.body.name,
-          url : req.body.url,
-          form : req.body.form,
-          note : req.body.note
+          deptID : req.user.username,
+          title : req.body.title,
+          body : req.body.body
         }).save( function ( err, todo, count ){ //存入db
           if( err ) return next( err );
             res.redirect( '/' );  //回到主畫面

@@ -9,6 +9,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const flash = require('connect-flash');
 const Promise = require('bluebird');
+const vhost = require('vhost');
 
 
 const app = express();
@@ -80,6 +81,9 @@ app.use(express.static(path.join(__dirname, 'public', 'dest')));
 // routes
 const routes = require('./routes/index');
 const users = require('./routes/users');
+const subroutes = require('./routes/sub');
+
+app.use(vhost('*.localhost', subroutes));
 
 app.use('/', routes);
 app.use('/users', users);

@@ -8,10 +8,6 @@ const routes = require( '../api/controllers/index' );
 router.get('/',routes.index);
 
 
-/*          school profile             */
-router.get('/school/:id', routes.school );
-
-
 /*        store school form to db            */
 router.get('/departments', loggedIn, routes.departments );
 router.post('/departments', loggedIn, routes.departments_form );

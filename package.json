@@ -17,6 +17,7 @@
     "ejs": "^2.5.6",
     "express": "^4.11.1",
     "express-session": "^1.10.1",
+    "express-subdomain": "^1.0.5",
     "mocha": "~1.14.0",
     "mongoose": "^4.4.1",
     "morgan": "^1.5.1",
@@ -25,6 +26,7 @@
     "passport-local-mongoose": "^1.0.0",
     "redis": "^2.6.5",
     "serve-favicon": "^2.2.0",
-    "should": "~2.1.0"
+    "should": "~2.1.0",
+    "vhost": "^3.0.2"
   }
 }
