@@ -1,9 +1,25 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+const routes = require( '../api/controllers/index' );
+
+
+/*         main page           */
+router.get('/',routes.index);
+
+
+/*        store school form to db            */
+router.get('/departments', loggedIn, routes.departments );
+router.post('/departments', loggedIn, routes.departments_form );
+
+
+function loggedIn(req, res, next) {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
 
 module.exports = router;

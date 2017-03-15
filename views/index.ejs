@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title><%= title %></title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
 	</head>
 	<body>
 		<h1>註冊新帳號</h1>
@@ -24,5 +25,22 @@
 			<input type="submit" value="Submit">
 		</form>
 		<p>已經註冊過了嗎？<button>立即登入</button></p>
+		<h1>Main page</h1>
+		<% if (name.length > 0 ) { %>
+			<a>你好 ， <%= name %> </a>
+			<a href="/users/me">個人資料</a>
+			<a href="/departments"> 填寫系所表單</a>
+			<br>
+		<% }else{ %>
+			<a href="/users">register</a>
+		<% } %>
+		<a href='/users/<%= log %>'><%= log %></a>
+		<hr>
+
+		<% school.forEach( function ( sch ){ %>
+		  <a href="http://<%= sch.deptID %>.localhost:3000"><%= sch.title %></a><br>
+		<% }); %>
+
+
 	</body>
 </html>
