@@ -1,32 +1,24 @@
-const express = require('express');
-const Department = require('../models/department');  //department data
-const passport = require('passport');
+const Department = require('../models/department'); // department data
 
+exports.index = (req, res, next) => {
+  if (req.user) {  // if user is logged in
+    Department.find().exec((err, school) => {
+      if (err) return next(err);
 
-exports.index = function ( req, res, next ){
-  if(req.user){  // if user is logged in
-    Department.
-    find().
-    exec( function ( err, school ){
-      if( err ) return next( err );
-
-      res.render( 'index', {
-        log : 'logout' ,
-        name : req.user.displayName,
-        school :school
+      res.render('index', {
+        log: 'logout',
+        name: req.user.displayName,
+        school,
       });
     });
-  }
-  else{
-    Department.
-    find().
-    exec( function ( err, school ){
-       if( err ) return next( err );
+  } else {
+    Department.find().exec((err, school) => {
+      if (err) return next(err);
 
-      res.render( 'index', {
-          log : 'login' ,
-          name : '',
-          school :school
+      res.render('index', {
+        log: 'login',
+        name: '',
+        school,
       });
     });
   }
@@ -34,7 +26,7 @@ exports.index = function ( req, res, next ){
 
 /*
 exports.school = function ( req, res, next ){
-	Department.findOne({
+  Department.findOne({
     deptID : req.params.id
   }, function (err, user) {
     if(!err && user){  //if find the data , go to edit page
