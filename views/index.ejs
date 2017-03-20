@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+	<head>
+		<title>index</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+	</head>
+	<body>
+		<h1>Main page</h1>
+		<% if (name.length > 0 ) { %>
+			<a>你好 ， <%= name %> </a>
+			<a href="/users/me">個人資料</a>
+			<a href="/users/projects"> Projects List</a>
+			<br>
+		<% }else{ %>
+			<a href="/users">register</a>
+		<% } %>
+		<a href='/users/<%= log %>'><%= log %></a>
+		<hr>
+    <p>所有已發佈的系所網站</p>
+		<% school.forEach( function ( sch ){ %>
+		  <a href="http://<%= sch.subdomainName %>.localhost:3000"><%= sch.title %></a><br>
+		<% }); %>
+
+
+	</body>
 </html>
