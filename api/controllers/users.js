@@ -188,9 +188,10 @@ exports.projEdit = function (req, res, next) {
 
       proj.save(function (err) {
         if (err) {
-          console.error('ERROR!');
+          res.send(err);
+        } else {
+          res.redirect('/users/projects/' + proj._id);  //  回到detail
         }
-        res.redirect('/users/projects/' + proj._id);  //  回到detail
       });
     }
   })

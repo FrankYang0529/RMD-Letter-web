@@ -15,7 +15,7 @@ router.get('/me', loggedIn, users.profile);
 
 
 /*           update profile           */
-router.post('/me', loggedIn, users.update_profile);
+router.put('/me', loggedIn, users.update_profile);
 
 
 /*          login / logout           */
@@ -32,7 +32,7 @@ router.post('/projects', loggedIn, users.projCreate);
 
 /*          project detail              */
 router.get('/projects/:projID', loggedIn, users.project);
-router.post('/projects/:projID', loggedIn, users.projEdit);
+router.put('/projects/:projID', loggedIn, users.projEdit);
 router.get('/projects/:projID/edit', loggedIn, users.editPage);
 
 
