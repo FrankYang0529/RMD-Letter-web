@@ -21,6 +21,25 @@
 		  <a href="http://<%= sch.deptID %>.localhost:3000"><%= sch.title %></a><br>
 		<% }); %>
 
-
+		<h1>註冊新帳號</h1>
+		<form action="/users" method="post">
+			User Name:<br>
+			<input type="text" name="username" value="Poan">
+			<br>
+			E-mail:<br>
+			<input type="email" name="email" value="rwd@mail.tw">
+			<br>
+			Display Name:<br>
+			<input type="text" name="displayName" value="博安老師">
+			<br>
+			Password:<br>
+			<input type="password" name="password">
+			<br>
+			Photo:<br>
+			<input type="text" name="gravatar" value="https://www.npmjs.com/package/gravatar">
+			<br><br>
+			<input type="submit" value="Submit">
+		</form>
+		<p>已經註冊過了嗎？<button>立即登入</button></p>
 	</body>
 </html>
