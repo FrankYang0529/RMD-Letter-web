@@ -5,16 +5,16 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const methodOverride = require('method-override')
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const Promise = require('bluebird');
 const vhost = require('vhost');
+const passport = require('./auth/passport');
+const stuPassport = require('./auth/stuPassport');
 
 
 const app = express();
-
+const stuApp = express();  // used for second passport(stuPassport)
 
 // express config
 const CONFIG = require('config');
@@ -37,6 +37,7 @@ client.on('error', function (err) {
 
 //  session
 const session = require('express-session');
+
 const RedisStore = require('connect-redis')(session);
 app.use(session({
   store: new RedisStore({ client: client }),
@@ -47,16 +48,33 @@ app.use(session({
   cookie: { path: '/', httpOnly: true, maxAge: null }
 }));
 
+stuApp.use(session({
+  store: new RedisStore({ client: client }),
+  secret: 'keyboard dog',
+  key: 'express.sid',
+  resave: true,
+  saveUninitialized: false,
+  cookie: { path: '/', httpOnly: true, maxAge: null }
+}));
+
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  console.log(req.headers.origin);
+  next();
+})
+
 
 // passport config
 app.use(passport.initialize());
 app.use(flash());
 app.use(passport.session());
 
-const Account = require('./api/models/account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+stuApp.use(stuPassport.initialize());
+stuApp.use(stuPassport.session());
 
 
 // mongoose
