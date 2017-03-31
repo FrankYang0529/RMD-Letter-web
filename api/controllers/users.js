@@ -1,3 +1,4 @@
+const Promise = require('bluebird');
 const passport = require('../../auth/passport');
 const Account = require('../models/account');
 
@@ -54,28 +55,40 @@ exports.register = function (req, res, next) {
 };
 
 exports.changePassword = function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
-
-    // req / res held in closure
-    req.logIn(user, function (err) {
-      if (err) { return next(err); }
-
-      Account.findOne({ username: req.body.username }).then(function(sanitizedUser) {
-          if (sanitizedUser) {
-              sanitizedUser.setPassword(req.body.newPassword, function() {
-                  sanitizedUser.save();
-                  res.redirect('/');
-              });
-          } else {
-              res.redirect('/users/login');
-          }
-      },function(err) {
-          console.error(err);
-      })
+  const setPassword = Promise.promisify(req.user.setPassword);
+  setPassword.call(req.user, req.body.newPassword)
+    .then(() => {
+      return req.user.save();
+    })
+    .then((user) => {
+      res.redirect('/');
+    })
+    .catch(function(err) {
+      next(err);
     });
-  })(req, res, next);
+
+  // passport.authenticate('local', function (err, user, info) {
+  //   if (err) { return next(err); }
+  //   if (!user) { return res.redirect('/users/login'); }
+
+  //   // req / res held in closure
+  //   req.logIn(user, function (err) {
+  //     if (err) { return next(err); }
+
+  //     Account.findOne({ username: req.body.username }).then(function(sanitizedUser) {
+  //         if (sanitizedUser) {
+  //             sanitizedUser.setPassword(req.body.newPassword, function() {
+  //                 sanitizedUser.save();
+  //                 res.redirect('/');
+  //             });
+  //         } else {
+  //             res.redirect('/users/login');
+  //         }
+  //     },function(err) {
+  //         console.error(err);
+  //     })
+  //   });
+  // })(req, res, next);
 };
 
 exports.profile = function (req, res, next) {
