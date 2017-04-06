@@ -49,29 +49,27 @@ exports.login = function (req, res, next) {
 /*                 api                    */
 
 exports.register = function (req, res, next) {
-  Account.register(
-    new Account({
-      username: req.body.username,
-      displayName: req.body.displayName,
-      gravatar: req.body.gravatar,
-      email: req.body.email,
-      projID: req.vhost[0]
-    }), req.body.password, (err, account) => {
-      if (err) {
-        console.log(err);
-        if (err.name === 'MongoError') {
-          return res.redirect('/users'); // email invalid
-        }
-        return res.redirect('/users');
-      }
-      passport.authenticate('stu-local')(req, res, () => {
-        req.session.save((err) => {
-          if (err) {
-            return next(err);
-          }
-          res.redirect('/');
-        });
-      });
+  const register = Promise.promisify(Account.register);
+  register.call(Account, new Account({
+    username: req.body.username,
+    displayName: req.body.displayName,
+    gravatar: req.body.gravatar,
+    email: req.body.email,
+    projID: req.vhost[0]
+  }), req.body.password)
+    .then(function (account) {
+      const auth = Promise.promisify(passport.authenticate('stu-local'));
+      return auth.call(passport, req, res);
+    })
+    .then(function (auth) {
+      return req.session.save();
+    })
+    .then(function (session) {
+      res.redirect('/');
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.redirect('/users');
     });
 };
 
@@ -111,11 +109,7 @@ exports.logout = function (req, res, next) {
 exports.profile = function (req, res, next) {
   res.format({
     'application/json': function () {
-      res.send({
-        username: req.user.username,
-        name: req.user.displayName,
-        email: req.user.email
-      });
+      res.send(req.user);
     },
     'default': function () {
       /* TODO
@@ -130,44 +124,40 @@ exports.profile = function (req, res, next) {
 }
 
 exports.update_profile = function (req, res, next) {
-  Account.findOne({ username: req.user.username }).exec().then(function (user) {
-    if (user) {
-      if (req.body.name.length < 1 || req.body.email.length < 1 || req.body.gravatar.length < 1) {
-        res.format({
-          'application/json': function () {
-            res.send({
-              username: req.user.username,
-              name: req.user.displayName,
-              email: req.user.email
-            });
-          },
-          'default': function () {
-            /* TODO
-            res.render('studentProfile', {
-              username: req.user.username,
-              name: req.user.displayName,
-              email: req.user.email
-            });
-            */
-          }
-        });
-      } else {
-        user.username = req.user.username;
-        user.displayName = req.body.name;
-        user.email = req.body.email;
-        user.gravatar = req.body.gravatar;
+  if (req.body.displayName.length < 1 || req.body.email.length < 1 || req.body.gravatar.length < 1) { // error handle
+    /*
+    res.render('users', {
+      username: req.user.username,
+      name: req.body.name,
+      email: req.body.email,
+      gravatar: req.body.gravatar,
+      error: '*字號的填寫處不能為空!'
+    });
+    */
+  }
+  req.user.displayName = req.body.displayName;
+  req.user.email = req.body.email;
+  req.user.gravatar = req.body.gravatar;
 
+  req.user.save()
+    .then(function (user) {
+      res.redirect('/users/me');
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+};
 
-        user.save(function (err) {
-          if (err) {
-            console.error('ERROR!');
-          }
-          res.redirect('/');//  回到主畫面
-        });
-      }
-    }
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
+exports.changePassword = function (req, res, next) {
+  const setPassword = Promise.promisify(req.user.setPassword);
+  setPassword.call(req.user, req.body.newPassword)
+    .then(() => {
+      return req.user.save();
+    })
+    .then((user) => {
+      res.redirect('/');
+    })
+    .catch(function(err) {
+      next(err);
+    });
 };

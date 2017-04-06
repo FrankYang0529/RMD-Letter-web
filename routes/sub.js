@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const subroutes = require('../api/controllers/subdomain');
-const Policy = require('./policy');
+const Policy = require('../api/policy');
 
 router.get('/', subroutes.index);
 
 /*             register                 */
 router.get('/users', subroutes.userIndex);
 router.post('/users', subroutes.register);
-
+router.put('/users', subroutes.changePassword);
 
 /*            login/logout             */
 router.get('/users/login', subroutes.login);

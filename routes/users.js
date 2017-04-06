@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const users = require('../api/controllers/users');
-const Policy = require('./policy');
+const Policy = require('../api/policy');
 
 /*              register                 */
 router.get('/', users.index);
