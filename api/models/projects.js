@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const Projects = new Schema({
   ownerID: String,
-  title: String,
-  body: String,
+  titleZh: String,
+  hbr: String,
   subdomainName: String
 });
 
