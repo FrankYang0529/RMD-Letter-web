@@ -21,5 +21,4 @@ router.get('/users/logout', subroutes.logout);
 router.get('/users/me', subroutes.profile);
 router.put('/users/me', subroutes.update_profile);
 
-
 module.exports = router;

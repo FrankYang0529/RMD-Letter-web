@@ -16,6 +16,7 @@ const stuPassport = require('./auth/stuPassport');
 const app = express();
 const stuApp = express();  // used for second passport(stuPassport)
 
+
 // express config
 const CONFIG = require('config');
 
@@ -67,7 +68,6 @@ app.use(function (req, res, next) {
   next();
 })
 
-
 // passport config
 app.use(passport.initialize());
 app.use(flash());
@@ -116,6 +116,7 @@ app.use(vhost('*.localhost', subroutes));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/projects', projects);
+
 
 
 // catch 404 and forward to error handler
