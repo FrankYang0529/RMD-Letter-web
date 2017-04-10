@@ -1,8 +1,10 @@
-const Department = require('../models/department'); // department data
+const Projects = require('../models/projects'); // department data
+
+//  not  api
 
 exports.index = (req, res, next) => {
   if (req.user) {  //   if user is logged in
-    Department.find().exec().then(function (school) {
+    Projects.find().exec().then(function (school) {
       res.render('index', {
         log: 'logout',
         name: req.user.displayName,
@@ -13,7 +15,7 @@ exports.index = (req, res, next) => {
       console.log(err);
     });
   } else {
-    Department.find().exec().then(function (school) {
+    Projects.find().exec().then(function (school) {
       res.render('index', {
         log: 'login',
         name: '',
