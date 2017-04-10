@@ -1,4 +1,6 @@
 const Projects = require('../models/projects'); // department data
+const StuForms = require('../models/stuForms');
+const RmdltForms = require('../models/rmdltForms');
 
 //  not  api
 exports.createPage = function (req, res, next) {
@@ -174,3 +176,93 @@ exports.projDelete = function (req, res, next){
       res.send('delete error');
     });
 };
+
+exports.createStuForm = function (req, res, next) {
+  new StuForms({
+    projID: req.params.projID,
+    title: req.body.title,
+    questions: req.body.questions
+  }).save(function (err) { //  存入db
+    if (err) return next(err);
+    res.redirect('/projects/'+req.params.projID+'/student-form');
+  });
+};
+
+exports.updateStuForm = function (req, res, next) {
+  StuForms.findOne({ projID: req.params.projID }).exec()
+    .then(function (form) {
+      form.title = req.body.title;
+      form.questions = req.body.questions;
+      form.save();
+      res.redirect('/projects/'+req.params.projID+'/student-form');
+    })
+    .catch(function (err) {
+      res.send(err);
+    })
+}
+
+exports.stuFormDetail = function (req, res, next) {
+  StuForms.findOne({ projID: req.params.projID }).exec()
+    .then(function (form) {
+      res.format({
+        'application/json': function () {
+          res.send(form);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
+    .catch(function (err) {
+      res.send(err);
+    })
+}
+
+exports.createRmdltForm = function (req, res, next) {
+  new RmdltForms({
+    projID: req.params.projID,
+    title: req.body.title,
+    questions: req.body.questions
+  }).save(function (err) { //  存入db
+    if (err) return next(err);
+    res.redirect('/projects/'+req.params.projID+'/rmdletter-form');
+  });
+};
+
+exports.updateRmdltForm = function (req, res, next) {
+  RmdltForms.findOne({ projID: req.params.projID }).exec()
+    .then(function (form) {
+      form.title = req.body.title;
+      form.questions = req.body.questions;
+      form.save();
+      res.redirect('/projects/'+req.params.projID+'/rmdletter-form');
+    })
+    .catch(function (err) {
+      res.send(err);
+    })
+}
+
+exports.rmdltFormDetail = function (req, res, next) {
+  RmdltForms.findOne({ projID: req.params.projID }).exec()
+    .then(function (form) {
+      res.format({
+        'application/json': function () {
+          res.send(form);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
+    .catch(function (err) {
+      res.send(err);
+    })
+}
