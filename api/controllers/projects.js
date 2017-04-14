@@ -1,6 +1,7 @@
 const Projects = require('../models/projects'); // department data
 const StuForms = require('../models/stuForms');
 const RmdltForms = require('../models/rmdltForms');
+const InviteLetter = require('../models/inviteLetter');
 
 //  not  api
 exports.createPage = function (req, res, next) {
@@ -12,7 +13,6 @@ exports.createPage = function (req, res, next) {
     error: ''
   });
 };
-
 
 exports.editPage = function (req, res, next) {
   Projects.findOne({ _id: req.params.projID }).exec()
@@ -27,7 +27,6 @@ exports.editPage = function (req, res, next) {
       console.log(err);
     });
 };
-
 
 //  api
 
@@ -92,10 +91,20 @@ exports.projCreate = function (req, res, next) {
     titleZh: req.body.titleZh,
     hbr: req.body.hbr,
     subdomainName: req.body.subdomainName
-  }).save(function (err) { //  存入db
+  }).save(function (err,proj) { //  存入db
     if (err) return next(err);
+
+    new InviteLetter({
+      projID: proj._id,
+      title: proj.titleZh + "推薦信填寫",
+      content: "學生請老師填寫推薦信\n 謝謝!"
+    }).save();
+
     res.redirect('/');  //  回到主畫面
   });
+
+
+
 };
 
 exports.projHbrEdit = function (req, res, next) {
@@ -193,12 +202,15 @@ exports.updateStuForm = function (req, res, next) {
     .then(function (form) {
       form.title = req.body.title;
       form.questions = req.body.questions;
-      form.save();
+
+      return form.save();
+    })
+    .then(function(form) {
       res.redirect('/projects/'+req.params.projID+'/student-form');
     })
     .catch(function (err) {
       res.send(err);
-    })
+    });
 }
 
 exports.stuFormDetail = function (req, res, next) {
@@ -219,7 +231,7 @@ exports.stuFormDetail = function (req, res, next) {
     })
     .catch(function (err) {
       res.send(err);
-    })
+    });
 }
 
 exports.createRmdltForm = function (req, res, next) {
@@ -238,12 +250,15 @@ exports.updateRmdltForm = function (req, res, next) {
     .then(function (form) {
       form.title = req.body.title;
       form.questions = req.body.questions;
-      form.save();
+
+      return form.save();
+    })
+    .then(function(form) {
       res.redirect('/projects/'+req.params.projID+'/rmdletter-form');
     })
     .catch(function (err) {
       res.send(err);
-    })
+    });
 }
 
 exports.rmdltFormDetail = function (req, res, next) {
@@ -264,5 +279,42 @@ exports.rmdltFormDetail = function (req, res, next) {
     })
     .catch(function (err) {
       res.send(err);
+    });
+}
+
+exports.inviteltDetail = function (req, res, next) {
+  InviteLetter.findOne({ projID:req.params.projID }).exec()
+    .then(function(letter) {
+      res.format({
+        'application/json': function () {
+          res.send(letter);
+        },
+        'default': function () {
+          /* TODO
+          res.render('letterDetail', {
+            letter
+          });
+          */
+        }
+      });
     })
+    .catch(function(err) {
+      res.send(err);
+    });
+}
+
+exports.updateInvitelt = function (req, res, next) {
+  InviteLetter.findOne({ projID:req.params.projID }).exec()
+    .then(function(letter) {
+      letter.title = req.body.title;
+      letter.content = req.body.content;
+
+      return letter.save();
+    })
+    .then(function(letter) {
+      res.redirect('/projects/'+req.params.projID+'/invite-letter');
+    })
+    .catch(function(err) {  //  assume that will display invitation-letter's detail, so there can absolutly find one in database
+      res.send(err);
+    });
 }

@@ -33,4 +33,8 @@ router.post('/:projID/rmdletter-form', Policy.loggedIn, routes.createRmdltForm);
 router.put('/:projID/rmdletter-form', Policy.loggedIn, routes.updateRmdltForm);
 
 
+//  the email that mail to the recommended person
+router.get('/:projID/invite-letter', Policy.loggedIn, routes.inviteltDetail);
+router.put('/:projID/invite-letter', Policy.loggedIn, routes.updateInvitelt);
+
 module.exports = router;
