@@ -9,12 +9,14 @@ const Options = new Schema({
 const StudentForms = new Schema({
   projID: String,
   title: String,
-  questions: [{
+  questions: [
+    {
       questionTitle: String,
       questionType: String,
       options: [Options],
       require: Boolean
-    }]
+    }
+  ]
 });
 
 module.exports = mongoose.model('stuForms', StudentForms);

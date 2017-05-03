@@ -1,7 +1,8 @@
 const Projects = require('../models/projects'); // department data
 const StuForms = require('../models/stuForms');
-const RmdltForms = require('../models/rmdltForms');
+const RmdLtForms = require('../models/rmdltForms');
 const InviteLetter = require('../models/inviteLetter');
+const RecommendedPerson = require('../models/rmdPerson');
 
 //  not  api
 exports.createPage = function (req, res, next) {
@@ -32,10 +33,10 @@ exports.editPage = function (req, res, next) {
 
 exports.projectList = function (req, res, next) {
   Projects.find({ ownerID: req.user.username }).exec()
-    .then(function (proj) {
+    .then(function (projs) {
       res.format({
         'application/json': function () {
-          res.send(proj);
+          res.send(projs);
         },
         'default': function () {
           /* TODO
@@ -98,6 +99,11 @@ exports.projCreate = function (req, res, next) {
       projID: proj._id,
       title: proj.titleZh + "推薦信填寫",
       content: "學生請老師填寫推薦信\n 謝謝!"
+    }).save();
+
+    new RecommendedPerson({
+      projID: proj._id,
+      person: []
     }).save();
 
     res.redirect('/');  //  回到主畫面
@@ -234,8 +240,8 @@ exports.stuFormDetail = function (req, res, next) {
     });
 }
 
-exports.createRmdltForm = function (req, res, next) {
-  new RmdltForms({
+exports.createRmdLtForm = function (req, res, next) {
+  new RmdLtForms({
     projID: req.params.projID,
     title: req.body.title,
     questions: req.body.questions
@@ -245,8 +251,8 @@ exports.createRmdltForm = function (req, res, next) {
   });
 };
 
-exports.updateRmdltForm = function (req, res, next) {
-  RmdltForms.findOne({ projID: req.params.projID }).exec()
+exports.updateRmdLtForm = function (req, res, next) {
+  RmdLtForms.findOne({ projID: req.params.projID }).exec()
     .then(function (form) {
       form.title = req.body.title;
       form.questions = req.body.questions;
@@ -261,8 +267,8 @@ exports.updateRmdltForm = function (req, res, next) {
     });
 }
 
-exports.rmdltFormDetail = function (req, res, next) {
-  RmdltForms.findOne({ projID: req.params.projID }).exec()
+exports.rmdLtFormDetail = function (req, res, next) {
+  RmdLtForms.findOne({ projID: req.params.projID }).exec()
     .then(function (form) {
       res.format({
         'application/json': function () {
@@ -315,6 +321,41 @@ exports.updateInvitelt = function (req, res, next) {
       res.redirect('/projects/'+req.params.projID+'/invite-letter');
     })
     .catch(function(err) {  //  assume that will display invitation-letter's detail, so there can absolutly find one in database
+      res.send(err);
+    });
+}
+
+exports.rmdPersonList = function (req, res, next) {
+  RecommendedPerson.findOne({ projID: req.params.projID }).exec()
+    .then(function (personList) {
+      res.format({
+        'application/json': function () {
+          res.send(personList);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
+    .catch(function (err) {
+      res.send(err);
+    });
+}
+
+exports.addRmdPerson = function (req, res, next) {
+  RecommendedPerson.findOne({ projID: req.params.projID }).exec()
+    .then(function (personList) {
+      personList.person.push(req.body.person);
+      return personList.save();
+    })
+    .then(function(personList) {
+      res.redirect('/projects/'+req.params.projID+'/rmd-person');
+    })
+    .catch(function (err) {
       res.send(err);
     });
 }

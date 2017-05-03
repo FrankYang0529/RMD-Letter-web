@@ -6,15 +6,24 @@ const Options = new Schema({
   option: String
 });
 
+const SubQuestions = new Schema({
+  title: String,
+  questionType: String
+});
+
+
 const Letter = new Schema({
   projID: String,
   title: String,
-  questions: [{
+  questions: [
+    {
       questionTitle: String,
       questionType: String,
       options: [Options],
+      subQuestions: [SubQuestions],
       require: Boolean
-    }]
+    }
+  ]
 });
 
 module.exports = mongoose.model('rmdltForms', Letter);
