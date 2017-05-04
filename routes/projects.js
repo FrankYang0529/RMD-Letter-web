@@ -21,4 +21,26 @@ router.put('/:projID/subdomain', Policy.loggedIn, routes.projSubdomainEdit);
 router.delete('/:projID', Policy.loggedIn, routes.projDelete);
 
 
+//  self definite student forms
+router.get('/:projID/student-form', Policy.loggedIn, routes.stuFormDetail);
+router.post('/:projID/student-form', Policy.loggedIn, routes.createStuForm);
+router.put('/:projID/student-form', Policy.loggedIn, routes.updateStuForm);
+
+
+//  self definite recommend letter forms
+router.get('/:projID/rmdletter-form', Policy.loggedIn, routes.rmdLtFormDetail);
+router.post('/:projID/rmdletter-form', Policy.loggedIn, routes.createRmdLtForm);
+router.put('/:projID/rmdletter-form', Policy.loggedIn, routes.updateRmdLtForm);
+
+
+//  the email that mail to the recommended person
+router.get('/:projID/invite-letter', Policy.loggedIn, routes.inviteltDetail);
+router.put('/:projID/invite-letter', Policy.loggedIn, routes.updateInvitelt);
+
+
+//  the recommended person manage
+router.get('/:projID/rmd-person', Policy.loggedIn, routes.rmdPersonList);
+router.post('/:projID/rmd-person', Policy.loggedIn, routes.addRmdPerson);
+
+
 module.exports = router;
