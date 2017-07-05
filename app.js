@@ -10,11 +10,11 @@ const flash = require('connect-flash');
 const Promise = require('bluebird');
 const vhost = require('vhost');
 const passport = require('./auth/passport');
-const stuPassport = require('./auth/stuPassport');
+//const stuPassport = require('./auth/stuPassport');
 
 
 const app = express();
-const stuApp = express();  // used for second passport(stuPassport)
+//const stuApp = express();  // used for second passport(stuPassport)
 
 
 // express config
@@ -48,7 +48,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { path: '/', httpOnly: true, maxAge: null }
 }));
-
+/*
 stuApp.use(session({
   store: new RedisStore({ client: client }),
   secret: 'keyboard dog',
@@ -57,7 +57,7 @@ stuApp.use(session({
   saveUninitialized: false,
   cookie: { path: '/', httpOnly: true, maxAge: null }
 }));
-
+*/
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
@@ -72,10 +72,10 @@ app.use(function (req, res, next) {
 app.use(passport.initialize());
 app.use(flash());
 app.use(passport.session());
-
+/*
 stuApp.use(stuPassport.initialize());
 stuApp.use(stuPassport.session());
-
+*/
 
 // mongoose
 const mongoose = require('mongoose');

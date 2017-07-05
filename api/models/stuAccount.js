@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const stuAccount = new Schema({
-  username: { type: String, unique: true, required: true, index: true },
+  username: { type: String, required: true,unique: false},
   password: { type: String },
   displayName: { type: String, required: true },
   email: {
@@ -15,14 +15,13 @@ const stuAccount = new Schema({
       },
       message: '{VALUE} is not a valid email!',
     },
-    unique: true,
     required: true,
+    unique: false
   },
   gravatar: String,
-  projID: String
+  subdomain: String
 });
 
-stuAccount.plugin(passportLocalMongoose);
+//stuAccount.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('stuaccounts', stuAccount);
-

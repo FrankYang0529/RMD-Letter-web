@@ -42,5 +42,10 @@ router.put('/:projID/invite-letter', Policy.loggedIn, routes.updateInvitelt);
 router.get('/:projID/rmd-person', Policy.loggedIn, routes.rmdPersonList);
 router.post('/:projID/rmd-person', Policy.loggedIn, routes.addRmdPerson);
 
+// get student list
+router.get('/:projID/student', Policy.loggedIn, routes.studentList);
+
+// get filled student form
+router.get('/:projID/:stuID', Policy.loggedIn, routes.filledStudentForm);
 
 module.exports = router;

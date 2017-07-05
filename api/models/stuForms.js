@@ -6,14 +6,21 @@ const Options = new Schema({
   option: String
 });
 
+const SubQuestions = new Schema({
+  title: String,
+  questionType: String //目前都預設為text
+});
+
+
 const StudentForms = new Schema({
   projID: String,
   title: String,
   questions: [
     {
-      questionTitle: String,
+      questionTitle: String,  // 題目
       questionType: String,
-      options: [Options],
+      options: [Options],  // 選擇或多選的選項
+      subQuestions: [SubQuestions],  // textSet的問題
       require: Boolean
     }
   ]

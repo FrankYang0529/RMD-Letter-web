@@ -6,7 +6,7 @@ const Projects = new Schema({
   ownerID: String,
   titleZh: String,
   hbr: String,
-  subdomainName: String
+  subdomainName: { type: String, required: true,unique: true },
 });
 
 module.exports = mongoose.model('projs', Projects);

@@ -3,7 +3,8 @@ const StuForms = require('../models/stuForms');
 const RmdLtForms = require('../models/rmdltForms');
 const InviteLetter = require('../models/inviteLetter');
 const RecommendedPerson = require('../models/rmdPerson');
-
+const StuAccount = require('../models/stuAccount');
+const StuFormAns = require('../models/stuFormAns');
 //  not  api
 exports.createPage = function (req, res, next) {
   res.render('projectCreate', {
@@ -358,4 +359,43 @@ exports.addRmdPerson = function (req, res, next) {
     .catch(function (err) {
       res.send(err);
     });
+}
+
+exports.studentList = function (req, res, next) {
+  Projects.findOne({ projID: req.params.projID }).exec()
+    .then(function (proj) {
+      return StuAccount.find({ subdomain: proj.subdomainName }).exec()
+    })
+    .then(function (students) {
+      res.format({
+        'application/json': function () {
+          res.send(students);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
+}
+
+exports.filledStudentForm = function (req, res, next) {
+  StuFormAns.findOne({ stuID: req.params.stuID }).exec()
+    .then(function (ans) {
+      res.format({
+        'application/json': function () {
+          res.send(ans);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
 }
