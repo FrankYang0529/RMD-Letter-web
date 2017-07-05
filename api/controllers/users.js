@@ -37,7 +37,7 @@ exports.register = function (req, res, next) {
     email: req.body.email
   }), req.body.password)
     .then(function (account) {
-      const auth = Promise.promisify(passport.authenticate('local'));
+      const auth = Promise.promisify(passport.authenticate('department-local'));
       return auth.call(passport, req, res);
     })
     .then(function (auth) {
@@ -111,7 +111,7 @@ exports.updateProfile = function (req, res, next) {
 
 exports.auth = function (req, res, next) {
   // generate the authenticate method and pass the req/res
-  passport.authenticate('local', function (err, user, info) {
+  passport.authenticate('department-local', function (err, user, info) {
     if (err) { return next(err); }
     if (!user) { return res.redirect('/users/login'); }
 

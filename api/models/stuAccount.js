@@ -22,6 +22,6 @@ const stuAccount = new Schema({
   subdomain: String
 });
 
-//stuAccount.plugin(passportLocalMongoose);
+stuAccount.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('stuaccounts', stuAccount);

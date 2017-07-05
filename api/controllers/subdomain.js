@@ -1,7 +1,7 @@
 const Projects = require('../models/projects');// department data
 const Account = require('../models/stuAccount');
 const vhost = require('vhost');
-//const passport = require('../../auth/stuPassport');
+const passport = require('../../auth/passport');
 const Promise = require('bluebird');
 const RecommendedPerson = require('../models/rmdPerson');
 const StudentForm = require('../models/stuForms');
@@ -11,11 +11,11 @@ const passwordHash = require('password-hash');
 
 /*               not api                   */
 exports.index = function (req, res, next) {
-  console.log('user:' + req.session.username);
+  console.log('user: '+req.user);
   console.log(req.vhost[0]);
   res.format({
     'default': function () {
-      res.send(req.vhost[0]);
+      res.send(req.user);
       // TODO
       // res.render('register', {
       // });
@@ -48,67 +48,44 @@ exports.login = function (req, res, next) {
 
 /*                 api                    */
 
-exports.register = function (req, res, next) {
-  Account.find({ subdomain: req.vhost[0] }).exec()
-    .then(function (account) {
-      account.forEach(function (acc) {
-        if (acc.email == req.body.email || acc.username == req.body.username) {
-          throw err;
-        }
-      })
-
-      new Account({
-        username: req.body.username,
-        displayName: req.body.displayName,
-        password: passwordHash.generate(req.body.password),
-        gravatar: req.body.gravatar,
-        email: req.body.email,
-        subdomain: req.vhost[0]
-      }).save(function (err,user) {
-        if (err) { res.send('err happened'); }
-
-        req.session.userId = user._id;
-        req.session.username = user.username;
-        req.session.email = user.email;
-        req.session.displayName = user.displayName;
-        req.session.password = user.password;
-        req.session.subdomain = user.subdomain;
-        req.session.gravatar = user.gravatar;
-        res.redirect('/');
-      });
-    })
-    .catch(function (err) {
-      res.send('register error');
-    })
-};
-
 exports.auth = function (req, res, next) {
-  Account.findOne({ subdomain: req.vhost[0], username: req.body.username }).exec()
-    .then(function (user) {
-      if (user && passwordHash.verify(req.body.password, user.password)) {
-        req.session.userId = user._id;
-        req.session.username = user.username;
-        req.session.email = user.email;
-        req.session.displayName = user.displayName;
-        req.session.password = user.password;
-        req.session.subdomain = user.subdomain;
-        req.session.gravatar = user.gravatar;
-        res.redirect('/');
-      } else {
-        res.redirect('/users/login');
-      }
-    })
+  // generate the authenticate method and pass the req/res
+  passport.authenticate('stu-local-login', function (err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/users/login'); }
+
+    // req / res held in closure
+    req.logIn(user, function (err) {
+      if (err) { return next(err); }
+      res.redirect('/');
+    });
+  })(req, res, next);
 };
+
+exports.loginForm = function (req, res, next) {
+  req.session.save((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
+};
+
 
 exports.logout = function (req, res, next) {
-  req.session.destroy();
-  res.redirect('/');
+  req.logout();
+  req.session.save((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
 };
 
 exports.profile = function (req, res, next) {
   res.format({
     'application/json': function () {
-      res.send(req.session);
+      res.send(req.user);
     },
     'default': function () {
       /* TODO
@@ -134,25 +111,17 @@ exports.update_profile = function (req, res, next) {
     });
     */
   }
+  req.user.displayName = req.body.displayName;
+  req.user.email = req.body.email;
+  req.user.gravatar = req.body.gravatar;
 
-  Account.findOne({ subdomain: req.vhost[0], username: req.session.username }).exec()
+  req.user.save()
     .then(function (user) {
-      user.email = req.body.email;
-      user.displayName = req.body.displayName;
-      user.gravatar = req.body.gravatar;
-
-      return user.save();
-    })
-    .then(function (user) {
-      req.session.email = req.body.email;
-      req.session.displayName = req.body.displayName;
-      req.session.gravatar = req.body.gravatar;
-
       res.redirect('/users/me');
     })
-    .catch(function (user) {
+    .catch(function (err) {
       res.send('duplicate email');
-    })
+    });
 };
 
 exports.changePassword = function (req, res, next) {
@@ -168,16 +137,14 @@ exports.changePassword = function (req, res, next) {
     */
   }
 
-  Account.findOne({ subdomain: req.vhost[0], username: req.session.username }).exec()
-    .then(function (user) {
-      req.session.password = passwordHash.generate(req.body.password);
-      user.password = req.session.password;
-
-      return user.save();
-    })
+  req.user.password = passwordHash.generate(req.body.password);
+  req.user.save()
     .then(function (user) {
       res.redirect('/');
     })
+    .catch(function (err) {
+      res.send('error');
+    });
 };
 
 exports.rmdPersonList = function (req, res, next) {

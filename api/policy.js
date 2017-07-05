@@ -10,19 +10,11 @@ exports.loggedIn = function (req, res, next) {
   }
 }
 
-exports.sessionLoggedIn = function (req, res, next) {
-  if (req.session.username && req.session.subdomain == req.vhost[0]) {
-    Account.findOne({ subdomain: req.session.subdomain, username: req.session.username }).exec()
-    .then(function (user) {
-      if (req.session.password == user.password) {
-        next();
-      } else {
-        req.session.destroy();
-        res.redirect('users/login');
-      }
-    })
+exports.studentLoggedIn = function (req, res, next) {
+  if (req.user && req.user.subdomain == req.vhost[0]) {
+    next();
   } else {
-    req.session.destroy();
+    req.logout();
     res.redirect('/users/login');
   }
 }
