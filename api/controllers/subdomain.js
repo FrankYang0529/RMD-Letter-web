@@ -9,6 +9,17 @@ const StudentFormAnswer = require('../models/stuFormAns');
 const inviteLetter = require('../models/inviteLetter');
 const passwordHash = require('password-hash');
 
+// mail config
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'j70915@gmail.com',
+    pass: 'lp331234567'
+  }
+});
+
+
 /*               not api                   */
 exports.index = function (req, res, next) {
   console.log('user: '+req.user);
@@ -194,18 +205,37 @@ exports.addRmdPerson = function (req, res, next) {
 }
 
 exports.sentLetter = function (req, res, next) {
-  var a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-  var b = a.then(function (proj) {
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then(function (proj) {
       return inviteLetter.findOne({ projID: proj._id }).exec();
     });
-  var c = RecommendedPerson.findOne({ _id: rmdPersonID }).exec();
-  return Promise.join(b, c, function(letter, rmdPerson) {
+  const c = a.then(function (proj) {
+      return RecommendedPerson.findOne({ projID: proj._id }).exec();
+    })
+
+  return Promise.join(b, c, function(letter, rmdPersonList) {
     const lt = letter.content;
-    lt.replace(/\[@學生名稱\]/g,req.displayName);
+    const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
+
+    lt.replace(/\[@學生名稱\]/g,req.user.displayName);
     lt.replace(/\[@教授名稱\]/g,rmdPerson.name);
-    /*
-    sent lt to the email: rmdPerson.email
-    */
+
+    // mail config
+    const mailOptions = {
+      from: 'j70915@gmail.com',
+      to: rmdPerson.email,
+      subject: letter.title,
+      text: lt
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.redirect('/users/me');
+      }
+    });
   })
 }
 

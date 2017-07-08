@@ -34,10 +34,11 @@ exports.register = function (req, res, next) {
     username: req.body.username,
     displayName: req.body.displayName,
     gravatar: req.body.gravatar,
-    email: req.body.email
+    email: req.body.email,
+    type: 'department'
   }), req.body.password)
     .then(function (account) {
-      const auth = Promise.promisify(passport.authenticate('department-local'));
+      const auth = Promise.promisify(passport.authenticate('local'));
       return auth.call(passport, req, res);
     })
     .then(function (auth) {
@@ -111,7 +112,7 @@ exports.updateProfile = function (req, res, next) {
 
 exports.auth = function (req, res, next) {
   // generate the authenticate method and pass the req/res
-  passport.authenticate('department-local', function (err, user, info) {
+  passport.authenticate('local', function (err, user, info) {
     if (err) { return next(err); }
     if (!user) { return res.redirect('/users/login'); }
 

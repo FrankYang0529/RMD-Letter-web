@@ -5,7 +5,6 @@ const passportLocalMongoose = require('passport-local-mongoose');
 
 const Account = new Schema({
   username: { type: String, unique: true, required: true, index: true },
-  password: { type: String },
   displayName: { type: String, required: true },
   email: {
     type: String,
@@ -19,6 +18,7 @@ const Account = new Schema({
     required: true,
   },
   gravatar: String,
+  type: String
 });
 
 Account.plugin(passportLocalMongoose);

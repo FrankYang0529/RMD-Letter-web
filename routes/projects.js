@@ -41,6 +41,8 @@ router.put('/:projID/invite-letter', Policy.loggedIn, routes.updateInvitelt);
 //  the recommended person manage
 router.get('/:projID/rmd-person', Policy.loggedIn, routes.rmdPersonList);
 router.post('/:projID/rmd-person', Policy.loggedIn, routes.addRmdPerson);
+router.post('/:projID/rmd-person/:personID', Policy.loggedIn, routes.modifyVerification);
+
 
 // get student list
 router.get('/:projID/student', Policy.loggedIn, routes.studentList);

@@ -361,6 +361,25 @@ exports.addRmdPerson = function (req, res, next) {
     });
 }
 
+exports.modifyVerification = function (req, res, next) {
+  RecommendedPerson.findOne({ projID: req.params.projID }).exec()
+    .then(function (personList) {
+      personList.person.forEach(function (person) {
+        if (person._id == req.params.personID){
+          person.verification = req.body.verification;
+        }
+      })
+
+      return personList.save();
+    })
+    .then(function (person) {
+      res.redirect('/projects/'+req.params.projID+'/rmd-person');
+    })
+    .catch(function (err) {
+      res.send(err);
+    });
+}
+
 exports.studentList = function (req, res, next) {
   Projects.findOne({ projID: req.params.projID }).exec()
     .then(function (proj) {

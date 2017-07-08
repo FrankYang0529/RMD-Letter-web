@@ -10,6 +10,7 @@ exports.loggedIn = function (req, res, next) {
   }
 }
 
+//check loggedin for student, need to check that user is in the correct subdomain
 exports.studentLoggedIn = function (req, res, next) {
   if (req.user && req.user.subdomain == req.vhost[0]) {
     next();

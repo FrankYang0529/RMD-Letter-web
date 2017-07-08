@@ -21,7 +21,6 @@ router.get('/users/login', subroutes.login);
 router.post('/users/login', subroutes.auth, subroutes.loginForm);
 router.get('/users/logout', subroutes.logout);
 
-
 //  profile
 router.get('/users/me', Policy.studentLoggedIn, subroutes.profile);
 router.put('/users/me', Policy.studentLoggedIn, subroutes.update_profile);
