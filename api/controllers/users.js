@@ -34,7 +34,8 @@ exports.register = function (req, res, next) {
     username: req.body.username,
     displayName: req.body.displayName,
     gravatar: req.body.gravatar,
-    email: req.body.email
+    email: req.body.email,
+    type: 'department'
   }), req.body.password)
     .then(function (account) {
       const auth = Promise.promisify(passport.authenticate('local'));
