@@ -1,26 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>index</title>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<title>landing page</title>
 	</head>
 	<body>
-		<h1>Main page</h1>
-		<% if (name.length > 0 ) { %>
-			<a>你好 ， <%= name %> </a>
-			<a href="/users/me">個人資料</a>
-			<a href="/projects"> Projects List</a>
-			<br>
-		<% }else{ %>
-			<a href="/users">register</a>
-		<% } %>
-		<a href='/users/<%= log %>'><%= log %></a>
-		<hr>
-    <p>所有已發佈的系所網站</p>
-		<% school.forEach( function ( sch ){ %>
-		  <a href="http://<%= sch.subdomainName %>.localhost:3000"><%= sch.title %></a><br>
-		<% }); %>
-
-
+		<div class="topnav" id="myTopnav">
+      <a href="/" align="left"><img src="/img/mail.svg" height="30px" border="0"></a>
+      Recommand Letter System
+      <a href='/users/<%= log %>' align="right"><img src="/img/user.svg" height="30px" border="0"></a>
+    </div>
 	</body>
 </html>
