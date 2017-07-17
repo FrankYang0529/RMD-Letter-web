@@ -1,89 +1,130 @@
-const passport = require('passport');
+const passport = require('../../auth/passport');
 const Account = require('../models/account');
-const Department = require('../models/department'); // department data
+const Promise = require('bluebird');
 
+//    not api
 
-exports.index = function (req, res, next){
-  res.render('register', {
-    error: ''
-  });
-};
-
-exports.register = function (req, res, next){
-  Account.register(
-    new Account({
-      username: req.body.username,
-      displayName: req.body.displayName,
-      gravatar: req.body.gravatar,
-      email: req.body.email
-    }), req.body.password, (err, account) => {
-      if (err) {
-        console.log(err);
-        if (err.name === 'MongoError') {
-          return res.render('register', { error: '此信箱已經註冊過' });
-        }
-        return res.render('register', { error: err.message });
-      }
-      passport.authenticate('local')(req, res, () => {
-        req.session.save((err) => {
-          if (err) {
-            return next(err);
-          }
-          res.redirect('/');
-        });
-      });
-    });
-};
-
-exports.profile = function (req, res, next) {
-  /* find the user data from db */
-  res.render('users', {
-    username: req.user.username,
-    name: req.user.displayName,
-    gravatar: req.user.gravatar,
-    email: req.user.email,
-    error: ''
-  });
-};
-
-exports.update_profile = function (req, res, next) {
-  /*    find the user data from db    */
-  Account.findOne({ username: req.user.username }).exec().then(function (user) {
-    if (user) {
-      if (req.body.name.length < 1 || req.body.email.length < 1 || req.body.gravatar.length < 1) {
-        res.render('users', {
-          username: req.user.username,
-          name: req.body.name,
-          email: req.body.email,
-          gravatar: req.body.gravatar,
-          error: '*字號的填寫處不能為空!'
-        });
-      } else {
-        user.username = req.user.username;
-        user.displayName = req.body.name;
-        user.email = req.body.email;
-        user.gravatar = req.body.gravatar;
-
-        user.save(function (err) {
-          if (err) {
-            console.error('ERROR!');
-          }
-          res.redirect('/');//  回到主畫面
-        });
-      }
+exports.index = function (req, res, next) {
+  res.format({
+    'default': function () {
+      // TODO
+      // res.render('register', {
+      // });
     }
-  })
-  .catch(function (err) {
-    console.log(err);
   });
 };
 
 exports.login = function (req, res, next) {
-  res.render('login', {
+  res.format({
+    'default': function () {
+      /* TODO
+      res.render('login', {
+      });
+      */
+    }
   });
 };
 
-exports.login_form = function (req, res, next) {
+
+//    api
+
+exports.register = function (req, res, next) {
+  const register = Promise.promisify(Account.register);
+  register.call(Account, new Account({
+    username: req.body.username,
+    displayName: req.body.displayName,
+    gravatar: req.body.gravatar,
+    email: req.body.email,
+    type: 'department'
+  }), req.body.password)
+    .then(function (account) {
+      const auth = Promise.promisify(passport.authenticate('local'));
+      return auth.call(passport, req, res);
+    })
+    .then(function (auth) {
+      return req.session.save();
+    })
+    .then(function (session) {
+      res.redirect('/');
+    })
+    .catch(function (err) {
+      console.log(err);
+      res.redirect('/users');
+    });
+};
+
+exports.changePassword = function (req, res, next) {
+  const setPassword = Promise.promisify(req.user.setPassword);
+  setPassword.call(req.user, req.body.newPassword)
+    .then(() => {
+      return req.user.save();
+    })
+    .then((user) => {
+      res.redirect('/');
+    })
+    .catch(function(err) {
+      next(err);
+    });
+};
+
+exports.profile = function (req, res, next) {
+  res.format({
+    'application/json': function () {
+      res.send(req.user);
+    },
+    'default': function () {
+      /* TODO
+      res.render('users', {
+        username: req.user.username,
+        name: req.user.displayName,
+        gravatar: req.user.gravatar,
+        email: req.user.email
+      });
+      */
+    }
+  });
+};
+
+exports.updateProfile = function (req, res, next) {
+  if (req.body.displayName.length < 1 || req.body.email.length < 1 || req.body.gravatar.length < 1) { // error handle
+    /*
+    res.render('users', {
+      username: req.user.username,
+      name: req.body.name,
+      email: req.body.email,
+      gravatar: req.body.gravatar,
+      error: '*字號的填寫處不能為空!'
+    });
+    */
+  }
+  req.user.displayName = req.body.displayName;
+  req.user.email = req.body.email;
+  req.user.gravatar = req.body.gravatar;
+
+  req.user.save()
+    .then(function (user) {
+      res.redirect('/users/me');
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+};
+
+exports.auth = function (req, res, next) {
+  // generate the authenticate method and pass the req/res
+  passport.authenticate('local', function (err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/users/login'); }
+
+    // req / res held in closure
+    req.logIn(user, function (err) {
+      if (err) { return next(err); }
+      res.redirect('/');
+    });
+  })(req, res, next);
+};
+
+exports.loginForm = function (req, res, next) {
   req.session.save((err) => {
     if (err) {
       return next(err);
@@ -99,72 +140,5 @@ exports.logout = function (req, res, next) {
       return next(err);
     }
     res.redirect('/');
-  });
-};
-
-exports.projects = function (req, res, next) {
-  Department.findOne({ deptID: req.user.username }).exec().then(function (user) {
-    if (user) {  //  if find the data , go to edit page
-      res.render('departments', {
-        title: user.title,
-        body: user.body,
-        error: ''
-      }); //  if find the data , go to edit page
-      console.log('edit');
-    } else {
-      res.render('departments', {
-        title: '',
-        body: '',
-        error: ''
-      });
-    }
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
-};
-
-exports.projects_edition = function (req, res, next) {
-  Department.findOne({ deptID: req.user.username }).exec().then(function (user) {
-    if (user) {   //  edit department files
-      if (req.body.title.length < 1 || req.body.body.length < 1) {    //  must to filled the blank
-        res.render('departments', {
-          title: req.body.title,
-          body: req.body.body,
-          error: '*字號的填寫處不能為空!'
-        });
-      } else {
-        user.deptID = req.user.username;
-        user.title = req.body.title;
-        user.body = req.body.body;
-
-        user.save(function (err) {
-          if (err) {
-            console.error('ERROR!');
-          }
-          res.redirect('/');  //  回到主畫面
-        });
-      }
-    } else {
-      if (req.body.title.length < 1 || req.body.body.length < 1) {    //  must to filled the blank
-        res.render('departments', {
-          title: req.body.title,
-          body: req.body.body,
-          error: '*字號的填寫處不能為空!'
-        });
-      } else {
-        new Department({
-          deptID : req.user.username,
-          title : req.body.title,
-          body : req.body.body
-        }).save(function (err) { //  存入db
-          if (err) return next(err);
-          res.redirect('/');  //  回到主畫面
-        });
-      }
-    }
-  })
-  .catch(function (err) {
-    console.log(err);
   });
 };
