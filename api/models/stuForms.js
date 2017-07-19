@@ -13,7 +13,7 @@ const SubQuestions = new Schema({
 
 
 const StudentForms = new Schema({
-  projID: String,
+  projID: { type: String, unique: true },
   title: String,
   questions: [
     {

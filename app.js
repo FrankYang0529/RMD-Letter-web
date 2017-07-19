@@ -92,13 +92,14 @@ const routes = require('./routes/index');
 const users = require('./routes/users');
 const subroutes = require('./routes/sub');
 const projects = require('./routes/projects');
+const rmdPeople = require('./routes/rmdPeople');
 
 app.use(vhost('*.localhost', subroutes));
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/projects', projects);
-
+app.use('/rmd-person', rmdPeople);
 
 
 // catch 404 and forward to error handler

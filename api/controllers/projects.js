@@ -5,6 +5,8 @@ const InviteLetter = require('../models/inviteLetter');
 const RecommendedPerson = require('../models/rmdPerson');
 const StuAccount = require('../models/stuAccount');
 const StuFormAns = require('../models/stuFormAns');
+const RmdLtFormAns = require('../models/rmdltFormAns');
+
 //  not  api
 exports.createPage = function (req, res, next) {
   res.render('projectCreate', {
@@ -381,7 +383,7 @@ exports.modifyVerification = function (req, res, next) {
 }
 
 exports.studentList = function (req, res, next) {
-  Projects.findOne({ projID: req.params.projID }).exec()
+  Projects.findOne({ _id: req.params.projID }).exec()
     .then(function (proj) {
       return StuAccount.find({ subdomain: proj.subdomainName }).exec()
     })
@@ -402,7 +404,25 @@ exports.studentList = function (req, res, next) {
 }
 
 exports.filledStudentForm = function (req, res, next) {
-  StuFormAns.findOne({ stuID: req.params.stuID }).exec()
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then(function (ans) {
+      res.format({
+        'application/json': function () {
+          res.send(ans);
+        },
+        'default': function () {
+          /* TODO
+          res.render('formDetail', {
+            form
+          });
+          */
+        }
+      });
+    })
+}
+
+exports.studentRmdLetter = function (req, res, next) {
+  RmdLtFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
     .then(function (ans) {
       res.format({
         'application/json': function () {

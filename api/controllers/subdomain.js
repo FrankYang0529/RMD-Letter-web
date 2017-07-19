@@ -14,8 +14,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'your email account',
-    pass: 'your email password'
+    user: 'j70915',//'your email account',
+    pass: 'lp331234567'//'your email password'
   }
 });
 
@@ -214,11 +214,12 @@ exports.sentLetter = function (req, res, next) {
     })
 
   return Promise.join(b, c, function(letter, rmdPersonList) {
-    const lt = letter.content;
+    let lt = letter.content;
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
     lt.replace(/\[@學生名稱\]/g,req.user.displayName);
     lt.replace(/\[@教授名稱\]/g,rmdPerson.name);
+    lt = lt + '\n http://localhost:3000/rmd-person/' + rmdPersonList.projID + '/' + req.user._id;
 
     // mail config
     const mailOptions = {
@@ -240,5 +241,18 @@ exports.sentLetter = function (req, res, next) {
 }
 
 exports.studentForm = function (req, res, next) {
-  new StudentFormAnswer(req.answer).save();
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then(function (proj) {
+      new StudentFormAnswer({
+        projID: proj._id,
+        stuID: req.user._id,
+        answers: req.body.answers
+      }).save(function (err) { //  存入db
+        if (err) return next(err);
+        res.redirect('/users/me');
+      });
+    })
+    .catch(function (err) {
+      res.send(err);
+    });
 }
