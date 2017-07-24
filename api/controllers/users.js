@@ -6,7 +6,7 @@ const Promise = require('bluebird');
 
 exports.index = function (req, res, next) {
   res.format({
-    'default': function () {
+    default: () => {
       // TODO
       // res.render('register', {
       // });
@@ -16,7 +16,7 @@ exports.index = function (req, res, next) {
 
 exports.login = function (req, res, next) {
   res.format({
-    'default': function () {
+    default: () => {
       /* TODO
       res.render('login', {
       });
@@ -35,7 +35,7 @@ exports.register = function (req, res, next) {
     displayName: req.body.displayName,
     gravatar: req.body.gravatar,
     email: req.body.email,
-    type: 'department'
+    type: 'department',
   }), req.body.password)
     .then(function (account) {
       const auth = Promise.promisify(passport.authenticate('local'));
@@ -72,7 +72,7 @@ exports.profile = function (req, res, next) {
     'application/json': function () {
       res.send(req.user);
     },
-    'default': function () {
+    default () {
       /* TODO
       res.render('users', {
         username: req.user.username,

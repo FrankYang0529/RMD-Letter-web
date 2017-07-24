@@ -1,6 +1,6 @@
 const express = require('express');
-const router = express.Router();
 
+const router = express.Router();
 const routes = require('../api/controllers/rmdPeople');
 
 //  projects management
