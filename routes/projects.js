@@ -44,10 +44,13 @@ router.post('/:projID/rmd-person', Policy.loggedIn, routes.addRmdPerson);
 router.post('/:projID/rmd-person/:personID', Policy.loggedIn, routes.modifyVerification);
 
 
-// get student list
+//  get student list
 router.get('/:projID/student', Policy.loggedIn, routes.studentList);
 
-// get filled student form
+//  get filled student form
 router.get('/:projID/:stuID', Policy.loggedIn, routes.filledStudentForm);
+
+//  get Recommend Letter by Student
+router.get('/:projID/:stuID/rmd-letter', Policy.loggedIn, routes.studentRmdLetter);
 
 module.exports = router;

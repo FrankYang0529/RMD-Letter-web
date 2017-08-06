@@ -13,7 +13,7 @@ const TextSet = new Schema({
 });
 
 
-const StudentForms = new Schema({
+const LetterAns = new Schema({
   projID: String,
   stuID: { type: String, unique: true },
   answers: [
@@ -27,4 +27,4 @@ const StudentForms = new Schema({
   ],
 });
 
-module.exports = mongoose.model('stuFormAns', StudentForms);
+module.exports = mongoose.model('rmdltFormAns', LetterAns);
