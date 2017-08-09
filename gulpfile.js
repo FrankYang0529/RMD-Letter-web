@@ -29,9 +29,9 @@ gulp.task('minify-js', function (cb) {
 });
  
 gulp.task('minify-css', function(){
-	gulp.src('public/src/subdomain/css/*.css')
+	gulp.src('public/src/css/*.css')
     .pipe(cleanCSS({compatibility: 'ie8'}))
-    .pipe(gulp.dest('public/dest/subdomain/css'));
+    .pipe(gulp.dest('public/dest/css'));
 });
 
 gulp.task('minify-img', function(){
