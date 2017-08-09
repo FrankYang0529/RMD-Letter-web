@@ -8,6 +8,7 @@
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/switch.js"></script>
   </head>
   
   <body>
@@ -89,26 +90,7 @@
       </div>
     </div>
 
-    <div align="center">Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-
-    <script>
-      $(function() {
-        $('#login-form-link').click(function(e) {
-          $("#login-form").delay(100).fadeIn(100);
-          $("#register-form").fadeOut(100);
-          $('#register-form-link').removeClass('active');
-          $(this).addClass('active');
-          e.preventDefault();
-        });
-        $('#register-form-link').click(function(e) {
-          $("#register-form").delay(100).fadeIn(100);
-          $("#login-form").fadeOut(100);
-          $('#login-form-link').removeClass('active');
-          $(this).addClass('active');
-          e.preventDefault();
-        });
-      });
-    </script>
+    <!--<div align="center">Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>-->
 
   </body>
 </html>

@@ -17,10 +17,8 @@ exports.index = function (req, res, next) {
 exports.login = function (req, res, next) {
   res.format({
     default: () => {
-      /* TODO
       res.render('login', {
       });
-      */
     }
   });
 };
