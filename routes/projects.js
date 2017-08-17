@@ -7,12 +7,13 @@ const Policy = require('../api/policy');
 //  projects management
 router.get('/', Policy.loggedIn, routes.projectList);
 router.get('/create', Policy.loggedIn, routes.createPage);  //  create project
-router.post('/', Policy.loggedIn, routes.projCreate);
+router.post('/', Policy.loggedIn, routes.projCreate); // create first hbr
 
 
 //  project detail
 router.get('/:projID', Policy.loggedIn, routes.projDetail);
-router.put('/:projID', Policy.loggedIn, routes.projHbrEdit);
+router.put('/:projID/:hbrBodyID', Policy.loggedIn, routes.projHbrEdit); // modify post
+router.post('/:projID', Policy.loggedIn, routes.projAddPost); // modify hbr, add a post(公告)
 router.get('/:projID/edit', Policy.loggedIn, routes.editPage);
 
 router.put('/:projID/titleZh', Policy.loggedIn, routes.projTitleZhEdit);

@@ -9,22 +9,20 @@ const RmdLtFormAns = require('../models/rmdltFormAns');
 
 // not  api
 exports.createPage = (req, res, next) => {
-  res.render('projectCreate', {
+  /* res.render('projectCreate', {
     title: '',
     body: '',
     error: '',
     subdomainName: '',
-  });
+  }); */
 };
 
 exports.editPage = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      res.render('projectEdit', {
-        titleZh: proj.titleZh,
-        hbr: proj.hbr,
-        proj,
-      });
+      /* TODO
+        show edit page
+      */
     })
     .catch((err) => {
       console.log(err);
@@ -79,7 +77,7 @@ exports.projDetail = (req, res, next) => {
 };
 
 exports.projCreate = (req, res, next) => {
-  if (req.body.titleZh.length < 1 || req.body.hbr.length < 1) {    //  error handle
+  if (req.body.titleZh.length < 1) {    //  error handle
     /*
     res.render('projectCreate', {
       titleZh: req.body.titleZh,
@@ -112,10 +110,10 @@ exports.projCreate = (req, res, next) => {
   });
 };
 
-exports.projHbrEdit = (req, res, next) => {
+exports.projAddPost = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.hbr.length < 1) {    //  must to filled the blank
+      if (req.body.hbrBody.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
@@ -123,7 +121,36 @@ exports.projHbrEdit = (req, res, next) => {
         });
         */
       }
-      proj.hbr = req.body.hbr;
+      proj.hbr.body.push(req.body.hbrBody);
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect('/');
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.projHbrEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.hbrBody.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          hbr: req.body.hbr,
+          proj
+        });
+        */
+      }
+      proj.hbr.body.forEach((body) => {
+        if (body._id == req.params.hbrBodyID) { // must be == not ===
+          body.title = req.body.hbrBody.title;
+          body.text = req.body.hbrBody.text;
+          body.file = req.body.hbrBody.file;
+          body.img = req.body.hbrBody.img;
+        }
+      });
 
       return proj.save();
     })
@@ -363,7 +390,7 @@ exports.modifyVerification = (req, res, next) => {
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
       personList.person.forEach((person) => {
-        if (person._id === req.params.personID) {
+        if (person._id == req.params.personID) {
           person.verification = req.body.verification;
         }
       });
