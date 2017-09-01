@@ -1,0 +1,116 @@
+body {
+    font-family: Microsoft JhengHei !important;
+    background-color: #F1F1F1 !important;
+}
+
+h1 {
+    font-size: 45px !important;
+}
+
+.navbar-collapse > .nav > li {
+    width: 25%;
+}
+
+.dropdown-toggle {
+    border-left: 1px solid rgba(255,255,255,.75);
+    border-right: 1px solid rgba(0,0,0,.1);
+}
+
+.action-bar {
+    margin-top: 10px;
+    margin-bottom: 10px;  
+    position: relative;
+}
+
+.operate {
+    position: absolute !important;
+    right: 0;
+    bottom: 0;
+}
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top: 10px !important; 
+    padding-bottom: 10px !important;
+    height: 40px;
+}
+
+.navbar {
+    min-height: 40px !important;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    /*width: 100%;*/
+}
+
+.panel {
+    overflow-y: scroll;
+    height: 500px;
+    
+}
+
+.panel-title {
+    font-size: 24px !important;
+    font-weight: bold;
+}
+
+.glyphicon-envelope {
+    font-size: 20px !important; 
+}
+
+.modal {
+    text-align: center;
+    padding: 0!important;
+    font-size: 18px;
+}
+  
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+  
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.verification {
+    color: #0099cc;
+    top: 2px !important;
+}
+
+.glyphicon-chevron-down {
+    -ms-transform: rotate(-90deg); /* IE 9 */
+    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+    transform: rotate(-90deg);
+    font-size: 18px !important;
+}
+
+.fileAttach {
+    font-size: 17px;
+    color: cadetblue;
+    font-weight: bold;
+}
+
+.contentBody {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.insideContent {
+    padding-left: 50px;
+}
+
+.question-form .form-inline  .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.question-form {
+    padding: 20px;
+}
