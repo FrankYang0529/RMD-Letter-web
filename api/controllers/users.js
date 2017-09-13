@@ -31,7 +31,7 @@ exports.register = function (req, res, next) {
   register.call(Account, new Account({
     username: req.body.username,
     displayName: req.body.displayName,
-    gravatar: req.body.gravatar,
+    gravatar: "https://www.npmjs.com/package/gravatar",//req.body.gravatar,
     email: req.body.email,
     type: 'department',
   }), req.body.password)
