@@ -6,9 +6,17 @@ const Policy = require('../api/policy');
 const passport = require('../auth/passport');
 
 router.get('/', subroutes.index);
+router.get('/recommendData', subroutes.recommendData); //  get self student-form data
+router.get('/projects/addRmdPerson', subroutes.addRmdPersonView);
+
+//  get announcement detail
+router.get('/announcement/:announcementID', subroutes.announcementDetail);
+
+//  get recommended letter schedule
+router.get('/schedule', subroutes.scheduleView);
 
 //  register
-router.get('/users', subroutes.userIndex);
+router.get('/users', subroutes.registerPage);
 router.post('/users', passport.authenticate('stu-local-signup', {
     successRedirect: '/',
     failureRedirect: '/users'
@@ -33,8 +41,9 @@ router.post('/projects/rmd-person', Policy.studentLoggedIn, subroutes.addRmdPers
 router.get('/projects/:rmdPersonID/send-letter', Policy.studentLoggedIn, subroutes.sentLetter);
 
 //Fill in student form
+router.get('/fill-student-form', Policy.studentLoggedIn, subroutes.studentFormView);
+router.get('/update-student-form', Policy.studentLoggedIn, subroutes.updateStudentFormView);
 router.post('/projects/student-form', Policy.studentLoggedIn, subroutes.studentForm);
-
 
 
 module.exports = router;

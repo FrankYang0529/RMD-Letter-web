@@ -90,7 +90,11 @@ exports.projCreate = (req, res, next) => {
   new Projects({
     ownerID: req.user.username,
     titleZh: req.body.titleZh,
-    hbr: req.body.hbr,
+    announcement: req.body.announcement,
+    email: req.body.email,
+    phone: req.body.phone,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
     subdomainName: req.body.subdomainName,
   }).save((err, proj) => { //  存入db
     if (err) return next(err);
@@ -113,7 +117,7 @@ exports.projCreate = (req, res, next) => {
 exports.projAddPost = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.hbrBody.length < 1) {    //  must to filled the blank
+      if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
@@ -121,7 +125,7 @@ exports.projAddPost = (req, res, next) => {
         });
         */
       }
-      proj.hbr.body.push(req.body.hbrBody);
+      proj.announcement.push(req.body.announcement);
       return proj.save();
     })
     .then((proj) => {
@@ -132,10 +136,10 @@ exports.projAddPost = (req, res, next) => {
     });
 };
 
-exports.projHbrEdit = (req, res, next) => {
+exports.projAnnouncementEdit = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.hbrBody.length < 1) {    //  must to filled the blank
+      if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
@@ -143,12 +147,11 @@ exports.projHbrEdit = (req, res, next) => {
         });
         */
       }
-      proj.hbr.body.forEach((body) => {
-        if (body._id == req.params.hbrBodyID) { // must be == not ===
-          body.title = req.body.hbrBody.title;
-          body.text = req.body.hbrBody.text;
-          body.file = req.body.hbrBody.file;
-          body.img = req.body.hbrBody.img;
+      proj.announcement.forEach((body) => {
+        if (body._id == req.params.announcementID) { // must be == not ===
+          body.title = req.body.announcement.title;
+          body.text = req.body.announcement.text;
+          body.file = req.body.announcement.file;
         }
       });
 

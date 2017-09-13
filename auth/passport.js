@@ -47,7 +47,8 @@ passport.use('stu-local-signup', new LocalStrategy({
           gravatar: req.body.gravatar,
           email: req.body.email,
           subdomain: req.vhost[0],
-          type: 'student'
+          type: 'student',
+          permissionID: req.body.permissionID,
         }).save(function (err,user) {
             if (err) { res.send('err happened'); }
 

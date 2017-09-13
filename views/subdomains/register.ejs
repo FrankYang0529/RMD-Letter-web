@@ -1,0 +1,87 @@
+<html lang="zh-Hant">
+  <head>
+    <link rel="stylesheet" type="text/css" href="/subdomain/css/signInUp.css">
+    <!-- 最新編譯和最佳化的 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- 選擇性佈景主題 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <!-- 最新編譯和最佳化的 JavaScript -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  </head>
+  
+  <body>
+    
+    <div class="container">
+      <div class="header">
+        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+        <h1>推薦信系統</h1>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="panel panel-login">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-xs-12">
+                  <a href="#" class="active" id="login-form-link">註冊</a>
+                </div>
+              </div>
+              <hr>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <form id="login-form" action="/users" method="post" role="form" style="display: block;" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="username" class="col-lg-2 control-label">帳號</label>
+                        <div class="col-lg-9">
+                          <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="請輸入帳號" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="password" class="col-lg-2 control-label">密碼</label>
+                      <div class="col-lg-9">
+                        <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="請輸入密碼">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="displayName" class="col-lg-2 control-label">姓名</label>
+                      <div class="col-lg-9">
+                        <input type="text" name="displayName" id="displayName" tabindex="3" class="form-control" placeholder="請輸入真實姓名" value="">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="username" class="col-lg-2 control-label">信箱</label>
+                      <div class="col-lg-9">
+                        <input type="text" name="email" id="email" tabindex="4" class="form-control" placeholder="請輸入信箱" value="">
+                      </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                          <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="註冊">
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel" style="text-align: center;">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <span>已經有帳號了嗎?&nbsp;&nbsp;&nbsp;</span><a href="/users/login">登入</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

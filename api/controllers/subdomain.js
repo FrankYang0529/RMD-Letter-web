@@ -6,6 +6,7 @@ const RecommendedPerson = require('../models/rmdPerson');
 const StudentFormAnswer = require('../models/stuFormAns');
 const inviteLetter = require('../models/inviteLetter');
 const passwordHash = require('password-hash');
+const StudentForm = require('../models/stuForms');
 
 // mail config
 const nodemailer = require('nodemailer');
@@ -21,26 +22,137 @@ const transporter = nodemailer.createTransport({
 
 /*               not api                   */
 exports.index = (req, res, next) => {
-  console.log(`user: ${req.user}`);
-  console.log(req.vhost[0]);
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/index', {
+            user: req.user,
+            announcements: proj.announcement,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.announcementDetail = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      let target = {};
+      proj.announcement.forEach((body) => {
+        if (body._id == req.params.announcementID) {
+          target = body;
+        }
+      });
+      console.log(target);
+      res.format({
+        default: () => {
+          res.render('subdomains/announcementDetail', {
+            user: req.user,
+            announcement: target,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.scheduleView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/schedule', {
+            user: req.user,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.recommendData = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+    })
+    .then((ans) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/recommendData', {
+            user: req.user,
+            answer: ans,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.addRmdPersonView = (req, res, next) => {
   res.format({
     default: () => {
-      res.send(req.user);
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/addRmdPerson', {
+        user: req.user,
+      });
     },
   });
 };
 
+exports.studentFormView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentForm.findOne({ projID: proj._id }).exec();
+    })
+    .then((questions) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/studentForm', {
+            user: req.user,
+            questions,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
 
-exports.userIndex = (req, res, next) => {
+exports.updateStudentFormView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentForm.findOne({ projID: proj._id }).exec();
+    })
+    .then((questions) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/studentForm', {
+            user: req.user,
+            questions,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.registerPage = (req, res, next) => {
   res.format({
     default: () => {
-      res.send('user index');
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/register', {
+      });
     },
   });
 };
@@ -48,10 +160,8 @@ exports.userIndex = (req, res, next) => {
 exports.login = (req, res, next) => {
   res.format({
     default: () => {
-      res.send('login page');
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/login', {
+      });
     },
   });
 };
@@ -123,6 +233,7 @@ exports.update_profile = (req, res, next) => {
   }
   req.user.displayName = req.body.displayName;
   req.user.email = req.body.email;
+  req.user.permissionID = req.body.permissionID;
   req.user.gravatar = req.body.gravatar;
 
   req.user.save()
@@ -163,21 +274,13 @@ exports.rmdPersonList = (req, res, next) => {
       return RecommendedPerson.findOne({ projID: proj._id }).exec();
     })
     .then((personList) => {
-      const verificatedPersonList = personList.person.filter((person) => {
-        console.log(person);
-        return person.verification === true;
-      });
-
+      console.log(personList);
       res.format({
-        'application/json': () => {
-          res.send(verificatedPersonList);
-        },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+          res.render('subdomains/recommendList', {
+            user: req.user,
+            personList: personList.person,
           });
-          */
         },
       });
     })
@@ -192,11 +295,18 @@ exports.addRmdPerson = (req, res, next) => {
       return RecommendedPerson.findOne({ projID: proj._id }).exec();
     })
     .then((personList) => {
-      personList.person.push(req.body.person);
+      const person = {
+        name: req.body.name,
+        jobTitle: req.body.jobTitle,
+        serviceUnit: req.body.serviceUnit,
+        email: req.body.email,
+        verification: false,
+      };
+      personList.person.push(person);
       return personList.save();
     })
     .then((personList) => {
-      res.redirect('/'); // to all verificated recommend people list
+      res.redirect('/projects/rmd-person'); // to all verificated recommend people list
     })
     .catch((err) => {
       res.send(err);
