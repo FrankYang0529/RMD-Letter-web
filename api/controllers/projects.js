@@ -152,7 +152,6 @@ exports.projAnnouncementEdit = (req, res, next) => {
           body.title = req.body.announcement.title;
           body.text = req.body.announcement.text;
           body.file = req.body.announcement.file;
-          body.img = req.body.announcement.img;
         }
       });
 

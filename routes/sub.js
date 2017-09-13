@@ -12,6 +12,9 @@ router.get('/projects/addRmdPerson', subroutes.addRmdPersonView);
 //  get announcement detail
 router.get('/announcement/:announcementID', subroutes.announcementDetail);
 
+//  get recommended letter schedule
+router.get('/schedule', subroutes.scheduleView);
+
 //  register
 router.get('/users', subroutes.registerPage);
 router.post('/users', passport.authenticate('stu-local-signup', {

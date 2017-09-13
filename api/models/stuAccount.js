@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const stuAccount = new Schema({
-  username: { type: String, required: true, unique: false},
+  username: { type: String, required: true, unique: false },
   password: { type: String },
   displayName: { type: String, required: true },
   email: {
@@ -14,11 +14,12 @@ const stuAccount = new Schema({
       message: '{VALUE} is not a valid email!',
     },
     required: true,
-    unique: false
+    unique: false,
   },
+  permissionID: { type: String, required: true },
   gravatar: String,
   subdomain: String,
-  type: String
+  type: String,
 });
 
 module.exports = mongoose.model('stuaccounts', stuAccount);

@@ -71,7 +71,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li><a href="#">進度查詢</a></li>
+                            <li><a href="/schedule">進度查詢</a></li>
                         </ul>
                     </div>
                 </nav>
@@ -120,16 +120,6 @@
                                             <%= announcement.timestamp.getFullYear() %>-<%= ("00" + (announcement.timestamp.getMonth()+1)).slice(-2) %>-<%= ("00" + announcement.timestamp.getDate()).slice(-2) %>&nbsp;&nbsp;<%= ("00" + announcement.timestamp.getHours()).slice(-2) %>:<%= ("00" +announcement.timestamp.getMinutes()).slice(-2) %>:<%= ("00" +announcement.timestamp.getSeconds()).slice(-2) %> 
                                         </span>
                                         <br><br><br>
-                                        <div>
-                                                <span class="fileAttach"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;附加圖檔</span>
-                                                <br><br>
-                                                <% if (typeof announcement.img == 'undefined') { %>
-                                                    <span class="insideContent">目前並無任何附加圖檔</span>
-                                                <% } else { %>
-                                                    <img class="insideContent" src="<%= announcement.img %>">
-                                                <% } %>
-                                        </div>
-                                        <br><br>
                                         <div>
                                             <span class="fileAttach"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;附加檔案</span>
                                             <br><br>

@@ -62,6 +62,22 @@ exports.announcementDetail = (req, res, next) => {
     });
 };
 
+exports.scheduleView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/schedule', {
+            user: req.user,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 exports.recommendData = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
     .then((proj) => {
@@ -217,6 +233,7 @@ exports.update_profile = (req, res, next) => {
   }
   req.user.displayName = req.body.displayName;
   req.user.email = req.body.email;
+  req.user.permissionID = req.body.permissionID;
   req.user.gravatar = req.body.gravatar;
 
   req.user.save()

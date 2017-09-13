@@ -114,3 +114,11 @@ h1 {
 .question-form {
     padding: 20px;
 }
+
+.glyphicon-ok {
+    color: green;
+}
+
+.glyphicon-remove {
+    color: red;
+}
