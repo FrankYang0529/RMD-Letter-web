@@ -86,8 +86,21 @@
                     font-weight: 600;
                 }
 
-                .noborder {
-                    border: none !important;
+                th {
+                    padding-left: 20px !important; 
+                    border-top: 3px solid #ddd !important;
+                    background-color: antiquewhite;
+                    width: 15%;
+                }
+
+                table {
+                    table-layout: fixed;     
+                    border: 3px solid #ddd;
+                }
+
+                td {
+                    border-right: 3px solid #ddd;
+                    border-top: 3px solid #ddd !important;    
                 }
             </style>
 
@@ -120,10 +133,52 @@
                                             <div class="panel-heading">
                                                 <h2 class="panel-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;我的資料</h2>
                                             </div>
-                                            <% if ( answer === null ) { %>
+                                            <% if ( answers === null ) { %>
                                                 <h2 style="text-align: center; padding-top:20px;">你目前還沒有填寫資料喔! 趕快去填吧! <a href="/fill-student-form">填寫資料</a></h2>
-                                            <% } else { %>
+                                            <% } else { %> 
                                                 
+                                                <table class="table">
+                                                        <% 
+                                                        questions.questions.forEach( function (question) { 
+                                                            answers.answers.forEach( function (answer) {
+                                                                if (question._id == answer.question_id) { 
+                                                                    if (question.questionType == 'text') {                                                                                                                
+                                                        %>
+                                                                        <tr>
+                                                                            <th><%= question.questionTitle %>：</th>
+                                                                            <td><%= answer.text %></td>
+                                                                        </tr>
+                                                        <%          } else if (question.questionType == 'textArea') {   %>
+                                                                        <tr>
+                                                                            <th><%= question.questionTitle %>：</th>
+                                                                            <td style="white-space:pre"><%= answer.text %></td>
+                                                                        </tr>
+                                                        <%          } else if (question.questionType == 'single') { %>
+                                                                        <tr>
+                                                                            <th><%= question.questionTitle %>：</th>
+                                                                            <td><%= answer.choices[0].option %></td>
+                                                                        </tr>
+                                                        <%          } else if (question.questionType == 'multiple') {  %>
+                                                                        <tr>
+                                                                            <th><%= question.questionTitle %>：</th>
+                                                                            <td>
+                                                                                <% answer.choices.forEach( function (choice, index) { 
+                                                                                    if (index == 0) {
+                                                                                %>
+                                                                                        <span><%= choice.option %></span>
+                                                                                <%  } else { %>
+                                                                                        <span>、 <%= choice.option %></span>
+                                                                                <%  }
+                                                                                   });
+                                                                                %>
+                                                                            </td>
+                                                                        </tr>
+                                                        <%          }
+                                                                }
+                                                            });
+                                                           });
+                                                        %>
+                                                        </table>
                                             <% } %>
                                         </div>
                                     </div>

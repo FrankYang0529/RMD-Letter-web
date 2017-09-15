@@ -118,16 +118,31 @@
                                                 <th style="text-align: center;">推薦信已填寫</th> 
                                             </tr>
                                         </thead>
-                                        <tr>
-                                            <td>莊坤達</td>
-                                            <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
-                                        </tr>
-                                        <tr>
-                                                <td>楊中平</td>
-                                                <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                                                <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
-                                            </tr>
+                                        <% if ( user.sentLetter.length == 0 ) { %>
+                                            <tr><td colspan="3">目前還沒有寄任何推薦信邀請</td><tr>
+                                        <% } else { 
+                                                user.sentLetter.forEach(function (rmdPerson) { %>
+                                                    <tr>
+                                                        <td><%= rmdPerson.rmdPersonName %></td>
+                                                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                                        <%          if (rmdlts.length == 0) { %>
+                                                        <td><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
+                                                    </tr>
+                                        <%          } else {            
+                                                        rmdlts.forEach(function (rmdlt) {
+                                                            if (rmdlt.rmdPersonID == rmdPerson.rmdPersonID) { %>
+                                                            <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                                                    </tr>
+                                        <%                  } else {  %>
+                                                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
+                                                    </tr>
+                                        <%                  }
+                                                        });
+                                                    }
+                                                    
+                                                });
+                                           }    
+                                        %>
                                     </table>
                                 </div>
                             </div>
