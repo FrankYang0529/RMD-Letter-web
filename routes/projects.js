@@ -18,6 +18,7 @@ router.get('/:projID/edit', Policy.loggedIn, routes.editPage);
 
 router.put('/:projID/titleZh', Policy.loggedIn, routes.projTitleZhEdit);
 router.put('/:projID/subdomain', Policy.loggedIn, routes.projSubdomainEdit);
+router.get('/:projID/deployed', Policy.loggedIn, routes.projDeployed);
 
 router.delete('/:projID', Policy.loggedIn, routes.projDelete);
 
@@ -49,7 +50,7 @@ router.post('/:projID/rmd-person/:personID', Policy.loggedIn, routes.modifyVerif
 router.get('/:projID/student', Policy.loggedIn, routes.studentList);
 
 //  get filled student form
-router.get('/:projID/:stuID', Policy.loggedIn, routes.filledStudentForm);
+router.get('/:projID/:stuID/student-form', Policy.loggedIn, routes.filledStudentForm);
 
 //  get Recommend Letter by Student
 router.get('/:projID/:stuID/rmd-letter', Policy.loggedIn, routes.studentRmdLetter);
