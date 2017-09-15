@@ -1,0 +1,92 @@
+.form{
+	padding: 5% 10%;
+}
+
+.question-pannel{
+	padding: 10px 50px;
+}
+
+h2{
+	font-size: 30px;
+}
+
+h2 input[type=text], h3 input[type=text]{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  /*border-bottom: 3px solid #ccc;*/
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+input/*[type=text], input[type=e-mail], input[type=date], input[type=password] , input[type=url], input[type=tel]*/{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+input:focus {
+	background-color: none;
+  border: none;
+  border-bottom: 2px solid #ccc;
+}
+
+input[type=submit]{
+	display: block;
+	/*background-color: white;*/
+	border: 1px solid #C6C8CC;
+	border-radius: 25px;
+	color: black;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 15px;
+  padding: 15px;
+  margin: 25px;
+  margin-left:80%;
+/*	padding-top: 5%;
+	padding-right: 20%;*/
+}
+
+input[type=text].option, button.option{
+	display: inline-block;
+	width: 90%;
+	background-color: rgba(255,255,255,0);
+	border: none;
+  border-bottom: 2px solid #ccc;
+}
+
+input[type=text].option:focus {
+	border-bottom: 2px solid #444;
+}
+
+button.option{
+	width: inherit;
+	background-color: none;
+}
+
+.radio-icon{
+	display: inline-block;
+	width:18px;
+	height:18px;
+	border-radius:9px;
+	border: 1px solid grey;
+	margin-right: 20px;
+}
+
+.check-icon{
+	display: inline-block;
+	width:18px;
+	height:18px;
+	border-radius: 5px;
+	border: 1px solid grey;
+	margin-right: 20px;
+}
+

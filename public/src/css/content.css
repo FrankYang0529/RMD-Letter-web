@@ -1,0 +1,35 @@
+*{
+/*	border: 1px solid black;
+*/	font-family: "Lato", "微軟正黑體", sans-serif;
+}
+body{
+	margin:0; 
+	padding:0;
+	margin-bottom: 100px;
+}
+
+h1{
+	color: grey;   
+	text-align: right;
+	padding-top: 5%;
+	padding-right: 20%;
+	margin-bottom: 30px;
+
+	font-size: 50px;
+	font-weight: 400;
+	letter-spacing: 5px;
+}
+
+button.submit{
+	display: block;
+	/*background-color: white;*/
+	border: 1px solid #C6C8CC;
+	border-radius: 25px;
+	color: black;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 15px;
+  padding: 15px;
+  margin: 25px;
+  margin-left:80%;
+}
