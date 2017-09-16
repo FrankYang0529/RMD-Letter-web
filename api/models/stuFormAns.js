@@ -16,6 +16,7 @@ const TextSet = new Schema({
 const StudentForms = new Schema({
   projID: String,
   stuID: String,
+  remark: String,
   answers: [
     {
       question_id: String,

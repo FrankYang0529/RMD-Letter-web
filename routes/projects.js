@@ -52,6 +52,10 @@ router.get('/:projID/student', Policy.loggedIn, routes.studentList);
 //  get filled student form
 router.get('/:projID/:stuID/student-form', Policy.loggedIn, routes.filledStudentForm);
 
+//  post remark(note), and update it. you can also get remark from get-student-form api.
+router.post('/:projID/:stuID/remark', Policy.loggedIn, routes.fillStudentRemark);
+router.put('/:projID/:stuID/remark', Policy.loggedIn, routes.updateStudentRemark);
+
 //  get Recommend Letter by Student
 router.get('/:projID/:stuID/rmd-letter', Policy.loggedIn, routes.studentRmdLetter);
 

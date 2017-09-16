@@ -394,6 +394,7 @@ exports.studentForm = (req, res, next) => {
       return new StudentFormAnswer({
         projID: proj._id,
         stuID: req.user._id,
+        remark: '',
         answers: JSON.parse(req.body.answers),
       }).save();
     })

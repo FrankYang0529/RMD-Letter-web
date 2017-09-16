@@ -454,12 +454,40 @@ exports.filledStudentForm = (req, res, next) => {
         },
         default: () => {
           /* TODO
-          res.render('formDetail', {
+          res.render('學生資料', {
             form
           });
           */
         },
       });
+    });
+};
+
+exports.fillStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.updateStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
     });
 };
 
