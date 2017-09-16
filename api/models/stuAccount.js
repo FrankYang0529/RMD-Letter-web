@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const rmdPerson = new Schema({
+  rmdPersonID: String,
+  rmdPersonName: String,
+});
+
 const stuAccount = new Schema({
   username: { type: String, required: true, unique: false },
   password: { type: String },
@@ -16,10 +21,10 @@ const stuAccount = new Schema({
     required: true,
     unique: false,
   },
-  permissionID: { type: String, required: true },
   gravatar: String,
   subdomain: String,
   type: String,
+  sentLetter: [rmdPerson],
 });
 
 module.exports = mongoose.model('stuaccounts', stuAccount);

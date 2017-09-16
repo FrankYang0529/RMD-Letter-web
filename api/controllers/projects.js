@@ -96,6 +96,7 @@ exports.projCreate = (req, res, next) => {
     startTime: req.body.startTime,
     endTime: req.body.endTime,
     subdomainName: req.body.subdomainName,
+    isDeployed: false,
   }).save((err, proj) => { //  存入db
     if (err) return next(err);
 
@@ -210,6 +211,22 @@ exports.projSubdomainEdit = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.projDeployed = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      proj.isDeployed = true;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 
 exports.projDelete = (req, res, next) => {
   Projects.findById(req.params.projID).remove().exec()
@@ -432,11 +449,12 @@ exports.filledStudentForm = (req, res, next) => {
     .then((ans) => {
       res.format({
         'application/json': () => {
-          res.send(ans);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(ans));
         },
         default: () => {
           /* TODO
-          res.render('formDetail', {
+          res.render('學生資料', {
             form
           });
           */
@@ -445,12 +463,41 @@ exports.filledStudentForm = (req, res, next) => {
     });
 };
 
+exports.fillStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.updateStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 exports.studentRmdLetter = (req, res, next) => {
-  RmdLtFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+  RmdLtFormAns.find({ stuID: req.params.stuID, projID: req.params.projID }).exec()
     .then((ans) => {
       res.format({
         'application/json': () => {
-          res.send(ans);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(ans));
         },
         default: () => {
           /* TODO

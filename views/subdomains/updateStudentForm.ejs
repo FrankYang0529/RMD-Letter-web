@@ -172,7 +172,7 @@
                                         <% }}); %>
                                     </form>
                                     <div class="col-sm-offset-1 col-sm-11">
-                                        <button class="btn btn-default" onclick="submitStudentForm()">送出
+                                        <button class="btn btn-default" onclick="updateStudentForm()">送出
                                         </button>
                                     </div>
                                     <div class="modal fade" tabindex="-1" role="dialog" id="alertMessage">
@@ -195,6 +195,22 @@
             </div>
         </div>
     </div>
+    <script>
+        $.get('/projects/student-form-answer', function (data) {
+            if (data !== null){
+                data.answers.forEach(function(answer) {
+                    if (answer.text !== '') {
+                        $(`.${answer.question_id}`).val(answer.text);
+                    } else {
+                        answer.choices.forEach(function(choice) {
+                            $(`.${answer.question_id}#${choice.option_id}`).prop("checked", true);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 
 </html>

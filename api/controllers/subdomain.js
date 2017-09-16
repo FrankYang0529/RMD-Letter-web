@@ -5,6 +5,7 @@ const Promise = require('bluebird');
 const RecommendedPerson = require('../models/rmdPerson');
 const StudentFormAnswer = require('../models/stuFormAns');
 const inviteLetter = require('../models/inviteLetter');
+const RmdltFormAnswer = require('../models/rmdltFormAns');
 const passwordHash = require('password-hash');
 const StudentForm = require('../models/stuForms');
 
@@ -65,10 +66,14 @@ exports.announcementDetail = (req, res, next) => {
 exports.scheduleView = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
     .then((proj) => {
+      return RmdltFormAnswer.find({ projID: proj._id, stuID: req.user._id }).exec();
+    })
+    .then((rmdlts) => {
       res.format({
         default: () => {
           res.render('subdomains/schedule', {
             user: req.user,
+            rmdlts,
           });
         },
       });
@@ -79,23 +84,25 @@ exports.scheduleView = (req, res, next) => {
 };
 
 exports.recommendData = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
-    })
-    .then((ans) => {
-      res.format({
-        default: () => {
-          res.render('subdomains/recommendData', {
-            user: req.user,
-            answer: ans,
-          });
-        },
-      });
-    })
-    .catch((err) => {
-      res.send(err);
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then((proj) => {
+    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+  });
+  const c = a.then((proj) => {
+    return StudentForm.findOne({ projID: proj._id }).exec();
+  });
+
+  return Promise.join(b, c, (answers, questions) => {
+    res.format({
+      default: () => {
+        res.render('subdomains/recommendData', {
+          user: req.user,
+          answers,
+          questions,
+        });
+      },
     });
+  });
 };
 
 exports.addRmdPersonView = (req, res, next) => {
@@ -129,23 +136,25 @@ exports.studentFormView = (req, res, next) => {
 };
 
 exports.updateStudentFormView = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentForm.findOne({ projID: proj._id }).exec();
-    })
-    .then((questions) => {
-      res.format({
-        default: () => {
-          res.render('subdomains/studentForm', {
-            user: req.user,
-            questions,
-          });
-        },
-      });
-    })
-    .catch((err) => {
-      res.send(err);
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then((proj) => {
+    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+  });
+  const c = a.then((proj) => {
+    return StudentForm.findOne({ projID: proj._id }).exec();
+  });
+
+  return Promise.join(b, c, (answers, questions) => {
+    res.format({
+      default: () => {
+        res.render('subdomains/updateStudentForm', {
+          user: req.user,
+          answers,
+          questions,
+        });
+      },
     });
+  });
 };
 
 exports.registerPage = (req, res, next) => {
@@ -328,7 +337,7 @@ exports.sentLetter = (req, res, next) => {
 
     lt.replace(/\[@學生名稱\]/g, req.user.displayName);
     lt.replace(/\[@教授名稱\]/g, rmdPerson.name);
-    lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.user._id}`;
+    lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
     // mail config
     const mailOptions = {
@@ -343,10 +352,40 @@ exports.sentLetter = (req, res, next) => {
         console.log(error);
       } else {
         console.log(`Email sent: ${info.response}`);
+        req.user.sentLetter.push({ rmdPersonID: req.params.rmdPersonID, rmdPersonName: rmdPerson.name });
+        req.user.save();
         res.redirect('/users/me');
       }
     });
   });
+};
+
+exports.getStudentForm = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentForm.findOne({ projID: proj._id }).exec();
+    })
+    .then((questions) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(questions));
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.getStudentFormAns = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentFormAnswer.findOne({ projID: proj._id, stuID: req.user._id }).exec();
+    })
+    .then((ans) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(ans));
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 };
 
 exports.studentForm = (req, res, next) => {
@@ -355,11 +394,29 @@ exports.studentForm = (req, res, next) => {
       return new StudentFormAnswer({
         projID: proj._id,
         stuID: req.user._id,
-        answers: req.body.answers,
+        remark: '',
+        answers: JSON.parse(req.body.answers),
       }).save();
     })
     .then((proj) => {
-      res.redirect('/users/me');
+      res.redirect('/recommendData');
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.updateStudentForm = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+    })
+    .then((answer) => {
+      answer.answers = JSON.parse(req.body.answers);
+      return answer.save();
+    })
+    .then((proj) => {
+      res.redirect('/recommendData');
     })
     .catch((err) => {
       res.send(err);

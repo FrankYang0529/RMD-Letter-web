@@ -11,7 +11,7 @@
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="/subdomain/js/addRmdPerson.js"></script>
     <title>index</title>
 
 </head>
@@ -129,7 +129,7 @@
                                                         </thead>
                                                         <% personList.forEach( function (person) { %>
                                                         <tr>
-                                                            <td><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></td>
+                                                            <td><span class="glyphicon glyphicon-envelope send-letter" aria-hidden="true" onclick="sendLetter('<%= person._id %>')"></span></td>
                                                             <% if (person.verification) { %>
                                                                 <td><%= person.name %>&nbsp;<span class="glyphicon glyphicon-ok-sign verification" data-toggle="tooltip" data-placement="top" title="已認證過的推薦人" aria-hidden="true"></span></td>
                                                             <% } else { %>
@@ -145,6 +145,18 @@
                                         </div>
                             </div>
                         </div>
+                        <div class="modal fade" tabindex="-1" role="dialog" id="alertMessage">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-body">
+                                  <p id="alertContent"></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <a data-dismiss="modal" id="alertFooter">關閉</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         <script>
                             $(document).ready(function(){
                                 $('[data-toggle="tooltip"]').tooltip();   
