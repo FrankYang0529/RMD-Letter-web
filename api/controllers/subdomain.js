@@ -5,7 +5,9 @@ const Promise = require('bluebird');
 const RecommendedPerson = require('../models/rmdPerson');
 const StudentFormAnswer = require('../models/stuFormAns');
 const inviteLetter = require('../models/inviteLetter');
+const RmdltFormAnswer = require('../models/rmdltFormAns');
 const passwordHash = require('password-hash');
+const StudentForm = require('../models/stuForms');
 
 // mail config
 const nodemailer = require('nodemailer');
@@ -21,26 +23,145 @@ const transporter = nodemailer.createTransport({
 
 /*               not api                   */
 exports.index = (req, res, next) => {
-  console.log(`user: ${req.user}`);
-  console.log(req.vhost[0]);
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/index', {
+            user: req.user,
+            announcements: proj.announcement,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.announcementDetail = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      let target = {};
+      proj.announcement.forEach((body) => {
+        if (body._id == req.params.announcementID) {
+          target = body;
+        }
+      });
+      console.log(target);
+      res.format({
+        default: () => {
+          res.render('subdomains/announcementDetail', {
+            user: req.user,
+            announcement: target,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.scheduleView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return RmdltFormAnswer.find({ projID: proj._id, stuID: req.user._id }).exec();
+    })
+    .then((rmdlts) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/schedule', {
+            user: req.user,
+            rmdlts,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.recommendData = (req, res, next) => {
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then((proj) => {
+    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+  });
+  const c = a.then((proj) => {
+    return StudentForm.findOne({ projID: proj._id }).exec();
+  });
+
+  return Promise.join(b, c, (answers, questions) => {
+    res.format({
+      default: () => {
+        res.render('subdomains/recommendData', {
+          user: req.user,
+          answers,
+          questions,
+        });
+      },
+    });
+  });
+};
+
+exports.addRmdPersonView = (req, res, next) => {
   res.format({
     default: () => {
-      res.send(req.user);
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/addRmdPerson', {
+        user: req.user,
+      });
     },
   });
 };
 
+exports.studentFormView = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentForm.findOne({ projID: proj._id }).exec();
+    })
+    .then((questions) => {
+      res.format({
+        default: () => {
+          res.render('subdomains/studentForm', {
+            user: req.user,
+            questions,
+          });
+        },
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
 
-exports.userIndex = (req, res, next) => {
+exports.updateStudentFormView = (req, res, next) => {
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then((proj) => {
+    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+  });
+  const c = a.then((proj) => {
+    return StudentForm.findOne({ projID: proj._id }).exec();
+  });
+
+  return Promise.join(b, c, (answers, questions) => {
+    res.format({
+      default: () => {
+        res.render('subdomains/updateStudentForm', {
+          user: req.user,
+          answers,
+          questions,
+        });
+      },
+    });
+  });
+};
+
+exports.registerPage = (req, res, next) => {
   res.format({
     default: () => {
-      res.send('user index');
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/register', {
+      });
     },
   });
 };
@@ -48,10 +169,8 @@ exports.userIndex = (req, res, next) => {
 exports.login = (req, res, next) => {
   res.format({
     default: () => {
-      res.send('login page');
-      // TODO
-      // res.render('register', {
-      // });
+      res.render('subdomains/login', {
+      });
     },
   });
 };
@@ -123,6 +242,7 @@ exports.update_profile = (req, res, next) => {
   }
   req.user.displayName = req.body.displayName;
   req.user.email = req.body.email;
+  req.user.permissionID = req.body.permissionID;
   req.user.gravatar = req.body.gravatar;
 
   req.user.save()
@@ -163,21 +283,13 @@ exports.rmdPersonList = (req, res, next) => {
       return RecommendedPerson.findOne({ projID: proj._id }).exec();
     })
     .then((personList) => {
-      const verificatedPersonList = personList.person.filter((person) => {
-        console.log(person);
-        return person.verification === true;
-      });
-
+      console.log(personList);
       res.format({
-        'application/json': () => {
-          res.send(verificatedPersonList);
-        },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+          res.render('subdomains/recommendList', {
+            user: req.user,
+            personList: personList.person,
           });
-          */
         },
       });
     })
@@ -192,11 +304,18 @@ exports.addRmdPerson = (req, res, next) => {
       return RecommendedPerson.findOne({ projID: proj._id }).exec();
     })
     .then((personList) => {
-      personList.person.push(req.body.person);
+      const person = {
+        name: req.body.name,
+        jobTitle: req.body.jobTitle,
+        serviceUnit: req.body.serviceUnit,
+        email: req.body.email,
+        verification: false,
+      };
+      personList.person.push(person);
       return personList.save();
     })
     .then((personList) => {
-      res.redirect('/'); // to all verificated recommend people list
+      res.redirect('/projects/rmd-person'); // to all verificated recommend people list
     })
     .catch((err) => {
       res.send(err);
@@ -218,7 +337,7 @@ exports.sentLetter = (req, res, next) => {
 
     lt.replace(/\[@學生名稱\]/g, req.user.displayName);
     lt.replace(/\[@教授名稱\]/g, rmdPerson.name);
-    lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.user._id}`;
+    lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
     // mail config
     const mailOptions = {
@@ -233,10 +352,40 @@ exports.sentLetter = (req, res, next) => {
         console.log(error);
       } else {
         console.log(`Email sent: ${info.response}`);
+        req.user.sentLetter.push({ rmdPersonID: req.params.rmdPersonID, rmdPersonName: rmdPerson.name });
+        req.user.save();
         res.redirect('/users/me');
       }
     });
   });
+};
+
+exports.getStudentForm = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentForm.findOne({ projID: proj._id }).exec();
+    })
+    .then((questions) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(questions));
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.getStudentFormAns = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentFormAnswer.findOne({ projID: proj._id, stuID: req.user._id }).exec();
+    })
+    .then((ans) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(ans));
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 };
 
 exports.studentForm = (req, res, next) => {
@@ -245,11 +394,29 @@ exports.studentForm = (req, res, next) => {
       return new StudentFormAnswer({
         projID: proj._id,
         stuID: req.user._id,
-        answers: req.body.answers,
+        remark: '',
+        answers: JSON.parse(req.body.answers),
       }).save();
     })
     .then((proj) => {
-      res.redirect('/users/me');
+      res.redirect('/recommendData');
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.updateStudentForm = (req, res, next) => {
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+    .then((proj) => {
+      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
+    })
+    .then((answer) => {
+      answer.answers = JSON.parse(req.body.answers);
+      return answer.save();
+    })
+    .then((proj) => {
+      res.redirect('/recommendData');
     })
     .catch((err) => {
       res.send(err);

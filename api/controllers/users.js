@@ -24,7 +24,7 @@ exports.login = function (req, res, next) {
     default: () => {
       res.render('login', {
       });
-    }
+    },
   });
 };
 

@@ -15,7 +15,8 @@ const TextSet = new Schema({
 
 const LetterAns = new Schema({
   projID: String,
-  stuID: { type: String, unique: true },
+  rmdPersonID: String,
+  stuID: String,
   answers: [
     {
       question_id: String,

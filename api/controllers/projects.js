@@ -9,22 +9,20 @@ const RmdLtFormAns = require('../models/rmdltFormAns');
 
 // not  api
 exports.createPage = (req, res, next) => {
-  res.render('projectCreate', {
+  /* res.render('projectCreate', {
     title: '',
     body: '',
     error: '',
     subdomainName: '',
-  });
+  }); */
 };
 
 exports.editPage = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      res.render('projectEdit', {
-        titleZh: proj.titleZh,
-        hbr: proj.hbr,
-        proj,
-      });
+      /* TODO
+        show edit page
+      */
     })
     .catch((err) => {
       console.log(err);
@@ -80,19 +78,27 @@ exports.projDetail = (req, res, next) => {
 };
 
 exports.projCreate = (req, res, next) => {
-  // if (req.body.titleZh.length < 1 || req.body.hbr.length < 1) {    //  error handle 
-  //   res.render('projectCreate', {
-  //     titleZh: req.body.titleZh,
-  //     hbr: req.body.hbr,
-  //     subdomainName: req.body.subdomainName
-  //   }); 
-  // }
 
+  if (req.body.titleZh.length < 1) {    //  error handle
+    /*
+    res.render('projectCreate', {
+      titleZh: req.body.titleZh,
+      hbr: req.body.hbr,
+      subdomainName: req.body.subdomainName
+    });
+    */
+  }
+  
   new Projects({
     ownerID: req.user.username,
     titleZh: req.body.titleZh,
-    hbr: req.body.hbr,
+    announcement: req.body.announcement,
+    email: req.body.email,
+    phone: req.body.phone,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
     subdomainName: req.body.subdomainName,
+    isDeployed: false,
   }).save((err, proj) => { //  存入db
     if (err) return next(err);
 
@@ -111,10 +117,10 @@ exports.projCreate = (req, res, next) => {
   });
 };
 
-exports.projHbrEdit = (req, res, next) => {
+exports.projAddPost = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.hbr.length < 1) {    //  must to filled the blank
+      if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
@@ -122,7 +128,35 @@ exports.projHbrEdit = (req, res, next) => {
         });
         */
       }
-      proj.hbr = req.body.hbr;
+      proj.announcement.push(req.body.announcement);
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect('/');
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.projAnnouncementEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.announcement.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          hbr: req.body.hbr,
+          proj
+        });
+        */
+      }
+      proj.announcement.forEach((body) => {
+        if (body._id == req.params.announcementID) { // must be == not ===
+          body.title = req.body.announcement.title;
+          body.text = req.body.announcement.text;
+          body.file = req.body.announcement.file;
+        }
+      });
 
       return proj.save();
     })
@@ -179,6 +213,22 @@ exports.projSubdomainEdit = (req, res, next) => {
       console.log(err);
     });
 };
+
+exports.projDeployed = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      proj.isDeployed = true;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 
 exports.projDelete = (req, res, next) => {
   Projects.findById(req.params.projID).remove().exec()
@@ -362,7 +412,7 @@ exports.modifyVerification = (req, res, next) => {
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
       personList.person.forEach((person) => {
-        if (person._id === req.params.personID) {
+        if (person._id == req.params.personID) {
           person.verification = req.body.verification;
         }
       });
@@ -401,11 +451,12 @@ exports.filledStudentForm = (req, res, next) => {
     .then((ans) => {
       res.format({
         'application/json': () => {
-          res.send(ans);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(ans));
         },
         default: () => {
           /* TODO
-          res.render('formDetail', {
+          res.render('學生資料', {
             form
           });
           */
@@ -414,12 +465,41 @@ exports.filledStudentForm = (req, res, next) => {
     });
 };
 
+exports.fillStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
+exports.updateStudentRemark = (req, res, next) => {
+  StuFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+    .then((ans) => {
+      ans.remark = req.body.remark;
+      return ans.save();
+    })
+    .then((ans) => {
+      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 exports.studentRmdLetter = (req, res, next) => {
-  RmdLtFormAns.findOne({ stuID: req.params.stuID, projID: req.params.projID }).exec()
+  RmdLtFormAns.find({ stuID: req.params.stuID, projID: req.params.projID }).exec()
     .then((ans) => {
       res.format({
         'application/json': () => {
-          res.send(ans);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(ans));
         },
         default: () => {
           /* TODO

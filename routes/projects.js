@@ -7,16 +7,18 @@ const Policy = require('../api/policy');
 //  projects management
 router.get('/', Policy.loggedIn, routes.projectList);
 router.get('/create', Policy.loggedIn, routes.createPage);  //  create project
-router.post('/', Policy.loggedIn, routes.projCreate);
+router.post('/', Policy.loggedIn, routes.projCreate); // create first hbr
 
 
 //  project detail
 router.get('/:projID', Policy.loggedIn, routes.projDetail);
-router.put('/:projID', Policy.loggedIn, routes.projHbrEdit);
+router.put('/announcement/:projID/:announcementID', Policy.loggedIn, routes.projAnnouncementEdit); // modify post
+router.post('/announcement/:projID', Policy.loggedIn, routes.projAddPost); // add a post(公告)
 router.get('/:projID/edit', Policy.loggedIn, routes.editPage);
 
 router.put('/:projID/titleZh', Policy.loggedIn, routes.projTitleZhEdit);
 router.put('/:projID/subdomain', Policy.loggedIn, routes.projSubdomainEdit);
+router.get('/:projID/deployed', Policy.loggedIn, routes.projDeployed);
 
 router.delete('/:projID', Policy.loggedIn, routes.projDelete);
 
@@ -48,7 +50,11 @@ router.post('/:projID/rmd-person/:personID', Policy.loggedIn, routes.modifyVerif
 router.get('/:projID/student', Policy.loggedIn, routes.studentList);
 
 //  get filled student form
-router.get('/:projID/:stuID', Policy.loggedIn, routes.filledStudentForm);
+router.get('/:projID/:stuID/student-form', Policy.loggedIn, routes.filledStudentForm);
+
+//  post remark(note), and update it. you can also get remark from get-student-form api.
+router.post('/:projID/:stuID/remark', Policy.loggedIn, routes.fillStudentRemark);
+router.put('/:projID/:stuID/remark', Policy.loggedIn, routes.updateStudentRemark);
 
 //  get Recommend Letter by Student
 router.get('/:projID/:stuID/rmd-letter', Policy.loggedIn, routes.studentRmdLetter);
