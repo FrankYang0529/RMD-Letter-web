@@ -37,15 +37,16 @@ exports.projectList = (req, res, next) => {
   Projects.find({ ownerID: req.user.username }).exec()
     .then((projs) => {
       res.format({
-        'application/json': () => {
-          res.send(projs);
-        },
+        // 'application/json': () => {
+        //   res.send(projs);
+        // },
         default: () => {
-          /* TODO
+          /* TODO*/
           res.render('projectList', {
-            projects
+            username: req.user.username,
+            projects: projs
           });
-          */
+          
         },
       });
     })
@@ -79,15 +80,13 @@ exports.projDetail = (req, res, next) => {
 };
 
 exports.projCreate = (req, res, next) => {
-  if (req.body.titleZh.length < 1 || req.body.hbr.length < 1) {    //  error handle
-    /*
-    res.render('projectCreate', {
-      titleZh: req.body.titleZh,
-      hbr: req.body.hbr,
-      subdomainName: req.body.subdomainName
-    });
-    */
-  }
+  // if (req.body.titleZh.length < 1 || req.body.hbr.length < 1) {    //  error handle 
+  //   res.render('projectCreate', {
+  //     titleZh: req.body.titleZh,
+  //     hbr: req.body.hbr,
+  //     subdomainName: req.body.subdomainName
+  //   }); 
+  // }
 
   new Projects({
     ownerID: req.user.username,
@@ -108,7 +107,7 @@ exports.projCreate = (req, res, next) => {
       person: [],
     }).save();
 
-    return res.redirect('/');  //  回到主畫面
+    return res.redirect('/projects');  //  回到主畫面
   });
 };
 

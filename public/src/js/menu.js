@@ -11,7 +11,21 @@ function toggleNav(){
 }
 
 function clickMenu(id) {
-  var i;
+	console.log(id);
+
+	var url = {
+		prjList: '/projects', 
+		prjManage: '/', 
+		apply: "/", 
+		announce: "/",
+		studentForm: "/",
+		letterForm: "/users",  
+		rmdPerson: "/users/login",
+		userManage: '/users/me'
+	};
+	console.log(url[id]);
+	// alert('hold');
+	var i;
   var c = document.getElementById("menu").children;
   for (i = 0; i < c.length; i++) {
   	if(c[i].className == 'selectedMenu'){
@@ -20,29 +34,9 @@ function clickMenu(id) {
   }
 	document.getElementById(id).classList.add('selectedMenu');
 	  
-	// var d = document.getElementById("content2").children;
-	// for (i = 0; i < d.length; i++) {
-	// 	var page = id + "-page";
-	// 	console.log(page);
-	// 	if(d[i].id == page){
-	// 		console.log(d[i].id);
-	// 		d[i].style.visibility = "visible";
-	// 	}
-	// 	else if (d[i].style.visibility == "visible"){
-	// 		console.log(d[i].id);
-	// 		d[i].style.visibility = "hidden";		
-	// 	}
-	// 	else{
-	// 		console.log(d[i].style.visibility);
-	// 	}
- //  }
+	//var url = id + '.ejs';
 
-	//console.log(document.getElementById("content").innerHTML);
-	var url = id + '.html';
-	// console.log(url);
-	document.getElementById("content").src = url;
-	document.getElementById("content").innerHTML = document.getElementById("content").innerHTML + id;
-	//console.log(document.getElementById("content").innerHTML);
-	//document.getElementById("content").src = "test.html";
+	document.getElementById("content").src = url[id];
+	//document.getElementById("content").innerHTML = document.getElementById("content").innerHTML + id;
 }
 

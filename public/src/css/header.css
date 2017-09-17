@@ -75,7 +75,7 @@ header .navbar a#user:hover, .offcanvas a:focus{
 
 header .navbar a#user:hover img, .offcanvas a:focus img{
 	height: 20px;
-	content: url("img/user-hover.svg");
+	content: url("/../img/user-hover.svg");
 }
 
 footer{
@@ -84,13 +84,14 @@ footer{
   background-color: #29457F;
   color: white;
   padding: 50px;
-  /*margin: 0;*/
+  margin-bottom: 0;
 }
 
 footer a:link, a:hover, a:visited, a:active {
 	color: white;
 	text-decoration: none;
 }
+
 @media all and (max-width: 970px) {
   header .navbar a#user{
 		position: relative;

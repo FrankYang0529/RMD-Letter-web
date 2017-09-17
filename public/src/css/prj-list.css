@@ -1,0 +1,35 @@
+/*.project-list a {
+	display: block;
+	border: 1px solid #C6C8CC;
+	border-radius: 25px; 
+	border-style: groove;
+	float: none;
+	margin: 20px 15%;
+	padding: 3%;
+	padding-left: 3%;
+	color: black;
+	text-decoration: none;
+	font-size:30px; 
+	letter-spacing: 0px;
+
+  overflow: hidden;
+  display: -webkit-flex;
+  -webkit-align-items: center; 
+  display: flex;
+  align-items: center;
+
+}
+.project-list a:hover, a:focus{
+	background-color: #C6C8CC;
+	color: black;
+}
+
+.project-list img{
+	height: 50px;
+	padding-right: 10px;
+}*/
+
+.list-img{
+	height: 70px;
+	border-radius: 0;
+}
