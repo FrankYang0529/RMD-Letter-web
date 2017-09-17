@@ -9,12 +9,12 @@ const RmdLtFormAns = require('../models/rmdltFormAns');
 
 // not  api
 exports.createPage = (req, res, next) => {
-  /* res.render('projectCreate', {
+  res.render('projectCreate', {
     title: '',
     body: '',
     error: '',
     subdomainName: '',
-  }); */
+  });
 };
 
 exports.editPage = (req, res, next) => {
@@ -34,10 +34,10 @@ exports.editPage = (req, res, next) => {
 exports.projectList = (req, res, next) => {
   Projects.find({ ownerID: req.user.username }).exec()
     .then((projs) => {
-      res.format({
-        // 'application/json': () => {
-        //   res.send(projs);
-        // },
+       res.format({
+      //   'application/json': () => {
+      //     res.send(projs);
+      //   },
         default: () => {
           /* TODO*/
           res.render('projectList', {
@@ -57,18 +57,17 @@ exports.projDetail = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
       res.format({
-        'application/json': () => {
-          res.send(proj);
-        },
+        // 'application/json': () => {
+        //   res.send(proj);
+        // },
         default: () => {
-          /* TODO
-          res.render('projectDetail', {
-            titleZh: user.titleZh,
-            hbr: user.hbr,
-            subdomainName: user.subdomainName,
-            projID: req.params.projID
+          res.render('projectManage', {
+            titleZh: proj.titleZh,
+            hbr: proj.hbr,
+            subdomainName: proj.subdomainName,
+            projID: req.params.projID,
+            project: proj
           });
-          */
         },
       });
     })
@@ -80,19 +79,19 @@ exports.projDetail = (req, res, next) => {
 exports.projCreate = (req, res, next) => {
 
   if (req.body.titleZh.length < 1) {    //  error handle
-    /*
+    
     res.render('projectCreate', {
       titleZh: req.body.titleZh,
       hbr: req.body.hbr,
       subdomainName: req.body.subdomainName
     });
-    */
+    
   }
-  
+
   new Projects({
     ownerID: req.user.username,
     titleZh: req.body.titleZh,
-    announcement: req.body.announcement,
+    announcement: [],//req.body.announcement,
     email: req.body.email,
     phone: req.body.phone,
     startTime: req.body.startTime,

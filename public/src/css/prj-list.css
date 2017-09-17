@@ -28,8 +28,14 @@
 	height: 50px;
 	padding-right: 10px;
 }*/
+.list a{
+	color: grey;
+}
+.list a:hover, a:focus{
+	color: black;
+}
 
-.list-img{
+.list img{
 	height: 70px;
 	border-radius: 0;
 }

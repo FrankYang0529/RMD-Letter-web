@@ -2,16 +2,6 @@
 /*	border: 1px solid black;
 */	font-family: "Lato", "微軟正黑體", sans-serif;
 }
-body{
-	margin:0; 
-	padding:0;
-	/*margin-bottom: 100px;*/
-}
-
-.content{
-	padding: 5% 10%;
-	height: -webkit-fill-available;
-}
 
 h1{
 	color: grey;   

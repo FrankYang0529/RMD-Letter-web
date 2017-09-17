@@ -21,42 +21,48 @@
 	  </div>
 	</header>
 
-	<div id="menu" class="sidenav">
+	<div id="menu" class="sidenav" style="width: 250px;">
 	  <span class="close" onclick="toggleNav()">&#9776;</span>
 	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
-	  <a href="javascript:void(0)" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
-	  <a href="javascript:void(0)" id="prjManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-	  <a href="javascript:void(0)" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
-	  <a href="javascript:void(0)" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
-	  <a href="javascript:void(0)" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
-	  <a href="javascript:void(0)" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
-	  <a href="javascript:void(0)" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
-	  <a href="$" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
 	</div>
 
-	<div id="topbar"></div>
-	<div class="prj-list content">
-		<div class="w3-container project-list">
-			<h1 id="title"><%= username %>專案列表</h1>
-			<%= projects %>
+	<!-- <div id="topbar"></div> -->
+	<div id = "content" class="prj-list open">
+		<div class="w3-container list">
+			<h1 id="title"><!--%= username %-->專案列表</h1>
+<!--			<%= projects %>
+ 			<ul>
+				<% projects.forEach(function(project) { %>
+				<li><%=  project.titleZh %></li>
+				<li><%=  project.startTime %> - <%=  project.endTime %></li>
+				<li><%=  project.subdomainName %></li>
+				<% }); %>
+			</ul> -->
 			<ul class="w3-ul w3-card-4">
-				<li class="w3-bar">
-				  <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
-				  <img src="/img/edit.svg" class="w3-bar-item w3-circle w3-hide-small list-img">
+				<% projects.forEach(function(project) { %>
+				<% var url = "/projects/" + project._id %>
+				<a href="/projects/<%= project._id %>">
+					<li class="w3-bar">
+					<span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span>
+				  <img src="/img/edit.svg" class="w3-bar-item w3-circle w3-hide-small">
 				  <div class="w3-bar-item">
-				    <span class="w3-large">Mike</span><br>
-				    <span>Web Designer</span>
+				    <span class="w3-large"><%=  project.titleZh %></span><br>
+				    <span><%=  project.subdomainName %></span>
 				  </div>
-				</li>
-				<a href="/projects/create">create</a>
-				<li class="w3-bar">
-				  <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
-				  <img src="/img/add.svg" class="w3-bar-item w3-circle w3-hide-small list-img">
+					</li>
+				</a>
+				<% }); %>
+
+				<a href="/projects/create"><li class="w3-bar">
+				  <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span>
+				  <img src="/img/add.svg" class="w3-bar-item w3-circle w3-hide-small">
 				  <div class="w3-bar-item">
-				    <span class="w3-large">Mike</span><br>
-				    <span>Web Designer</span>
+				    <span class="w3-large">創建新專案</span><br>
+				    <span>create new project</span>
 				  </div>
-				</li>
+				</li></a>
 		  </ul>
 <!-- 			<a href=""><img src="img/edit.svg"/>105年成大資訊工程所碩士推甄</a>
 			<a href=""><img src="img/edit.svg"/>105年成大資訊工程所博士推甄</a>

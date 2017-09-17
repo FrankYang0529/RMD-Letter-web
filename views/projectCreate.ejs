@@ -23,44 +23,35 @@
   </div>
 </header>
 
-<div id="menu" class="sidenav">
-  <span class="close" onclick="toggleNav()">&#9776;</span>
- 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
-  <a href="javascript:void(0)" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
-  <a href="javascript:void(0)" id="prjManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-  <a href="javascript:void(0)" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
-  <a href="javascript:void(0)" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
-  <a href="javascript:void(0)" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
-  <a href="javascript:void(0)" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
-  <a href="javascript:void(0)" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
-  <a href="javascript:void(0)" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
-</div>
-<div id="topbar"></div>
-<div class="prj-create">
-    title: <%= title %>,
-    body: <%= body %>,
-    error: <%= error %>,
-    subdomainName: <%= subdomainName %>,
-
-<h1 id="title">projectCreate</h1>
+  <div id="menu" class="sidenav" style="width: 250px;">
+    <span class="close" onclick="toggleNav()">&#9776;</span>
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="/projects" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+    <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
+  </div>
+<!-- <div id="topbar"></div> -->
+<div id="content" class="prj-create open">
+  <h1 id="title">創建新專案</h1>
 	<div class="w3-container form">
 	  <div class="w3-card-4">
 	  	<form action="/projects" method="post">
 		    <div class="w3-container">
-		      <h2><input class="w3-input" type="text" placeholder='projectCreate' onfocus="this.placeholder = ''" onblur="this.placeholder = 'projectCreate'"></h2>
-		    </div>
-		    <div class="w3-container">
-	 	      <label>titleZh</label></p>
-		      <input class="w3-input" type="text" placeholder='titleZh' onfocus="this.placeholder = ''" onblur="this.placeholder = 'titleZh">
-		      <label>hbr</label></p>     
-		      <input class="w3-input" type="test" placeholder='hbr' onfocus="this.placeholder = ''" onblur="this.placeholder = 'hbr'">
-		      <label>subdomainName</label></p>     
-		      <input class="w3-input" type="text" placeholder='subdomainName' onfocus="this.placeholder = ''" onblur="this.placeholder = 'subdomainName'">
+		      <h2><input class="w3-input" type="text" name = 'titleZh' id = 'titleZh' placeholder='106年成大資工所博士推甄' onfocus="this.placeholder = ''" onblur="this.placeholder = '106年成大資工所博士推甄'" value="106年成大資工所博士推甄"></h2>
+	 	      <label>email</label>
+		      <input class="w3-input" type="email" name = 'email' id = 'email' placeholder='abc@gmail.com' onfocus="this.placeholder = ''" onblur="this.placeholder = 'abc@gmail.com">
+          <label>phone</label>
+          <input class="w3-input" type="phone" name = 'phone' id = 'phone' placeholder='06-2757575' onfocus="this.placeholder = ''" onblur="this.placeholder = '06-2757575">
+          <label>startTime</label>
+          <input class="w3-input" type="date" name = 'startTime' id = 'startTime' placeholder='2017/10/02' onfocus="this.placeholder = ''" onblur="this.placeholder = '2017/10/02">
+          <label>endTime</label>
+          <input class="w3-input" type="date" name = 'endTime' id = 'endTime' placeholder='2017/11/02' onfocus="this.placeholder = ''" onblur="this.placeholder = '2017/11/02">
+		      <label>subdomainName</label>    
+		      <input class="w3-input" type="text" name = 'subdomainName' id = 'subdomainName' placeholder='abc.xyz' onfocus="this.placeholder = ''" onblur="this.placeholder = 'abc.xyz'">
 		      <button class="w3-btn w3-blue-grey submit">新增專案</button>
 		    </div>
-		  </div>
-	  </form>
-	</div>
+  	  </form>
+  	</div>
+  </div>
 </div>
 <footer>
   <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
