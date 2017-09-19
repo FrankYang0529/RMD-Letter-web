@@ -4,7 +4,11 @@
   /*border: 1px solid black;*/
   margin: 0;
   padding: 0;
+  
 }
+/*body{
+  height: 100%;
+}*/
 
 #topbar{
   height: 94px; 
@@ -15,10 +19,11 @@
   display: block;
   position: relative;
   width: 100%;
-  height: -webkit-fill-available;
+  /*height: 100%;*/
+  /*height: -webkit-fill-available;*/
   background-color: rgba(255,255,255,1); /*#ff9966;*/ 
   padding: 5% 10%;
-  /*margin-bottom: 100px;*/
+  margin-bottom: 80px;
   /*margin: 0;*/
 }
 

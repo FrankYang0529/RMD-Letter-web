@@ -8,7 +8,7 @@
   <link rel="stylesheet" type="text/css" href="/css/menu.css">
 	<link rel="stylesheet" type="text/css" href="/css/content.css">
 	<link rel="stylesheet" type="text/css" href="/css/form.css">
-	<link rel="stylesheet" type="text/css" href="/css/prj-list.css">
+	<link rel="stylesheet" type="text/css" href="/css/project.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
 </head>
@@ -29,17 +29,9 @@
 	</div>
 
 	<!-- <div id="topbar"></div> -->
-	<div id = "content" class="prj-list open">
+	<div id = "content" class="prj-list open ">
 		<div class="w3-container list">
-			<h1 id="title"><!--%= username %-->專案列表</h1>
-<!--			<%= projects %>
- 			<ul>
-				<% projects.forEach(function(project) { %>
-				<li><%=  project.titleZh %></li>
-				<li><%=  project.startTime %> - <%=  project.endTime %></li>
-				<li><%=  project.subdomainName %></li>
-				<% }); %>
-			</ul> -->
+			<h1 id="title">專案列表</h1>
 			<ul class="w3-ul w3-card-4">
 				<% projects.forEach(function(project) { %>
 				<% var url = "/projects/" + project._id %>
@@ -64,10 +56,6 @@
 				  </div>
 				</li></a>
 		  </ul>
-<!-- 			<a href=""><img src="img/edit.svg"/>105年成大資訊工程所碩士推甄</a>
-			<a href=""><img src="img/edit.svg"/>105年成大資訊工程所博士推甄</a>
-			<a href=""><img src="img/edit.svg"/>106年成大資訊工程所碩士推甄</a>
-			<a href=""><img src="img/add.svg"/>新增專案</a> -->
 		</div>
 	</div>
 
@@ -77,5 +65,3 @@
      
 </body>
 </html> 
-</body>
-</html>

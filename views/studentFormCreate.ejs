@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/form.js"></script>
+</head>
+<body>
+	<header>
+	  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+	  <div class="navbar">
+	    <a href=""><img src="/img/black-mail.svg"/></a>
+	    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+	  </div>
+	</header>
+	
+	<div id="menu" class="sidenav" style="width: 250px;">
+	  <span class="close" onclick="toggleNav()">&#9776;</span>
+	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+	  <a href="/projects/<%= projID %>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+	  <a href="/projects/<%= projID %>" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+	  <a href="j/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	</div>
+
+	<div id="content" class="open">
+		<h1 id="title">創建學生報名表單</h1>	
+		projID = <%= projID %>
+		<div class="w3-container form">
+		  <div class="w3-card-4">
+		    <form id="form-edit" class="w3-container">
+		    	<div class="w3-container">
+			      <h2><input type="text" name="title" value="" placeholder="成大資工所推甄入學報名表" onfocus="this.placeholder = ''" onblur="this.placeholder = '請填入學生表單名稱'" ></h2>
+			    </div>
+			    <div id="qidic6kl" class="question-pannel text-answer">
+		    		<span onclick="removeQuestion('qidic6kl');" class="w3-bar-item w3-button w3-white w3-hover-opacity w3-hover-black w3-border w3-xlarge w3-right">×</span>
+			    	<div id="typeSelection" class="w3-dropdown-hover w3-cell typeSelection">
+							<input type="button" name="questionType" class="w3-button w3-black questionType" value="簡答">
+						  <div class="w3-dropdown-content w3-bar-block w3-border">
+						    <li class="w3-bar-item w3-button" onclick="var qpid = $(this).parent().parent().parent().attr('id'); selectType(qpid, 'single');">單選</li>
+						    <li class="w3-bar-item w3-button" onclick="var qpid = $(this).parent().parent().parent().attr('id'); selectType(qpid, 'multiple');">多選</li>
+						    <li class="w3-bar-item w3-button" onclick="var qpid = $(this).parent().parent().parent().attr('id'); selectType(qpid, 'text');">簡答</li>
+						    <li class="w3-bar-item w3-button" onclick="var qpid = $(this).parent().parent().parent().attr('id'); selectType(qpid, 'textArea');">詳答</li>
+						    <li class="w3-bar-item w3-button" onclick="var qpid = $(this).parent().parent().parent().attr('id'); selectType(qpid,'file');">檔案上傳</li>
+						  </div>
+						</div>
+					  <h3 class="w3-cell"><input type="text" name="questionTitle" value="" placeholder="問題" onfocus="this.placeholder = ''" onblur="this.placeholder = '問題'" ></h3>
+					  <div id="qidic6kl-answer" class="answer-textarea">
+					  	<div>
+					  		<p>
+					  			<div class="empty-icon"></div>
+					  			<input name="skip" type="text" class="w3-input option" placeholder=" 答案 " onfocus="this.placeholder = ''" onblur="this.placeholder = '答案'" disabled="disabled" >
+					  		</p>
+					  	</div>
+					  </div>
+					  <div>
+					  	<p>
+					  		<input type="checkbox" name="required" class="w3-check">
+					  		<label>必填</label>
+					  	</p>
+					  </div>
+					</div>
+					<div id="add-q-button" onclick="addQuestion(id);" class="w3-button w3-circle w3-grey w3-large add-q-button">+</div><br>
+		    	<div onclick= "createStudentForm('<%= projID %>');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button">創建表單</div>
+		    </form>
+		  </div>
+		</div>
+	</div>
+
+	<footer>
+	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	</footer>
+     
+</body>
+</html> 

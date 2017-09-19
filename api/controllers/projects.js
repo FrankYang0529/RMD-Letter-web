@@ -20,9 +20,17 @@ exports.createPage = (req, res, next) => {
 exports.editPage = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      /* TODO
-        show edit page
-      */
+      res.format({
+        'application/json': () => {
+          res.send(projs);
+        },
+        default: () => {
+          // TODO
+          // res.render('apply', {
+          //   projID: req.params.projID
+          // });
+        },
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -270,15 +278,22 @@ exports.stuFormDetail = (req, res, next) => {
   StuForms.findOne({ projID: req.params.projID }).exec()
     .then((form) => {
       res.format({
-        'application/json': () => {
-          res.send(form);
-        },
+        // 'application/json': () => {
+        //   res.send(form);
+        // },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+          if (form == null){
+            res.render('studentFormCreate', {
+            projID: req.params.projID
           });
-          */
+          }
+          else{
+            res.render('studentForm', {
+            form,
+            projID: req.params.projID
+          });
+          }
+  
         },
       });
     })
@@ -324,7 +339,8 @@ exports.rmdLtFormDetail = (req, res, next) => {
         default: () => {
           /* TODO
           res.render('formDetail', {
-            form
+            form,
+            projID
           });
           */
         },
@@ -382,7 +398,8 @@ exports.rmdPersonList = (req, res, next) => {
         default: () => {
           /* TODO
           res.render('formDetail', {
-            form
+            form,
+            projID
           });
           */
         },

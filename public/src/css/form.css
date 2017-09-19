@@ -3,7 +3,17 @@
 }*/
 
 .question-pannel{
-	padding: 10px 50px;
+  padding: 10px 50px;
+}
+
+.typeSelection{
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.questonType{
+  display: block;
+  color: white;
+  width: 160px;
 }
 
 h2{
@@ -55,9 +65,9 @@ input[type=submit]{
 	padding-right: 20%;*/
 }
 
-input[type=text].option, button.option{
+input[type=text].option, button.option, button.upload{
 	display: inline-block;
-	width: 90%;
+	width: calc(100% - 100px);
 	background-color: rgba(255,255,255,0);
 	border: none;
   border-bottom: 2px solid #ccc;
@@ -67,9 +77,21 @@ input[type=text].option:focus {
 	border-bottom: 2px solid #444;
 }
 
-button.option{
-	width: inherit;
-	background-color: none;
+button.option, button.upload{
+  width: inherit;
+  background-color: none;
+}
+
+button.upload{
+  border: 2px solid #ccc;
+}
+
+.add-q-button{
+  margin: 20px 60px;
+}
+
+.create-q-button{
+  margin: 20px 60px;
 }
 
 .radio-icon{
@@ -90,12 +112,31 @@ button.option{
 	margin-right: 20px;
 }
 
+.empty-icon{
+  display: inline-block;
+  width:18px;
+  height:18px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+  margin-right: 20px;
+}
+
+.textarea{
+  height:100px; 
+  width: 80%; 
+  margin-left: 58px; 
+  border: 1px solid #ccc; 
+  color: #bbb; 
+  padding: 20px;
+}
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
+  margin-left: 15px;
 }
 
 /* Hide default HTML checkbox */
