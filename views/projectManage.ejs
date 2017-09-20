@@ -26,11 +26,11 @@
 	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
 	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
 	  <a href="/projects/<%= projID%>" id="prjManage" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-	  <a href="/projects/<%= projID%>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
-	  <a href="/projects/<%= projID%>" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+	  <a href="/projects/<%= projID%>/edit" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
 	  <a href="/projects/<%= projID%>/student-form" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
 	  <a href="/projects/<%= projID%>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID%>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+	  <a href="/projects/<%= projID%>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
 	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
 	</div>
 
@@ -42,17 +42,19 @@
 		  <div class="w3-card-4">
 		  	<form action="" method="put">
 			    <div class="w3-container">
-			      <h2><input id="titleZh" type="text" value="<%= titleZh %>" placeholder="<%= titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= titleZh %>'" onchange=""></h2>
-				   	<label>報名網站子網域</label>     
-			      <input type="text" id="subdomain" class="w3-input" placeholder="<%= subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= subdomainName %>'"><br>
-			      <!-- <label>報名開始日期</label>
-			      <input class="w3-input" type="text" placeholder="<%= project.startTime %>" onfocus="this.type='date'" onblur="this.type='text'">
-			      <label>報名截止日期</label>     
-				     <input class="w3-input" type="text" placeholder="<%= project.endTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+			      <h2><input id="titleZh" type="text" value="<%= project.titleZh %>" placeholder="<%= project.titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.titleZh %>'" onchange=""></h2>
 			      <label>聯絡電話</label>
 			      <input class="w3-input" type="tel" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'">
 			      <label>e-mail</label>     
-			      <input class="w3-input" type="e-mail" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'"> -->
+			      <input class="w3-input" type="e-mail" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'">
+			      <label>報名開始日期</label>
+			      <input class="w3-input" type="text" placeholder="<%= project.startTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+			      <label>報名截止日期</label>     
+				     <input class="w3-input" type="text" placeholder="<%= project.endTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+
+				  	<label>報名網站子網域</label>     
+			      <input type="text" id="subdomain" class="w3-input" placeholder="<%= project.subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.subdomainName %>'"><br>
+
 			      <label>發布報名網站</label>
 			      <label class="switch">
 			      	<% if(project.isDeployed == "true"){ %>

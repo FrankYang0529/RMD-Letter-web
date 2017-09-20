@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+<body>
+	<header>
+	  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+	  <div class="navbar">
+	    <a href=""><img src="/img/black-mail.svg"/></a>
+	    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+	  </div>
+	</header>
+
+	<div id="menu" class="sidenav" style="width: 250px;">
+	  <span class="close" onclick="toggleNav()">&#9776;</span>
+	  <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/projects/<%= projID%>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+	  <a href="/projects/<%= projID%>/edit" id="announce" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+	  <a href="/projects/<%= projID%>/student-form" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+	  <a href="/projects/<%= projID%>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+	  <a href="/projects/<%= projID%>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+	  <a href="/projects/<%= projID%>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	</div>
+
+	<!-- <div id="topbar"></div> -->
+	<div id="content" class="announce-edit open">
+		<h1 id="title">公告編輯</h1>
+		<!-- announcement = <%= proj.announcement %> -->
+		<% var announce = proj.announcement; %>
+<!-- 	  title: String,
+	  text: String,
+	  file: String,
+	  timestamp: Date, -->
+	    
+
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="w3-third">
+    	<div class="w3-white w3-text-grey w3-card-4">
+        <div class="w3-display-container">
+          <div class="w3-display-bottomleft w3-container w3-text-black">
+            <h2>公告列表</h2>
+          </div>
+        </div>
+        <div class="w3-container">
+          <a href="#" id="add-post-btn"><p class="img-text"><img src="/img/edit-post.svg">新增公告</p></a>
+          <hr>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
+          <p>發佈時間</p></a>
+          <hr>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
+          <p>發佈時間</p></a>
+          <hr>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
+          <p>發佈時間</p></a>
+          <hr>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
+          <p>發佈時間</p></a>
+          <hr>
+          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray"><%= announce.title %></i></b></p>
+          <p><%= announce.timestamp %></p>
+          <hr>
+        </div>
+      </div><br>
+
+	  <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+		  <div id="add-new-post" class="w3-container w3-card-2 w3-white" style="display: none;">
+		    <form id="announce-create" class="w3-container" action="/projects/announcement/<%= projID %>/" method="post">
+	        <h2 class="w3-text-grey w3-padding-16">
+	        	<input type="text" id="newPostTitle" name="title" value="" placeholder="新增公告" onfocus="this.placeholder = ''" onblur="this.placeholder = '新增公告'" style="outline: none;">
+	        </h2>
+	        <div class="w3-container">
+	        	<textarea id="letter-content" form="announce-create" name="content" id="newPostContent" class="w3-input w3-text-grey w3-border-top" style="height: 400px; outline: none;">公告內容...</textarea>
+	        	<input type="file" id="file">
+			    	<div form="announce-create" id="announce-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin: 20px;">新增 ❯</div>
+	        </div>
+        </form>
+      </div>
+
+			<div class="w3-container w3-card-2 w3-white w3-margin-bottom">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-blue-gray"></i>Work Experience</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-blue-gray w3-round">Current</span></h6>
+          <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6>
+          <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br>
+        </div>
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+	</div>
+	</div>
+	<footer>
+	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	</footer>
+ <script type="text/javascript">
+
+ 	$("#add-post-btn").click(function() {
+ 		$("#add-new-post").toggle();
+ 	});
+
+  $("#announce-btn").click(function(e){
+  	$.ajax({ 
+      url: '/projects/announcement/<%= projID %>/',
+      data: {title: $("#newPostTitle").val(), content: $("#newPostContent").val()},
+      type: 'post'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+ </script>>
+
+</body>
+</html> 

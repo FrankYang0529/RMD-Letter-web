@@ -22,14 +22,15 @@ exports.editPage = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
       res.format({
-        'application/json': () => {
-          res.send(projs);
-        },
+        // 'application/json': () => {
+        //   res.send(proj);
+        // },
         default: () => {
           // TODO
-          // res.render('apply', {
-          //   projID: req.params.projID
-          // });
+          res.render('announce', {
+            proj,  
+            projID: req.params.projID
+          });
         },
       });
     })
@@ -71,11 +72,8 @@ exports.projDetail = (req, res, next) => {
         // },
         default: () => {
           res.render('projectManage', {
-            titleZh: proj.titleZh,
-            hbr: proj.hbr,
-            subdomainName: proj.subdomainName,
-            projID: req.params.projID,
-            project: proj
+            project: proj,
+            projID: req.params.projID
           });
         },
       });
@@ -126,21 +124,24 @@ exports.projCreate = (req, res, next) => {
 };
 
 exports.projAddPost = (req, res, next) => {
+  console.log(req.body);
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.announcement.length < 1) {    //  must to filled the blank
+      //if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
           proj
         });
         */
-      }
-      proj.announcement.push(req.body.announcement);
+      //}
+      
+      proj.announcement.push(req.body);
       return proj.save();
     })
     .then((proj) => {
-      res.redirect('/');
+      // res.send('success');
+      res.redirect(`/projects/${proj._id}/edit`);
     })
     .catch((err) => {
       res.send(err);
@@ -457,7 +458,7 @@ exports.addRmdPerson = (req, res, next) => {
   }
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
-      console.log(personList.person);
+      // console.log(personList.person);
       var rmdPerson = {
         name: req.body.name,
         email: req.body.email,
@@ -465,9 +466,9 @@ exports.addRmdPerson = (req, res, next) => {
         jobTitle: req.body.jobTitle,
         verification: req.body.verification
       };
-      console.log(rmdPerson);
+      // console.log(rmdPerson);
       personList.person.push(rmdPerson);
-      console.log(personList.person);
+      // console.log(personList.person);
       return personList.save();
     })
     .then((personList) => {

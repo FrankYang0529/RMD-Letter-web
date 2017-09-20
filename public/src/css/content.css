@@ -1,30 +1,54 @@
 *{
-/*	border: 1px solid black;
-*/	font-family: "Lato", "微軟正黑體", sans-serif;
+/*  border: 1px solid black;
+*/  font-family: "Lato", "微軟正黑體", sans-serif;
 }
 
 h1{
-	color: grey;   
-	text-align: right;
-	padding-top: 5%;
-	padding-right: 20%;
-	margin-bottom: 30px;
+  color: grey;   
+  text-align: right;
+  padding-top: 5%;
+  padding-right: 20%;
+  margin-bottom: 30px;
 
-	font-size: 50px;
-	font-weight: 400;
-	letter-spacing: 5px;
+  font-size: 50px;
+  font-weight: 400;
+  letter-spacing: 5px;
 }
 
 button.submit{
-	display: block;
-	/*background-color: white;*/
-	border: 1px solid #C6C8CC;
-	border-radius: 25px;
-	color: black;
+  display: block;
+  /*background-color: white;*/
+  border: 1px solid #C6C8CC;
+  border-radius: 25px;
+  color: black;
   text-align: center;
   letter-spacing: 1px;
   font-size: 15px;
   padding: 15px;
   margin: 25px;
   margin-left:80%;
+}
+
+a:link .img-text, a:visited .img-text{
+	font-size: 18px;
+	text-align: center;
+  text-decoration: none;
+  color: grey;
+  background-color: white;
+  padding: 14px 25px;
+  margin-top: 15px;
+
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  display: flex;
+  align-items: center;
+}
+
+a:hover .img-text, a:active .img-text{
+  color: black;
+}
+
+.img-text img{
+	height: 35px;
+	padding-right: 5px; 
 }

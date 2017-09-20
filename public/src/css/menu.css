@@ -27,11 +27,16 @@
   /*margin: 0;*/
 }
 
+#content.announce-edit{
+  padding: 0;
+}
+
 #content.open {
   width: calc(100% - 250px);
   background-color: white;
   left: 250px;
 }
+
 
 #menuButton{
   position: fixed;

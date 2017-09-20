@@ -22,6 +22,7 @@ gulp.task('hello', function(){
 gulp.task('watch', function () {
   gulp.watch('public/src/js/*.js', ['minify-js']);
   gulp.watch('public/src/css/*.css', ['minify-css']);
+  gulp.watch('public/src/img/*', ['minify-img']);  
 });
 
 gulp.task('minify-js', function (cb) {
