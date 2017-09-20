@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="/subdomain/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/subdomain/css/style.css">
     <!-- 最新編譯和最佳化的 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <!-- 選擇性佈景主題 -->
@@ -11,112 +11,115 @@
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
     <script type="text/javascript" src="/subdomain/js/addRmdPerson.js"></script>
-    <title>index</title>
+
+    <title><%= proj.titleZh %></title>
 
 </head>
 
 <body>
     <div class="wrapper" style=" height:100%; width:100%;">
-        <div class="container" style="height:100%;">
+            <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
+                    <div class="container-fluid">
+                      <!-- Brand and toggle get grouped for better mobile display -->
+                      <div class="navbar-header">
+                        <h1><%= proj.titleZh %></h1>
+                      </div>
+                  
+                        <ul class="nav navbar-nav navbar-right">
+                                <% if ( typeof user == 'undefined' ) { %>
+                                    <li><a href="/users/login">登入</a> </li>
+                                    <li><a href="/users">註冊</a> </li>
+                                    <li><a href="#" onclick="intro()">使用說明</a></li>
+                                    <li><a href="#" onclick="contact()">連絡我們</a></li>
+                                <% } else { %>
+                                    <li id="display-name"><%= user.displayName %>， 您好</li>
+                                    <li><a href="/users/logout">登出</a> </li>
+                                    <li><a href="/users/me">個人資料</a> </li>
+                                    <li><a href="#" onclick="intro()">使用說明</a></li>
+                                    <li><a href="#" onclick="contact()">聯絡我們</a></li>
+                                <% } %>
 
-            <!-- header -->
-            <div id="header">
-                <div class="row action-bar">
-                    <div class="col-md-7">
-                        <h1>2017年成大資訊碩士推薦信申請</h1>
-                    </div>
-                    <div class="col-md-5 operate" align="right">
-                        <div>
-                            <% if ( typeof user == 'undefined' ) { %>
-                                <a href="/users/login">登入</a> <span>|</span>
-                                <a href="/users">註冊</a> <span>|</span>
-                                <a href="/introduction">使用說明</a>
-                            <% } else { %>
-                                    <a href="/users/logout">登出</a> <span>|</span>
-                                    <a href="/users/me">個人資料</a> <span>|</span>
-                                    <a href="/introduction">使用說明</a>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-                <!-- navbar -->
-                <nav class="navbar navbar-default">
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
-                            <li><a href="/" class="dropdown-toggle">系所公告</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li class="header_bottomlime">
-                                        <a href="/recommendData">我的資料</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/fill-student-form">填寫資料</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/update-student-form">修改資料</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li class="header_bottomlime">
-                                        <a href="/projects/rmd-person">推薦人名單</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/projects/addRmdPerson">新增推薦人</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="/schedule">進度查詢</a></li>
                         </ul>
                     </div>
-                </nav>
-            </div>
-            <style>
-                li.header_bottomlime {
-                    border-bottom: 1px #ccc dotted;
-                    padding: 2px;
-                    width: 155px;
-                    text-align: center;
-                    /*font style*/
-                    letter-spacing: 0.1em;
-                    font-weight: 600;
-                }
+                  </nav>
+                  
+        <div style="padding-top: 88px;">
+                <% if ( typeof user != 'undefined' ) { %>
+                    <nav class="navbar navbar-default operater-navbar" style="background: white;">
+                        <div class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
+                                <li><a href="/" class="dropdown-toggle">系所公告</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="header_bottomlime">
+                                            <a href="/recommendData">我的資料</a>
+                                        </li>
+                                        <li class="header_bottomlime">
+                                            <a href="/fill-student-form">填寫資料</a>
+                                        </li>
+                                        <li class="header_bottomlime">
+                                            <a href="/update-student-form">修改資料</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="header_bottomlime">
+                                            <a href="/projects/rmd-person">推薦人名單</a>
+                                        </li>
+                                        <li class="header_bottomlime">
+                                            <a href="/projects/addRmdPerson">新增推薦人</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="/schedule">進度查詢</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <% } %>
+                    <script>
+                            function contact() {
+                                swal({
+                                    type: 'info',
+                                    html:
+                                        '<b style="font-size: 22px;">email： </b><span style="font-size: 22px;"><%= proj.email %></span><br><br>' +
+                                        '<b style="font-size: 22px;">TEL： </b><span style="font-size: 22px;"><%= proj.phone %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    focusConfirm: false,
+                                    confirmButtonText: '我知道了',
+                                    confirmButtonAriaLabel: '我知道了',
+                                });
+                            }
+                            
+                            $(document).ready(() => {
+                                $('[data-toggle="tooltip"]').tooltip();   
+                            });
+                    
+                       </script>
 
-                .noborder {
-                    border: none !important;
-                }
-            </style>
 
-            <div style="margin-bottom: 20px;"></div>
-
+        <div class="custom-container">
             <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                 <div class="row" style="margin-top:12px;">
-                        <div class="col-md-2" style="float:left;">
-                                <div class="sidebar-nav floatmenu_style" style="background-color: white; min-height:500px; border-radius: 10px;">
-                                        <ul class="nav nav-list">
-                                            <li class="nav-header header_bottomlime">
-                                                子目錄
-                                            </li>
-                                            <li class="header_bottomlime">
-                                                <a href="/projects/rmd-person"></i>&nbsp;&nbsp;推薦人名單</a>
-                                            </li>
-                                            <li class="header_bottomlime">
-                                                <a href="/projects/addRmdPerson"></i>&nbsp;&nbsp;新增推薦人</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                        </div>
-                        <div class="col-md-10" style="float:left;">
-                            <div style="background-color: white; min-height:500px; border-radius: 10px;">
-                                    <div class="panel" style="min-height:500px;">
-                                            <div class="panel-body">
+                    
+                        <div style="background-color: white; border-radius: 10px;">
+                        <% if ( typeof user != 'undefined' ) { %>
+                            <div class="panel" style="margin-bottom: 0; min-height: calc(100vh - 168px);">
+                        <% } else { %>
+                            <div class="panel" style="margin-bottom: 0; min-height: calc(100vh - 118px);">
+                        <% } %>
+                                <div class="panel-body">
+                                        
                                                 <div class="panel-heading">
                                                     <h2 class="panel-title"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp;推薦人名單</h2>
                                                 </div>
+                                                <hr>
                                                 <table class="table table-hover">
                                                         <thead>
                                                             <tr>
@@ -141,29 +144,14 @@
                                                         </tr>
                                                         <% }); %>
                                                 </table>
-                                            </div>
-                                        </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" tabindex="-1" role="dialog" id="alertMessage">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-body">
-                                  <p id="alertContent"></p>
+                                           
                                 </div>
-                                <div class="modal-footer">
-                                  <a data-dismiss="modal" id="alertFooter">關閉</a>
-                                </div>
-                              </div>
                             </div>
-                          </div>
-                        <script>
-                            $(document).ready(function(){
-                                $('[data-toggle="tooltip"]').tooltip();   
-                            });
-                        </script>
+                       
+                    </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </body>

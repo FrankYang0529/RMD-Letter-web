@@ -1,6 +1,6 @@
 body {
   margin:0;
-  background-color: #F1F1F1 !important;
+  background-color: #EFEFEF !important;
   font-family: Microsoft JhengHei !important;
 }
 
@@ -10,7 +10,7 @@ h1{
 	margin-bottom: 30px !important;
 }
 
-.glyphicon-envelope {
+.glyphicon-envelope, .glyphicon-user {
 	margin-top: 40px;
     left: 50%;
     transform: translate(-50%);

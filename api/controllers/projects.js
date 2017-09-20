@@ -212,6 +212,76 @@ exports.projSubdomainEdit = (req, res, next) => {
     });
 };
 
+exports.projPhoneEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.phone.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.phone = req.body.phone;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projEmailEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.email.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.email = req.body.email;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projDeadlineEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.startTime.length < 1 || req.body.endTime.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.startTime = req.body.startTime;
+      proj.endTime = req.body.endTime;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.projDeployed = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {

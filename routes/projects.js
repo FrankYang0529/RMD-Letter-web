@@ -18,6 +18,9 @@ router.get('/:projID/edit', Policy.loggedIn, routes.editPage);
 
 router.put('/:projID/titleZh', Policy.loggedIn, routes.projTitleZhEdit);
 router.put('/:projID/subdomain', Policy.loggedIn, routes.projSubdomainEdit);
+router.put('/:projID/email', Policy.loggedIn, routes.projEmailEdit);
+router.put('/:projID/phone', Policy.loggedIn, routes.projPhoneEdit);
+router.put('/:projID/deadline', Policy.loggedIn, routes.projDeadlineEdit);
 router.get('/:projID/deployed', Policy.loggedIn, routes.projDeployed);
 
 router.delete('/:projID', Policy.loggedIn, routes.projDelete);
