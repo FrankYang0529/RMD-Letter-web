@@ -29,14 +29,14 @@
 	  <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
 	  <a href="/projects/<%= projID %>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
 	  <a href="/projects/<%= projID %>" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
-	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
-	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
 	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
 	</div>
 
 	<div id="content" class="open">
-		<h1 id="title">學生報名表單</h1>	
+		<h1 id="title">編輯推薦信表單</h1>	
 		<div class="w3-container form">
 		  <div class="w3-card-4">
 		    <form id="form-edit" class="w3-container">
@@ -148,15 +148,48 @@
 					<% }); %>
 
 					<div id="add-q-button" onclick="addQuestion(id);" class="w3-button w3-circle w3-grey w3-large add-q-button">+</div><br>
-		    	<div id="update-form-btn" onclick= "updateStudentForm('<%= projID %>');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button">儲存變更</div>
+		    	<div id="update-form-btn" onclick= "updateRmdForm('<%= projID %>');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button">儲存變更</div>
 		    </form>
 		  </div>
 		</div>
+
+		<h1>推薦信內容</h1>	
+
+		<div id="rmd-letter" class="w3-container form">
+		  <div class="w3-card-4">
+		    <form id="letter-edit" class="w3-container" action="/projects/<%= projID %>/invite-letter" method="put">
+		    	<h2><input type="text" id="letter-title" name="title" value="<%= letter.title %>" placeholder="<%= letter.title %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= letter.title %>'"></h2>
+		    	<p class="w3-small w3-right">[@推薦人名稱] [@學生名稱]</p>
+		    	<textarea id="letter-content" form="letter-edit" name="content" class="w3-input w3-border rmdlt" value="test"><%= letter.content %></textarea>
+		    	<div id="letter-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin-bottom: 10px;">儲存 ❯</div>
+		    </form>
+		   </div>
+		  </div>
+		</div>
+
 	</div>
 
 	<footer>
 	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 	</footer>
+
+<script>
+$(document).ready(function(){
+
+  $("#letter-btn").click(function(e){
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/invite-letter',
+      data: {title: $("#letter-title").val(), content: $("#letter-content").val()},
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+ });
+</script>
      
 </body>
 </html> 

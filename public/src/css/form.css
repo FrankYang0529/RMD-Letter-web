@@ -1,7 +1,11 @@
 /*.form{
 	padding: 5% 10%;
 }*/
-
+.rmdlt{
+  height: 300px;
+  margin-bottom: 30px;
+  text-align: left;
+}
 .question-pannel{
   padding: 10px 50px;
 }
@@ -10,7 +14,7 @@
   background-color: rgba(255, 255, 255, 0);
 }
 
-.questonType{
+.questionType{
   display: block;
   color: white;
   width: 160px;

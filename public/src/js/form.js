@@ -255,6 +255,7 @@ function removeQuestion(id){
 function createStudentForm(id){
 	//post = create, put = update
 	var url = "/projects/"+id+"/student-form";
+	var method = "post";
 	// console.log(url);
 	var data = {};			//object
   var title = ""; 		//string
@@ -293,7 +294,7 @@ function createStudentForm(id){
  			question.questionType = type[element.value];
  		}
  		else if(element.name == "questionTitle"){
- 			question.questonTitle = element.value;
+ 			question.questionTitle = element.value;
  		}
  		else if(element.name == "option"){
  			// console.log(type[element.type]);
@@ -308,8 +309,8 @@ function createStudentForm(id){
  			question.options = options;
  			
  			required = element.checked;
- 			console.log(required.toString());
- 			question.required = required.toString();
+ 			// console.log(required.toString());
+ 			question.require = required;//required.toString();
 
  			// console.log("question", question);
  			questions.push(question);
@@ -322,17 +323,20 @@ function createStudentForm(id){
  	// console.log("questions",questions);
  	data.title = title;
  	data.questions = questions;
- 	console.log("data",JSON.stringify(data));
+ 	// console.log("data",JSON.stringify(data));
 
 	$.ajax({
     url: url,
-    dataType: 'json',
-    type: 'post',
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-	  processData: false,
+    // dataType: 'json',
+    type: method,
+    // contentType: 'application/json',
+    data: {title: title, questions: JSON.stringify(questions)},//JSON.stringify(data),//data,//JSON.stringify(data),
+	  // processData: false,
 	  success: function( data, textStatus, jQxhr ){
-	    $('#response pre').html( JSON.stringify( data ) );
+	  	console.log("sucess");
+	  	//location.href = url;
+	  	location.reload();
+	    // $('#response pre').html( JSON.stringify( data ) );
 	  },
 	  error: function( jqXhr, textStatus, errorThrown ){
 	    console.log( errorThrown );
@@ -344,6 +348,7 @@ function createStudentForm(id){
 function updateStudentForm(id){
 	//post = create, put = update
 	var url = "/projects/"+id+"/student-form";
+	var method = "put";
 	var data = {};			//object
   var title = ""; 		//string
   var questions = []; //array
@@ -373,19 +378,23 @@ function updateStudentForm(id){
  			question.questionType = type[element.value];
  		}
  		else if(element.name == "questionTitle"){
- 			question.questonTitle = element.value;
+ 			question.questionTitle = element.value;
  		}
  		else if(element.name == "option"){
- 			option = {};		//object
- 			option.option = element.value; //{ "option": "option1"}
+ 			console.log(element.value);
+ 			option = {option: element.value};		//object
+ 			//option.option = element.value; //{ "option": "option1"}
+ 			console.log(option);
  			options.push(option);
+ 			console.log(options);
+
  		}
  		else if(element.name == "required"){
  			question.subQuestions = {};
  			question.options = options;
  			
  			required = element.checked;
- 			question.required = required.toString();
+ 			question.require = required;//required.toString();
 
  			questions.push(question);
  		}
@@ -393,22 +402,195 @@ function updateStudentForm(id){
  			console.log("err", element);
  		}
  	});
- 	data.title = title;
- 	data.questions = questions;
+ 	// data.title = title;
+ 	// data.questions = questions;
+ 	console.log(questions);
+ 	console.log("title",title);
+ 	console.log("json",JSON.stringify(questions));
 
 	$.ajax({
     url: url,
-    dataType: 'json',
-    type: 'put',
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-	  processData: false,
+    // dataType: 'json',
+    type: method,
+    // contentType: 'application/json',
+    data: {title: title, questions: JSON.stringify(questions)},//JSON.stringify(data),//data,//JSON.stringify(data),
+	  // processData: false,
 	  success: function( data, textStatus, jQxhr ){
-	    $('#response pre').html( JSON.stringify( data ) );
+	  	console.log("sucess");
+	  	//location.href = url;
+	  	location.reload();
+	    // $('#response pre').html( JSON.stringify( data ) );
 	  },
 	  error: function( jqXhr, textStatus, errorThrown ){
 	    console.log( errorThrown );
 	  }
 	});
+}
+
+function createRmdForm(id){
+	console.log("rmdFormCreate", id);
+	var url = "/projects/"+id+"/rmdletter-form";
+	var method = "post";
+	var data = {};			//object
+  var title = ""; 		//string
+  var questions = []; //array
+  var question = {}; 	//object
+  var options = [];		//array
+  var option = {};		//objecg
+  var required = "";	//string
+
+  var type = {
+  	"單選": "single", 
+		"多選": "multiple", 
+		"簡答": "text", 
+		"詳答": "textArea",
+		"檔案上傳": "file"
+  }
+
+  var input = document.querySelectorAll("#form-edit input");
+
+ 	input.forEach(function(element){
+ 		console.log(element.name, element.value);
+ 		if(element.name == "title"){
+ 			title = element.value;
+ 			data["title"] = title ;
+ 		}
+ 		else if(element.name == "questionType"){
+ 			question = {}; 	//object
+		  options = [];		//array
+ 			question.questionType = type[element.value];
+ 		}
+ 		else if(element.name == "questionTitle"){
+ 			console.log(element.name, element.value);
+ 			question.questionTitle = element.value;
+ 		}
+ 		else if(element.name == "option"){
+ 			option = {};		//object
+ 			option.option = element.value; //{ "option": "option1"}
+ 			options.push(option);
+ 		}
+ 		else if(element.name == "required"){
+ 			question.options = options;
+ 			
+ 			required = element.checked;
+ 			question.require = required;//required.toString();
+
+ 			questions.push(question);
+ 		}
+ 		else if(element.name == ""){
+ 			console.log("err", element);
+ 		}
+ 	});
+
+ 	data.title = title;
+ 	data.questions = questions;
+
+ 	console.log("data", data);
+ 	console.log("jsondata", JSON.stringify(data));
+
+	$.ajax({
+    url: url,
+    // dataType: 'json',
+    type: method,
+    // contentType: 'application/json',
+    data: {title: title, questions: JSON.stringify(questions)},//JSON.stringify(data),//data,//JSON.stringify(data),
+	  // processData: false,
+	  success: function( data, textStatus, jQxhr ){
+	  	console.log("sucess");
+	  	//location.href = url;
+	  	location.reload();
+	    // $('#response pre').html( JSON.stringify( data ) );
+	  },
+	  error: function( jqXhr, textStatus, errorThrown ){
+	    console.log( errorThrown );
+	  }
+	});
+
+}
+
+function updateRmdForm(id){
+	console.log("rmdFormUpdate", id);
+	var url = "/projects/"+id+"/rmdletter-form";
+	console.log(url)
+	var method = "put";
+	var data = {};			//object
+  var title = ""; 		//string
+  var questions = []; //array
+  var question = {}; 	//object
+  var options = [];		//array
+  var option = {};		//objecg
+  var required = "";	//string
+
+  var type = {
+  	"單選": "single", 
+		"多選": "multiple", 
+		"簡答": "text", 
+		"詳答": "textArea",
+		"檔案上傳": "file"
+  }
+
+  var input = document.querySelectorAll("#form-edit input");
+
+ 	input.forEach(function(element){
+ 		console.log(element.name, element.value);
+ 		if(element.name == "title"){
+ 			title = element.value;
+ 			data["title"] = title ;
+ 		}
+ 		else if(element.name == "questionType"){
+ 			question = {}; 	//object
+		  options = [];		//array
+ 			question.questionType = type[element.value];
+ 		}
+ 		else if(element.name == "questionTitle"){
+ 			console.log(element.name, element.value);
+ 			question.questionTitle = element.value;
+ 		}
+ 		else if(element.name == "option"){
+ 			option = {};		//object
+ 			option.option = element.value; //{ "option": "option1"}
+ 			options.push(option);
+ 		}
+ 		else if(element.name == "required"){
+ 			question.options = options;
+ 			
+ 			required = element.checked;
+ 			question.require = required;//required.toString();
+
+ 			questions.push(question);
+ 		}
+ 		else if(element.name == ""){
+ 			console.log("err", element);
+ 		}
+ 	});
+
+ 	// data.title = title;
+ 	// data.questions = questions;
+
+ 	// console.log("data", data);
+ 	// console.log("jsondata", JSON.stringify(data));
+ 	// console.log("questions ", questions);
+ 	// console.log("questions json", JSON.stringify(questions));
+
+
+	$.ajax({
+    url: url,
+    // dataType: 'json',
+    type: method,
+    // contentType: 'application/json',
+    data: {title: title, questions: JSON.stringify(questions)},//JSON.stringify(data),//data,//JSON.stringify(data),
+	  // processData: false,
+	  success: function( data, textStatus, jQxhr ){
+	  	console.log("sucess");
+	  	//location.href = url;
+
+	  	location.reload();
+	    // $('#response pre').html( JSON.stringify( data ) );
+	  },
+	  error: function( jqXhr, textStatus, errorThrown ){
+	    console.log( errorThrown );
+	  }
+	});
+
 
 }

@@ -29,20 +29,20 @@
 	  <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
 	  <a href="/projects/<%= projID %>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
 	  <a href="/projects/<%= projID %>" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
-	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
-	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
 	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
 	</div>
 
 	<div id="content" class="open">
-		<h1 id="title">創建學生報名表單</h1>	
+		<h1 id="title">創建推薦信表單</h1>	
 		projID = <%= projID %>
 		<div class="w3-container form">
 		  <div class="w3-card-4">
 		    <form id="form-edit" class="w3-container">
 		    	<div class="w3-container">
-			      <h2><input type="text" name="title" value="" placeholder="成大資工所推甄入學報名表" onfocus="this.placeholder = ''" onblur="this.placeholder = '請填入學生表單名稱'" ></h2>
+			      <h2><input type="text" name="title" value="" placeholder="成大資工所推薦信表單" onfocus="this.placeholder = ''" onblur="this.placeholder = '成大資工所推薦信表單'" ></h2>
 			    </div>
 			    <div id="qidic6kl" class="question-pannel text-answer">
 		    		<span onclick="removeQuestion('qidic6kl');" class="w3-bar-item w3-button w3-white w3-hover-opacity w3-hover-black w3-border w3-xlarge w3-right">×</span>
@@ -73,7 +73,7 @@
 					  </div>
 					</div>
 					<div id="add-q-button" onclick="addQuestion(id);" class="w3-button w3-circle w3-grey w3-large add-q-button">+</div><br>
-		    	<div onclick= "createStudentForm('<%= projID %>');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button">創建表單</div>
+		    	<div onclick= "createRmdForm('<%= projID %>');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button">創建表單</div>
 		    </form>
 		  </div>
 		</div>

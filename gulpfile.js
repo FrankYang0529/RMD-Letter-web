@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var watch = require('gulp-watch');
 var uglify = require('gulp-uglify');
 var pump = require('pump');
 var cleanCSS = require('gulp-clean-css');
@@ -16,6 +17,11 @@ gulp.task('default', function() {
 
 gulp.task('hello', function(){
   console.log('Hello nacat');
+});
+
+gulp.task('watch', function () {
+  gulp.watch('public/src/js/*.js', ['minify-js']);
+  gulp.watch('public/src/css/*.css', ['minify-css']);
 });
 
 gulp.task('minify-js', function (cb) {
