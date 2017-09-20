@@ -6,6 +6,8 @@ const RecommendedPerson = require('../models/rmdPerson');
 const StuAccount = require('../models/stuAccount');
 const StuFormAns = require('../models/stuFormAns');
 const RmdLtFormAns = require('../models/rmdltFormAns');
+const fs = require('fs');
+const AWS = require('aws-sdk');
 
 // not  api
 exports.createPage = (req, res, next) => {
@@ -126,7 +128,49 @@ exports.projAddPost = (req, res, next) => {
         });
         */
       }
-      proj.announcement.push(req.body.announcement);
+
+      const file = req.files.file;
+      if (file) {
+        const stream = fs.createReadStream(file.path);
+        
+        const s3 = new AWS.S3({
+          params: {
+            Bucket: 'rmd-letter',
+            Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
+            ACL: 'public-read',  //  檔案權限
+          },
+        });
+        
+        s3.upload({
+          Body: stream,
+        }).on('httpUploadProgress', (progress) => {
+            //  上傳進度
+          console.log(`${progress.loaded} of ${progress.total} bytes`);
+        })
+          .send((err, data) => {
+              // delete temp file
+            fs.unlink(file.path, (error) => {
+              if (err) {
+                console.error(error);
+              }
+              console.log('Temp File Delete');
+            });
+              //  上傳完畢或是碰到錯誤
+            if (err) {
+              console.log(err);
+            } else {
+              proj.announcement.push({
+                title: req.body.announcement.title,
+                text: req.body.announcement.text,
+                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
+                timestamp: req.body.announcement.timestamp,
+              });
+            }
+          });
+      } else {
+        proj.announcement.push(req.body.announcement);
+      }
+
       return proj.save();
     })
     .then((proj) => {
@@ -152,7 +196,41 @@ exports.projAnnouncementEdit = (req, res, next) => {
         if (body._id == req.params.announcementID) { // must be == not ===
           body.title = req.body.announcement.title;
           body.text = req.body.announcement.text;
-          body.file = req.body.announcement.file;
+          
+          const file = req.files.file;
+          if (file) {
+            const stream = fs.createReadStream(file.path);
+            
+            const s3 = new AWS.S3({
+              params: {
+                Bucket: 'rmd-letter',
+                Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
+                ACL: 'public-read',  //  檔案權限
+              },
+            });
+            
+            s3.upload({
+              Body: stream,
+            }).on('httpUploadProgress', (progress) => {
+                //  上傳進度
+              console.log(`${progress.loaded} of ${progress.total} bytes`);
+            })
+              .send((err, data) => {
+                  // delete temp file
+                fs.unlink(file.path, (error) => {
+                  if (err) {
+                    console.error(error);
+                  }
+                  console.log('Temp File Delete');
+                });
+                  //  上傳完畢或是碰到錯誤
+                if (err) {
+                  console.log(err);
+                } else {
+                  body.file = `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`;
+                }
+              });
+          }
         }
       });
 

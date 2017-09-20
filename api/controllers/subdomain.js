@@ -432,20 +432,3 @@ exports.updateStudentForm = (req, res, next) => {
       res.send(err);
     });
 };
-
-exports.uploadFile = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
-    })
-    .then((answer) => {
-      answer.answers = JSON.parse(req.body.answers);
-      return answer.save();
-    })
-    .then((proj) => {
-      res.redirect('/recommendData');
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-};

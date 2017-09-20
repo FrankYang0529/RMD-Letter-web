@@ -44,7 +44,7 @@ app.use(session({
   key: 'express.sid',
   resave: true,
   saveUninitialized: false,
-  cookie: { path: '/', httpOnly: true, maxAge: null }
+  cookie: { path: '/', httpOnly: true, maxAge: null },
 }));
 
 app.use((req, res, next) => {
@@ -66,6 +66,14 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 mongoose.connect(CONFIG.mongo);
+
+//  aws s3
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+  accessKeyId: CONFIG.AWS.accessKeyId,
+  secretAccessKey: CONFIG.AWS.secretAccessKey,
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

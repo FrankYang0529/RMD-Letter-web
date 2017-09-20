@@ -170,6 +170,7 @@ function updateStudentForm() {
                     textSet.push({
                       subQuestion_id: sub._id,
                       text: $(`#${sub._id}`).val(),
+                    });ub._id}`).val(),
                     });
                   });
                   answer.push({

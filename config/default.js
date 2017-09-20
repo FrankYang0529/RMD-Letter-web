@@ -14,10 +14,16 @@ module.exports = {
   mongo: 'mongodb://localhost/rmd-letter',
   redis: {
     host: '127.0.0.1',
-    port: 6379
+    port: 6379,
   },
 
   // path
   Controllers: Controllers,
-  Models: Models
+  Models: Models,
+
+  // aws s3
+  AWS: {
+    accessKeyId: YourAcessKey,
+    secretAccessKey: YourSecretAccessKey,
+  },
 };
