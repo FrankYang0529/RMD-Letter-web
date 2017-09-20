@@ -166,3 +166,8 @@ hr {
 .swal-wide{
     width:620px !important;
 }
+
+textarea {
+    resize: none;
+    min-height: 150px;
+}

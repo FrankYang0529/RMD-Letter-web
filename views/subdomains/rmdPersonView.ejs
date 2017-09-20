@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="/subdomain/css/style.css">
+    <!-- 最新編譯和最佳化的 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- 選擇性佈景主題 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <!-- 最新編譯和最佳化的 JavaScript -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
+
+    <title>
+        <%= proj.titleZh %> 推薦信填寫</title>
+
+</head>
+
+<body>
+    <div class="wrapper" style=" height:100%; width:100%;">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <h1>
+                        <%= proj.titleZh %> - 推薦信填寫</h1>
+                </div>
+            </div>
+        </nav>
+
+        <style>
+            th {
+                border-top: 3px solid #ddd !important;
+                background-color: #82d5ec;
+                width: 20%;
+            }
+
+            table {
+                table-layout: fixed;
+                border: 3px solid #ddd;
+            }
+
+            td {
+                border-right: 3px solid #ddd;
+                border-top: 3px solid #ddd !important;
+            }
+
+            .btn-student {
+                background-color: #59B2E0 !important;
+                outline: none;
+                color: #fff !important;
+                font-size: 17px;
+                height: 35px !important;
+                font-weight: normal;
+                padding: 14px 0;
+                text-transform: uppercase;
+                border-color: #59B2E6;
+                width: 120px;
+                float: right;
+                margin-top: -30px;
+                line-height: 0px;
+            }
+
+            .btn-student:hover,
+            .btn-student:focus {
+                color: #fff;
+                background-color: #53A3CD;
+                border-color: #53A3CD;
+            }
+        </style>
+
+        <div style="padding-top: 88px;">
+            <script>
+                function submitRmdLtForm(projID) {
+                    $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
+                        let answer = [];
+
+                        data.questions.forEach((question) => {
+                            if (question.questionType === 'text' || question.questionType ===
+                                'textArea') {
+                                answer.push({
+                                    question_id: question._id,
+                                    choices: [],
+                                    file_url: '',
+                                    text: $(`.${question._id}`).val(),
+                                    textSet: [],
+                                });
+                            } else if (question.questionType === 'single' || question.questionType ===
+                                'multiple') {
+                                let optionAnswers = [];
+                                question.options.forEach((option) => {
+                                    if ($(`#${option._id}`).is(':checked')) {
+                                        optionAnswers.push({
+                                            option_id: option._id, // 所選選項的ID
+                                            option: option.option,
+                                        });
+                                    }
+                                });
+                                answer.push({
+                                    question_id: question._id,
+                                    choices: optionAnswers,
+                                    file_url: '',
+                                    text: '',
+                                    textSet: [],
+                                });
+                            }
+                        });
+
+
+
+                        $.ajax({
+                            url: window.location.href,
+                            type: 'POST',
+                            data: {
+                                answers: JSON.stringify(answer),
+                            },
+                        });
+
+                        swal({
+                            type: 'success',
+                            html: '成功填寫完畢!',
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            focusConfirm: false,
+                            confirmButtonText: '我知道了',
+                            confirmButtonAriaLabel: '我知道了',
+                        });
+
+                        location.reload();
+                    });
+                }
+
+                function updateRmdLtForm(projID) {
+
+
+                    $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
+                        console.log(data);
+
+                        let answer = [];
+
+                        data.questions.forEach((question) => {
+                            if (question.questionType === 'text' || question.questionType ===
+                                'textArea') {
+                                answer.push({
+                                    question_id: question._id,
+                                    choices: [],
+                                    file_url: '',
+                                    text: $(`.${question._id}`).val(),
+                                    textSet: [],
+                                });
+                            } else if (question.questionType === 'single' || question.questionType ===
+                                'multiple') {
+                                let optionAnswers = [];
+                                question.options.forEach((option) => {
+                                    if ($(`#${option._id}`).is(':checked')) {
+                                        optionAnswers.push({
+                                            option_id: option._id, // 所選選項的ID
+                                            option: option.option,
+                                        });
+                                    }
+                                });
+                                answer.push({
+                                    question_id: question._id,
+                                    choices: optionAnswers,
+                                    file_url: '',
+                                    text: '',
+                                    textSet: [],
+                                });
+                            }
+                        });
+
+                        $.ajax({
+                            url: window.location.href,
+                            type: 'PUT',
+                            data: {
+                                answers: JSON.stringify(answer),
+                            },
+                        });
+                        swal({
+                            type: 'success',
+                            html: '成功修改完畢!',
+                            showCloseButton: true,
+                            showCancelButton: false,
+                            focusConfirm: false,
+                            confirmButtonText: '關閉',
+                            confirmButtonAriaLabel: '關閉',
+                        });
+                        location.reload();
+                    });
+                }
+            </script>
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h3 class="modal-title">學生資料</h3>
+            </div>
+            <div class="modal-body">
+                    <table class="table">
+                            <% 
+                            studentQues.questions.forEach( function (question) { 
+                                studentAns.answers.forEach( function (answer) {
+                                    if (question._id == answer.question_id) { 
+                                        if (question.questionType == 'text') {                                                                                                                
+                            %>
+                                            <tr>
+                                                <th><%= question.questionTitle %>：</th>
+                                                <td><%= answer.text %></td>
+                                            </tr>
+                            <%          } else if (question.questionType == 'textArea') {   %>
+                                            <tr>
+                                                <th><%= question.questionTitle %>：</th>
+                                                <td style="white-space:pre"><%= answer.text %></td>
+                                            </tr>
+                            <%          } else if (question.questionType == 'single') { %>
+                                            <tr>
+                                                <th><%= question.questionTitle %>：</th>
+                                                <td><%= answer.choices[0].option %></td>
+                                            </tr>
+                            <%          } else if (question.questionType == 'multiple') {  %>
+                                            <tr>
+                                                <th><%= question.questionTitle %>：</th>
+                                                <td>
+                                                    <% answer.choices.forEach( function (choice, index) { 
+                                                        if (index == 0) {
+                                                    %>
+                                                            <span><%= choice.option %></span>
+                                                    <%  } else { %>
+                                                            <span>、 <%= choice.option %></span>
+                                                    <%  }
+                                                       });
+                                                    %>
+                                                </td>
+                                            </tr>
+                            <%          }
+                                    }
+                                });
+                               });
+                            %>
+                            </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+            </div>
+          </div>
+        </div>
+      </div>
+            <div class="custom-container">
+                <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
+                    <div class="row" style="margin-top:12px;">
+
+                        <div style="background-color: white; border-radius: 10px;">
+                            <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 119px);">
+                                <div class="panel-body">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;推薦信填寫</h2>
+                                        <input type="submit" data-toggle="modal" data-target="#myModal" class="form-control btn btn-student" value="學生資料">
+                                    </div>
+                                    <hr>
+                                    <% if ( answers === null ) { %>
+                                        <form class="form-horizontal question-form">
+                                            <% questions.questions.forEach( function (question, index) { 
+                                                if (question.questionType === 'textSet') {                                                  
+                                            %>
+                                                <div class="form-group row">
+                                                    <label class="col-xs-1 control-label"><%= question.questionTitle %></label>
+                                                    <% 
+                                                            const num = question.subQuestions.length + 1;
+                                                            let questionRange = Math.floor((12 - num) / num);
+                                                            if (questionRange < 1) { questionRange = 1; }
+                                                        %>
+                                                        <div class="col-xs-<%= questionRange %>">
+                                                            <input type="text" class="form-control <%= question._id %>" id="text" />
+                                                        </div>
+                                                        <% question.subQuestions.forEach(function(sub) { %>
+                                                            <label class="col-xs-1 control-label"><%=sub.title %></label>
+                                                            <div class="col-xs-<%= questionRange %>">
+                                                                <input type="text" class="form-control <%= question._id %>" id="<%= sub._id %>" />
+                                                            </div>
+                                                            <% }); %>
+                                                </div>
+                                                <%  } else { %>
+                                                    <div class="form-group row">
+                                                        <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
+                                                        <div class="col-xs-10">
+                                                            <% if (question.questionType === 'text') { %>
+                                                                <input type="text" class="form-control <%= question._id %>" />
+                                                                <% } else if (question.questionType === 'textArea') { %>
+                                                                    <textarea class="form-control <%= question._id %>"></textarea>
+                                                                    <%  } else { 
+                                                                    question.options.forEach(function(option) {
+                                                                        if (question.questionType === 'single') {
+                                                            %>
+                                                                        <div class="radio-inline">
+                                                                            <label><input type="radio" class="<%= question._id %>" id="<%= option._id %>" name="<%= question._id %>"><%= option.option %></label>
+                                                                        </div>
+                                                                        <%          } else { %>
+                                                                            <div class="checkbox-inline">
+                                                                                <label><input type="checkbox" class="<%= question._id %>" id="<%= option._id %>"><%= option.option %></label>
+                                                                            </div>
+                                                                            <%          } 
+                                                                    }); 
+                                                                } 
+                                                            %>
+                                                        </div>
+                                                    </div>
+                                                    <% }}); %>
+                                        </form>
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button class="btn btn-default" onclick="submitRmdLtForm('<%= proj._id %>')">送出
+                                            </button>
+                                        </div>
+                                        <% } else { %>
+                                            <form class="form-horizontal question-form">
+                                                <% questions.questions.forEach( function (question, index) { 
+                                                if (question.questionType === 'textSet') {                                                  
+                                            %>
+                                                    <div class="form-group row">
+                                                        <label class="col-xs-1 control-label"><%= question.questionTitle %></label>
+                                                        <% 
+                                                            const num = question.subQuestions.length + 1;
+                                                            let questionRange = Math.floor((12 - num) / num);
+                                                            if (questionRange < 1) { questionRange = 1; }
+                                                        %>
+                                                            <div class="col-xs-<%= questionRange %>">
+                                                                <input type="text" class="form-control <%= question._id %>" id="text" />
+                                                            </div>
+                                                            <% question.subQuestions.forEach(function(sub) { %>
+                                                                <label class="col-xs-1 control-label"><%=sub.title %></label>
+                                                                <div class="col-xs-<%= questionRange %>">
+                                                                    <input type="text" class="form-control <%= question._id %>" id="<%= sub._id %>" />
+                                                                </div>
+                                                                <% }); %>
+                                                    </div>
+                                                    <%  } else { %>
+                                                        <div class="form-group row">
+                                                            <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
+                                                            <div class="col-xs-10">
+                                                                <% if (question.questionType === 'text') { %>
+                                                                    <input type="text" class="form-control <%= question._id %>" />
+                                                                    <% } else if (question.questionType === 'textArea') { %>
+                                                                        <textarea class="form-control <%= question._id %>"></textarea>
+                                                                        <%  } else { 
+                                                                    question.options.forEach(function(option) {
+                                                                        if (question.questionType === 'single') {
+                                                            %>
+                                                                            <div class="radio-inline">
+                                                                                <label><input type="radio" class="<%= question._id %>" id="<%= option._id %>" name="<%= question._id %>"><%= option.option %></label>
+                                                                            </div>
+                                                                            <%          } else { %>
+                                                                                <div class="checkbox-inline">
+                                                                                    <label><input type="checkbox" class="<%= question._id %>" id="<%= option._id %>"><%= option.option %></label>
+                                                                                </div>
+                                                                                <%          } 
+                                                                    }); 
+                                                                } 
+                                                            %>
+                                                            </div>
+                                                        </div>
+                                                        <% }}); %>
+                                            </form>
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button class="btn btn-default" onclick="updateRmdLtForm('<%= proj._id %>')">送出
+                                            </button>
+                                            </div>
+                                            <script>
+                                                const currentUrl = window.location.href;
+                                                const url = currentUrl.substring(currentUrl.indexOf('rmd-person') + 10, currentUrl.length);
+                                                $.getJSON(`/rmd-person/get-form-answer${url}`, function (data) {
+                                                    if (data !== null) {
+                                                        data.answers.forEach(function (answer) {
+                                                            if (answer.text !== '') {
+                                                                $(`.${answer.question_id}`).val(answer.text);
+                                                            } else {
+                                                                answer.choices.forEach(function (choice) {
+                                                                    $(
+                                                                        `.${answer.question_id}#${choice.option_id}`
+                                                                    ).prop("checked", true);
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            </script>
+                                            <% } %>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
