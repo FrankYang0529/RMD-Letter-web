@@ -1,0 +1,115 @@
+<html lang="zh-Hant">
+        <head>
+          <link rel="stylesheet" type="text/css" href="/subdomain/css/signInUp.css">
+          <!-- 最新編譯和最佳化的 CSS -->
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+          <!-- 選擇性佈景主題 -->
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+          <!-- 最新編譯和最佳化的 JavaScript -->
+          <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        </head>
+        
+        <body>
+          <style>
+              th, td {
+                line-height: 2 !important;
+              }
+
+              .first-row {
+                  border-top: 0px !important;
+              }
+          </style>
+          <div class="container">
+            <div class="header">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <h1>個人資料</h1>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-md-offset-3">
+                <div class="panel" style="text-align: center;">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tr>
+                                <th width="20%" class="first-row">帳號:</th>
+                                <td id="username" width="60%" class="first-row"><%= user.username %></td>
+                                <td width="20%" class="first-row"></td>
+                            </tr>
+                            <tr>
+                                <th>姓名:</th>
+                                <td id="displayName"><%= user.displayName %></td>
+                                <td><input type="submit" id="update-displayName" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('displayName','<%= user.displayName %>','<%= user.email %>')"></td>
+                            </tr>
+                            <tr>
+                                <th>信箱:</th>
+                                <td id="email"><%= user.email %></td>
+                                <td><input type="submit" id="update-email" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('email','<%= user.displayName %>','<%= user.email %>')"></td>
+                            </tr>
+                        </table>
+                    </div>
+                  </div>
+                  <div class="panel" style="text-align: center;">
+                        <div class="panel-body">
+                          <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <a href="/"><input type="submit" class="form-control btn btn-login" value="回首頁"></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              </div>
+            </div>
+          </div>
+          <script>
+              function send(id, displayName, email) {
+                $(`#update-${id}`).val('修改');
+                
+                if(id === 'displayName') {
+                    $.ajax({
+                        url: '/users/me',
+                        type: 'PUT',
+                        data: {
+                            displayName: $(`#answer-${id}`).val(),
+                            email: email,
+                        },
+                    });
+                    $(`#update-${id}`).attr('onclick', `modify("${id}","${$(`#answer-${id}`).val()}","${email}")`);
+                    if ($('#answer-email').length === 0){
+                        $('#update-email').attr('onclick', `modify("email","${$(`#answer-${id}`).val()}","${email}")`);
+                    } else {
+                        $('#update-email').attr('onclick', `send("email","${$(`#answer-${id}`).val()}","${email}")`);
+                    }
+                } else {
+                    $.ajax({
+                        url: '/users/me',
+                        type: 'PUT',
+                        data: {
+                            displayName: displayName,
+                            email: $(`#answer-${id}`).val(),
+                        },
+                    });
+                    $(`#update-${id}`).attr('onclick', `send("${id}","${displayName}","${$(`#answer-${id}`).val()}")`);
+                    if ($('#answer-displayName').length === 0){
+                        $('#update-displayName').attr('onclick', `modify("displayName","${$(`#answer-${id}`).val()}","${email}")`);
+                    } else {
+                        $('#update-displayName').attr('onclick', `send("displayName","${$(`#answer-${id}`).val()}","${email}")`);
+                    }
+                }
+
+                setTimeout(()=>{
+                    $(`#${id}`).html($(`#answer-${id}`).val());
+                }, 100);
+              }
+
+              function modify(id, displayName, email) {
+                $(`#update-${id}`).val('確定');
+                $(`#update-${id}`).attr('onclick', `send("${id}","${displayName}","${email}")`);
+                
+                const value = $(`#${id}`).html();
+                setTimeout(()=>{
+                    $(`#${id}`).html(`<input type="text" id="answer-${id}" class="form-control" value="${value}"/>`);
+                }, 100);
+              }
+          </script>
+        </body>
+      </html>

@@ -5,25 +5,48 @@ function submitAddPerson() {
   const email = document.getElementById('email').value;
 
   if (name.length === 0 || jobTitle.length === 0 || serviceUnit.length === 0 || email.length === 0) {
-    $('#alertContent').html('請確認資料填寫完整');
-    $('#alertFooter').html('關閉');
-    $('#alertMessage').modal('show');
+    swal({
+      type: 'warning',
+      html: '請確認資料填寫完整',
+      showCloseButton: true,
+      showCancelButton: false,
+      focusConfirm: false,
+      confirmButtonText: '關閉',
+      confirmButtonAriaLabel: '關閉',
+    });
   } else {
-    $('#alertContent').html('新增成功!在系辦認證成功後會加入推薦人名單中!');
-    $('#alertFooter').html('跳轉中請稍等');
-    $('#alertMessage').modal('show');
-    setTimeout(() => {
-      document.getElementById('rmdPerson').submit();
-    }, 2000);
+    swal({
+        type: 'success',
+        html: '<p>新增成功!尚需交由管理者審核通過!</p><p>跳轉中請稍後...</p',
+        timer: 3000,
+        onOpen: () => {
+          swal.showLoading();
+        },
+      })
+      .then(
+        () => {},
+        // handling the promise rejection
+        (dismiss) => {
+          if (dismiss === 'timer') {
+            document.getElementById('rmdPerson').submit();
+          }
+        },
+      );
   }
 }
 
 function submitStudentForm() {
   $.get('/projects/student-form-answer', function (data) {
     if (data !== null) { //  student-form had been done
-      $('#alertContent').html('已填寫過學生資料，欲修改資料請至「修改資料」');
-      $('#alertFooter').html('關閉');
-      $('#alertMessage').modal('show');
+      swal({
+        type: 'warning',
+        html: '已填寫過學生資料，欲修改資料請至「修改資料」',
+        showCloseButton: true,
+        showCancelButton: false,
+        focusConfirm: false,
+        confirmButtonText: '我知道了',
+        confirmButtonAriaLabel: '我知道了',
+      });
     } else {
       $.getJSON('/projects/student-form', (data) => {
         console.log(data);
@@ -55,22 +78,23 @@ function submitStudentForm() {
               text: '',
               textSet: [],
             });
-          }/* else { //  textSet
-            let textSet = [];
-            question.subQuestions.forEach((sub) => {
-              textSet.push({
-                subQuestion_id: sub._id,
-                text: $(`#${sub._id}`).val(),
-              });
-            });
-            answer.push({
-              question_id: question._id,
-              choices: [],
-              file_url: '',
-              text: $(`.${question._id}`).val(),
-              textSet,
-            });
-          }*/
+          }
+          /* else { //  textSet
+                      let textSet = [];
+                      question.subQuestions.forEach((sub) => {
+                        textSet.push({
+                          subQuestion_id: sub._id,
+                          text: $(`#${sub._id}`).val(),
+                        });
+                      });
+                      answer.push({
+                        question_id: question._id,
+                        choices: [],
+                        file_url: '',
+                        text: $(`.${question._id}`).val(),
+                        textSet,
+                      });
+                    }*/
         });
 
         $.ajax({
@@ -80,75 +104,104 @@ function submitStudentForm() {
             answers: JSON.stringify(answer),
           },
         });
-        $('#alertContent').html('成功填寫完畢!');
-        $('#alertFooter').html('關閉');
-        $('#alertMessage').modal('show');
-        $('#alertFooter').attr('onclick', "document.location.href = '/recommendData'");
+        swal({
+          type: 'success',
+          html: '成功填寫完畢!',
+          showCloseButton: true,
+          showCancelButton: false,
+          focusConfirm: false,
+          confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
+          confirmButtonAriaLabel: '我知道了',
+        });
       });
     }
   });
 }
 
 function updateStudentForm() {
-  $.getJSON('/projects/student-form', (data) => {
-    console.log(data);
-    let answer = [];
+  $.get('/projects/student-form-answer', function (data) {
+    if (data == null) { //  student-form had been done
+      swal({
+        type: 'warning',
+        html: '尚未填寫資料，請先至「填寫資料」填寫完畢',
+        showCloseButton: true,
+        showCancelButton: false,
+        focusConfirm: false,
+        confirmButtonText: '我知道了',
+        confirmButtonAriaLabel: '我知道了',
+      });
+    } else {
 
-    data.questions.forEach((question) => {
-      if (question.questionType === 'text' || question.questionType === 'textArea') {
-        answer.push({
-          question_id: question._id,
-          choices: [],
-          file_url: '',
-          text: $(`.${question._id}`).val(),
-          textSet: [],
-        });
-      } else if (question.questionType === 'single' || question.questionType === 'multiple') {
-        let optionAnswers = [];
-        question.options.forEach((option) => {
-          if ($(`#${option._id}`).is(':checked')) {
-            optionAnswers.push({
-              option_id: option._id, // 所選選項的ID
-              option: option.option,
+      $.getJSON('/projects/student-form', (data) => {
+        console.log(data);
+
+        let answer = [];
+
+        data.questions.forEach((question) => {
+          if (question.questionType === 'text' || question.questionType === 'textArea') {
+            answer.push({
+              question_id: question._id,
+              choices: [],
+              file_url: '',
+              text: $(`.${question._id}`).val(),
+              textSet: [],
+            });
+          } else if (question.questionType === 'single' || question.questionType === 'multiple') {
+            let optionAnswers = [];
+            question.options.forEach((option) => {
+              if ($(`#${option._id}`).is(':checked')) {
+                optionAnswers.push({
+                  option_id: option._id, // 所選選項的ID
+                  option: option.option,
+                });
+              }
+            });
+            answer.push({
+              question_id: question._id,
+              choices: optionAnswers,
+              file_url: '',
+              text: '',
+              textSet: [],
             });
           }
+          /* else { //  textSet
+                  let textSet = [];
+                  question.subQuestions.forEach((sub) => {
+                    textSet.push({
+                      subQuestion_id: sub._id,
+                      text: $(`#${sub._id}`).val(),
+                    });ub._id}`).val(),
+                    });
+                  });
+                  answer.push({
+                    question_id: question._id,
+                    choices: [],
+                    file_url: '',
+                    text: $(`.${question._id}`).val(),
+                    textSet,
+                  });
+                }*/
         });
-        answer.push({
-          question_id: question._id,
-          choices: optionAnswers,
-          file_url: '',
-          text: '',
-          textSet: [],
-        });
-      }/* else { //  textSet
-        let textSet = [];
-        question.subQuestions.forEach((sub) => {
-          textSet.push({
-            subQuestion_id: sub._id,
-            text: $(`#${sub._id}`).val(),
-          });
-        });
-        answer.push({
-          question_id: question._id,
-          choices: [],
-          file_url: '',
-          text: $(`.${question._id}`).val(),
-          textSet,
-        });
-      }*/
-    });
 
-    $.ajax({
-      url: '/projects/student-form',
-      type: 'PUT',
-      data: {
-        answers: JSON.stringify(answer),
-      },
-    });
-    $('#alertContent').html('成功修改完畢!');
-    $('#alertFooter').html('關閉');
-    $('#alertMessage').modal('show');
-    $('#alertFooter').attr('onclick', "document.location.href = '/recommendData'");
+        $.ajax({
+          url: '/projects/student-form',
+          type: 'PUT',
+          data: {
+            answers: JSON.stringify(answer),
+          },
+        });
+        swal({
+          type: 'success',
+          html: '成功修改完畢!',
+          showCloseButton: true,
+          showCancelButton: false,
+          focusConfirm: false,
+          confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
+          confirmButtonAriaLabel: '關閉',
+        });
+      });
+
+    }
   });
 }
 
@@ -159,15 +212,99 @@ function sendLetter(rmdPersonID) {
   $.get('/projects/student-form-answer', function (data) {
     console.log(data);
     if (data === null) {
-      $('#alertContent').html('請先完成學生資料填寫');
-      $('#alertFooter').html('關閉');
-      $('#alertMessage').modal('show');
+      swal({
+        type: 'error',
+        html: '請先完成學生資料填寫',
+        showCloseButton: true,
+        showCancelButton: false,
+        focusConfirm: false,
+        confirmButtonText: '我知道了',
+        confirmButtonAriaLabel: '我知道了',
+      });
     } else {
-      $('#alertContent').html('成功送出!');
-      $('#alertFooter').html('關閉');
-      $('#alertMessage').modal('show');
+      swal({
+        type: 'success',
+        html: '成功送出',
+        showCloseButton: true,
+        showCancelButton: false,
+        focusConfirm: false,
+        confirmButtonText: '關閉',
+        confirmButtonAriaLabel: '關閉',
+      });
 
       $.get(`/projects/${rmdPersonID}/send-letter`);
     }
+  });
+}
+
+function intro(type, content) {
+  $('.swal2-modal').css('width', '620px !important');
+
+  swal.setDefaults({
+    confirmButtonText: '下一步 &rarr;',
+    cancelButtonText: '我已經清楚了',
+    showCancelButton: true,
+    animation: false,
+    progressSteps: ['1', '2', '3', '4']
+  });
+
+  const steps = [{
+      title: 'Step 1',
+      text: '看清楚公告事項，不錯過任何訊息',
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step1.png',
+      customClass: 'swal-wide',
+      imageWidth: 620,
+      imageHeight: 355,
+    },
+    {
+      title: 'Step 2',
+      text: '填寫個人推薦資料',
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step2.png',
+      customClass: 'swal-wide',
+      imageWidth: 620,
+      imageHeight: 355,
+    },
+    {
+      title: 'Step 3',
+      text: '寄信給推薦人!',
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step3.png',
+      customClass: 'swal-wide',
+      imageWidth: 380,
+      imageHeight: 315,
+    },
+    {
+      title: 'Step 4',
+      text: '時刻確認你的推薦信進度',
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step4.png',
+      customClass: 'swal-wide',
+      imageWidth: 380,
+      imageHeight: 315,
+    },
+  ];
+
+  swal.queue(steps).then(() => {
+    swal.resetDefaults();
+    if (type === 1) { //  if is the first intro after register
+      swal({
+          title: '馬上開始使用吧!',
+          html: '',
+          confirmButtonText: 'OK!',
+        })
+        .then(function () {
+          swal(
+            '截止日期',
+            content,
+            'warning',
+          );
+        });
+    } else {
+      swal({
+        title: '馬上開始使用吧!',
+        html: '',
+        confirmButtonText: 'OK!',
+      });
+    }
+  }, () => {
+    swal.resetDefaults();
   });
 }

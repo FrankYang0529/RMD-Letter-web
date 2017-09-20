@@ -7,6 +7,8 @@ const StuAccount = require('../models/stuAccount');
 const StuFormAns = require('../models/stuFormAns');
 const RmdLtFormAns = require('../models/rmdltFormAns');
 const Promise = require('bluebird');
+const fs = require('fs');
+const AWS = require('aws-sdk');
 
 // not  api
 exports.createPage = (req, res, next) => {
@@ -135,8 +137,49 @@ exports.projAddPost = (req, res, next) => {
         });
         */
       //}
-      
-      proj.announcement.push(req.body);
+
+      if (req.files && req.files.file) {
+        const file = req.files.file;
+        const stream = fs.createReadStream(file.path);
+
+        const s3 = new AWS.S3({
+          params: {
+            Bucket: 'rmd-letter',
+            Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
+            ACL: 'public-read',  //  檔案權限
+          },
+        });
+        
+        s3.upload({
+          Body: stream,
+        }).on('httpUploadProgress', (progress) => {
+            //  上傳進度
+          console.log(`${progress.loaded} of ${progress.total} bytes`);
+        })
+          .send((err, data) => {
+              // delete temp file
+            fs.unlink(file.path, (error) => {
+              if (err) {
+                console.error(error);
+              }
+              console.log('Temp File Delete');
+            });
+              //  上傳完畢或是碰到錯誤
+            if (err) {
+              console.log(err);
+            } else {
+              proj.announcement.push({
+                title: req.body.announcement.title,
+                text: req.body.announcement.text,
+                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
+                timestamp: req.body.announcement.timestamp,
+              });
+            }
+          });
+      } else {
+        proj.announcement.push(req.body.announcement);
+      }
+
       return proj.save();
     })
     .then((proj) => {
@@ -163,7 +206,41 @@ exports.projAnnouncementEdit = (req, res, next) => {
         if (body._id == req.params.announcementID) { // must be == not ===
           body.title = req.body.announcement.title;
           body.text = req.body.announcement.text;
-          body.file = req.body.announcement.file;
+
+          if (req.files && req.files.file) {
+            const file = req.files.file;
+            const stream = fs.createReadStream(file.path);
+
+            const s3 = new AWS.S3({
+              params: {
+                Bucket: 'rmd-letter',
+                Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
+                ACL: 'public-read',  //  檔案權限
+              },
+            });
+
+            s3.upload({
+              Body: stream,
+            }).on('httpUploadProgress', (progress) => {
+                //  上傳進度
+              console.log(`${progress.loaded} of ${progress.total} bytes`);
+            })
+              .send((err, data) => {
+                  // delete temp file
+                fs.unlink(file.path, (error) => {
+                  if (err) {
+                    console.error(error);
+                  }
+                  console.log('Temp File Delete');
+                });
+                  //  上傳完畢或是碰到錯誤
+                if (err) {
+                  console.log(err);
+                } else {
+                  body.file = `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`;
+                }
+              });
+          }
         }
       });
 
@@ -219,6 +296,76 @@ exports.projSubdomainEdit = (req, res, next) => {
     .then((proj) => {
       // res.redirect(`/projects/${proj._id}`);  //  回到detail
       res.send('success');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projPhoneEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.phone.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.phone = req.body.phone;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projEmailEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.email.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.email = req.body.email;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projDeadlineEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.startTime.length < 1 || req.body.endTime.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.startTime = req.body.startTime;
+      proj.endTime = req.body.endTime;
+
+      return proj.save();
+    })
+    .then((proj) => {
+      res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);

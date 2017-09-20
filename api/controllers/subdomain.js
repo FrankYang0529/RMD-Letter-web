@@ -8,6 +8,10 @@ const inviteLetter = require('../models/inviteLetter');
 const RmdltFormAnswer = require('../models/rmdltFormAns');
 const passwordHash = require('password-hash');
 const StudentForm = require('../models/stuForms');
+const AWS = require('aws-sdk');
+
+const s3 = new AWS.S3();
+
 
 // mail config
 const nodemailer = require('nodemailer');
@@ -15,8 +19,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'your email account',
-    pass: 'your email password',
+    user: 'Your account',
+    pass: 'Your password',
   },
 });
 
@@ -29,6 +33,7 @@ exports.index = (req, res, next) => {
         default: () => {
           res.render('subdomains/index', {
             user: req.user,
+            proj,
             announcements: proj.announcement,
           });
         },
@@ -53,6 +58,7 @@ exports.announcementDetail = (req, res, next) => {
         default: () => {
           res.render('subdomains/announcementDetail', {
             user: req.user,
+            proj,
             announcement: target,
           });
         },
@@ -64,7 +70,9 @@ exports.announcementDetail = (req, res, next) => {
 };
 
 exports.scheduleView = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+  const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+
+  return projs
     .then((proj) => {
       return RmdltFormAnswer.find({ projID: proj._id, stuID: req.user._id }).exec();
     })
@@ -73,6 +81,7 @@ exports.scheduleView = (req, res, next) => {
         default: () => {
           res.render('subdomains/schedule', {
             user: req.user,
+            proj: projs.value(),
             rmdlts,
           });
         },
@@ -92,12 +101,13 @@ exports.recommendData = (req, res, next) => {
     return StudentForm.findOne({ projID: proj._id }).exec();
   });
 
-  return Promise.join(b, c, (answers, questions) => {
+  return Promise.join(a, b, c, (proj, answers, questions) => {
     res.format({
       default: () => {
         res.render('subdomains/recommendData', {
           user: req.user,
           answers,
+          proj,
           questions,
         });
       },
@@ -106,17 +116,23 @@ exports.recommendData = (req, res, next) => {
 };
 
 exports.addRmdPersonView = (req, res, next) => {
-  res.format({
-    default: () => {
-      res.render('subdomains/addRmdPerson', {
-        user: req.user,
-      });
-    },
-  });
+  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+  .then((proj) => {
+    res.format({
+      default: () => {
+        res.render('subdomains/addRmdPerson', {
+          user: req.user,
+          proj,
+        });
+      },
+    });
+  })
 };
 
 exports.studentFormView = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+  const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+
+  return projs
     .then((proj) => {
       return StudentForm.findOne({ projID: proj._id }).exec();
     })
@@ -125,6 +141,7 @@ exports.studentFormView = (req, res, next) => {
         default: () => {
           res.render('subdomains/studentForm', {
             user: req.user,
+            proj: projs.value(),
             questions,
           });
         },
@@ -144,11 +161,12 @@ exports.updateStudentFormView = (req, res, next) => {
     return StudentForm.findOne({ projID: proj._id }).exec();
   });
 
-  return Promise.join(b, c, (answers, questions) => {
+  return Promise.join(a, b, c, (proj, answers, questions) => {
     res.format({
       default: () => {
         res.render('subdomains/updateStudentForm', {
           user: req.user,
+          proj,
           answers,
           questions,
         });
@@ -213,23 +231,16 @@ exports.logout = (req, res, next) => {
 
 exports.profile = (req, res, next) => {
   res.format({
-    'application/json': () => {
-      res.send(req.user);
-    },
     default: () => {
-      /* TODO
-      res.render('studentProfile', {
-        username: req.user.username,
-        name: req.user.displayName,
-        email: req.user.email
+      res.render('subdomains/profile', {
+        user: req.user,
       });
-      */
     },
   });
 };
 
 exports.update_profile = (req, res, next) => {
-  if (req.body.displayName.length < 1 || req.body.email.length < 1 || req.body.gravatar.length < 1) { // error handle
+  if (req.body.displayName.length < 1 || req.body.email.length < 1) { // error handle
     /*
     res.render('users', {
       username: req.user.username,
@@ -242,13 +253,9 @@ exports.update_profile = (req, res, next) => {
   }
   req.user.displayName = req.body.displayName;
   req.user.email = req.body.email;
-  req.user.permissionID = req.body.permissionID;
-  req.user.gravatar = req.body.gravatar;
+  //  req.user.gravatar = req.body.gravatar;
 
   req.user.save()
-    .then((user) => {
-      res.redirect('/users/me');
-    })
     .catch((err) => {
       res.send('duplicate email');
     });
@@ -278,7 +285,9 @@ exports.changePassword = (req, res, next) => {
 };
 
 exports.rmdPersonList = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
+  const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  
+  return projs
     .then((proj) => {
       return RecommendedPerson.findOne({ projID: proj._id }).exec();
     })
@@ -288,6 +297,7 @@ exports.rmdPersonList = (req, res, next) => {
         default: () => {
           res.render('subdomains/recommendList', {
             user: req.user,
+            proj: projs.value(),
             personList: personList.person,
           });
         },

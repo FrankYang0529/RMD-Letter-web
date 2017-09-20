@@ -3,6 +3,8 @@ const router = express.Router();
 
 const routes = require('../api/controllers/projects');
 const Policy = require('../api/policy');
+const multiparty = require('connect-multiparty');
+const multipartyMiddleware = multiparty();
 
 //  projects management
 router.get('/', Policy.loggedIn, routes.projectList);
@@ -12,12 +14,15 @@ router.post('/', Policy.loggedIn, routes.projCreate); // create first hbr
 
 //  project detail
 router.get('/:projID', Policy.loggedIn, routes.projDetail);
-router.put('/announcement/:projID/:announcementID', Policy.loggedIn, routes.projAnnouncementEdit); // modify post
-router.post('/announcement/:projID', Policy.loggedIn, routes.projAddPost); // add a post(公告)
+router.put('/announcement/:projID/:announcementID', Policy.loggedIn, multipartyMiddleware, routes.projAnnouncementEdit); // modify post
+router.post('/announcement/:projID', Policy.loggedIn, multipartyMiddleware, routes.projAddPost); // add a post(公告)
 router.get('/:projID/edit', Policy.loggedIn, routes.editPage);
 
 router.put('/:projID/titleZh', Policy.loggedIn, routes.projTitleZhEdit);
 router.put('/:projID/subdomain', Policy.loggedIn, routes.projSubdomainEdit);
+router.put('/:projID/email', Policy.loggedIn, routes.projEmailEdit);
+router.put('/:projID/phone', Policy.loggedIn, routes.projPhoneEdit);
+router.put('/:projID/deadline', Policy.loggedIn, routes.projDeadlineEdit);
 router.get('/:projID/deployed', Policy.loggedIn, routes.projDeployed);
 
 router.delete('/:projID', Policy.loggedIn, routes.projDelete);

@@ -40,13 +40,12 @@ router.post('/projects/rmd-person', Policy.studentLoggedIn, subroutes.addRmdPers
 //  Send Recommend Letter Invitation
 router.get('/projects/:rmdPersonID/send-letter', Policy.studentLoggedIn, subroutes.sentLetter);
 
-//Fill in student form
+//  Fill in student form
 router.get('/fill-student-form', Policy.studentLoggedIn, subroutes.studentFormView);
 router.get('/update-student-form', Policy.studentLoggedIn, subroutes.updateStudentFormView);
 router.get('/projects/student-form', Policy.studentLoggedIn, subroutes.getStudentForm); //  get student form question for ajax
 router.get('/projects/student-form-answer', Policy.studentLoggedIn, subroutes.getStudentFormAns); //  get student form answer for ajax
 router.post('/projects/student-form', Policy.studentLoggedIn, subroutes.studentForm);
 router.put('/projects/student-form', Policy.studentLoggedIn, subroutes.updateStudentForm);
-
 
 module.exports = router;
