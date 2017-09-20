@@ -38,12 +38,12 @@
                             <tr>
                                 <th>姓名:</th>
                                 <td id="displayName"><%= user.displayName %></td>
-                                <td><input id="update-displayName" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('displayName','<%= user.displayName %>','<%= user.email %>')"></td>
+                                <td><input type="submit" id="update-displayName" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('displayName','<%= user.displayName %>','<%= user.email %>')"></td>
                             </tr>
                             <tr>
                                 <th>信箱:</th>
                                 <td id="email"><%= user.email %></td>
-                                <td><input id="update-email" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('email','<%= user.displayName %>','<%= user.email %>')"></td>
+                                <td><input type="submit" id="update-email" tabindex="4" class="form-control btn btn-login" value="修改" onclick="modify('email','<%= user.displayName %>','<%= user.email %>')"></td>
                             </tr>
                         </table>
                     </div>
@@ -52,7 +52,7 @@
                         <div class="panel-body">
                           <div class="row">
                             <div class="col-sm-6 col-sm-offset-3">
-                                <a href="/"><input class="form-control btn btn-login" value="回首頁"></a>
+                                <a href="/"><input type="submit" class="form-control btn btn-login" value="回首頁"></a>
                             </div>
                           </div>
                         </div>

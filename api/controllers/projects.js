@@ -129,10 +129,10 @@ exports.projAddPost = (req, res, next) => {
         */
       }
 
-      const file = req.files.file;
-      if (file) {
+      if (req.files && req.files.file) {
+        const file = req.files.file;
         const stream = fs.createReadStream(file.path);
-        
+
         const s3 = new AWS.S3({
           params: {
             Bucket: 'rmd-letter',
@@ -196,11 +196,11 @@ exports.projAnnouncementEdit = (req, res, next) => {
         if (body._id == req.params.announcementID) { // must be == not ===
           body.title = req.body.announcement.title;
           body.text = req.body.announcement.text;
-          
-          const file = req.files.file;
-          if (file) {
+
+          if (req.files && req.files.file) {
+            const file = req.files.file;
             const stream = fs.createReadStream(file.path);
-            
+
             const s3 = new AWS.S3({
               params: {
                 Bucket: 'rmd-letter',
@@ -208,7 +208,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
                 ACL: 'public-read',  //  檔案權限
               },
             });
-            
+
             s3.upload({
               Body: stream,
             }).on('httpUploadProgress', (progress) => {
