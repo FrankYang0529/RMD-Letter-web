@@ -170,6 +170,7 @@ function updateStudentForm() {
                     textSet.push({
                       subQuestion_id: sub._id,
                       text: $(`#${sub._id}`).val(),
+                    });ub._id}`).val(),
                     });
                   });
                   answer.push({
@@ -237,6 +238,8 @@ function sendLetter(rmdPersonID) {
 }
 
 function intro(type, content) {
+  $('.swal2-modal').css('width', '620px !important');
+
   swal.setDefaults({
     confirmButtonText: '下一步 &rarr;',
     cancelButtonText: '我已經清楚了',
@@ -248,30 +251,34 @@ function intro(type, content) {
   const steps = [{
       title: 'Step 1',
       text: '看清楚公告事項，不錯過任何訊息',
-      imageUrl: 'https://unsplash.it/400/200',
-      imageWidth: 400,
-      imageHeight: 200,
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step1.png',
+      customClass: 'swal-wide',
+      imageWidth: 620,
+      imageHeight: 355,
     },
     {
       title: 'Step 2',
       text: '填寫個人推薦資料',
-      imageUrl: 'https://unsplash.it/400/200',
-      imageWidth: 400,
-      imageHeight: 200,
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step2.png',
+      customClass: 'swal-wide',
+      imageWidth: 620,
+      imageHeight: 355,
     },
     {
       title: 'Step 3',
       text: '寄信給推薦人!',
-      imageUrl: 'https://unsplash.it/400/200',
-      imageWidth: 400,
-      imageHeight: 200,
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step3.png',
+      customClass: 'swal-wide',
+      imageWidth: 380,
+      imageHeight: 315,
     },
     {
       title: 'Step 4',
       text: '時刻確認你的推薦信進度',
-      imageUrl: 'https://unsplash.it/400/200',
-      imageWidth: 400,
-      imageHeight: 200,
+      imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step4.png',
+      customClass: 'swal-wide',
+      imageWidth: 380,
+      imageHeight: 315,
     },
   ];
 

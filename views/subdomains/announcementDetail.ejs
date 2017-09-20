@@ -104,9 +104,9 @@
                     
                         <div style="background-color: white; border-radius: 10px;">
                         <% if ( typeof user != 'undefined' ) { %>
-                            <div class="panel" style="margin-bottom: 0; min-height: calc(100vh - 168px);">
+                            <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 169px);">
                         <% } else { %>
-                            <div class="panel" style="margin-bottom: 0; min-height: calc(100vh - 118px);">
+                            <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 119px);">
                         <% } %>
                         <div class="panel-body">
                                 <div class="panel-heading">
@@ -127,10 +127,15 @@
                                     <div>
                                         <span class="fileAttach"><span class="glyphicon glyphicon-link" aria-hidden="true"></span>&nbsp;附加檔案</span>
                                         <br><br>
-                                        <% if (typeof announcement.file == 'undefined') { %>
+                                        <% if (typeof announcement.file == 'undefined' || announcement.file <= 1) { %>
                                             <span class="insideContent">目前並無任何附加檔案</span>
-                                        <% } else { %>
-                                            <a class="insideContent" href="<%= announcement.file %>">file</a>
+                                        <% } else {
+                                            /* announcement.file =  'https://s3.us-east-2.amazonaws.com/rmd-letter/proposal_final.pdf'; */
+                                            const fileName = announcement.file.substring(announcement.file.lastIndexOf("/") + 1, announcement.file.length); 
+                                        %>
+                                            <span class="insideContent">點此下載： </span><a href="<%= announcement.file %>"> <%= fileName %></a>
+                                            <iframe src="http://docs.google.com/gview?url=<%= announcement.file %>&embedded=true" 
+                                            style="width:600px; height:760px; padding-left: 50px;margin-top: 10px;" frameborder="0"></iframe>
                                         <% } %>
                                     </div>
                                 <div>

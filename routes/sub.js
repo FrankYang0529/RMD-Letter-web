@@ -48,7 +48,4 @@ router.get('/projects/student-form-answer', Policy.studentLoggedIn, subroutes.ge
 router.post('/projects/student-form', Policy.studentLoggedIn, subroutes.studentForm);
 router.put('/projects/student-form', Policy.studentLoggedIn, subroutes.updateStudentForm);
 
-//  upload files to s3 bucket
-router.post('/upload-file', Policy.studentLoggedIn, subroutes.uploadFile);
-
 module.exports = router;

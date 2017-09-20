@@ -162,3 +162,7 @@ hr {
 .swal2-modal .swal2-content, .swal2-title {
     font-family: Microsoft JhengHei !important; 
 }
+
+.swal-wide{
+    width:620px !important;
+}
