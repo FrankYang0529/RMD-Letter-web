@@ -443,7 +443,6 @@ exports.rmdPersonList = (req, res, next) => {
             personList,
             projID: req.params.projID
           });
-          
         },
       });
     })
@@ -453,12 +452,26 @@ exports.rmdPersonList = (req, res, next) => {
 };
 
 exports.addRmdPerson = (req, res, next) => {
+  if(req.body.verification == undefined){
+    req.body.verification = false;
+  }
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
-      personList.person.push(req.body.person);
+      console.log(personList.person);
+      var rmdPerson = {
+        name: req.body.name,
+        email: req.body.email,
+        serviceUnit: req.body.serviceUnit,
+        jobTitle: req.body.jobTitle,
+        verification: req.body.verification
+      };
+      console.log(rmdPerson);
+      personList.person.push(rmdPerson);
+      console.log(personList.person);
       return personList.save();
     })
     .then((personList) => {
+      // res.send('success');
       res.redirect(`/projects/${req.params.projID}/rmd-person`);
     })
     .catch((err) => {

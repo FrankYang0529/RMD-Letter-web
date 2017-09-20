@@ -11,6 +11,7 @@
   <link rel="stylesheet" type="text/css" href="/css/project.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
+  <script src="/js/list.js"></script>
 </head>
 <body>
   <header>
@@ -39,29 +40,64 @@
       <h1 id="title">推薦人列表</h1>
       <ul class="w3-ul w3-card-4">
         <% var list = personList.person; %>
+        <% if (list != ""){%>
         <% list.forEach(function(person) { %>
+        <% if (person != null){%>
+
         <% var url = "/projects/" + person.name %>
-        <a href="/projects/<%= project._id %>/">
+        <a>
           <li class="w3-bar">
-          <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span>
-          <img src="/img/edit.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
+          <% if(person.verification == true){%>
+          <img src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <% }else{ %>
+          <img src="/img/checked.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <% } %>
           <div class="w3-bar-item">
             <span class="w3-large"><%=  person.name %></span><br>
-            <span><%=  person.serviceUnit%>:<%=person.jobTitle%></span>
+            <span><%=  person.serviceUnit%> - <%=person.jobTitle%></span><br>
+            <span><%=  person.email%></span><br>
           </div>
           </li>
         </a>
+        <% } %>
         <% }); %>
+        <% } %>
 
-        <a href="/projects/create"><li class="w3-bar">
-          <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">Ｖ</span>
-          <img src="/img/add.svg" class="w3-bar-item w3-circle w3-hide-small">
+
+        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-blue">
+          <span class="w3-bar-item w3-button w3-xlarge w3-right">Ｖ</span>
+          <img src="/img/user-3.svg" class="w3-bar-item w3-circle w3-hide-small">
           <div class="w3-bar-item">
             <span class="w3-large">新增推薦人</span><br>
             <span>add new recommander</span>
           </div>
         </li></a>
       </ul>
+      <div id="addRmdForm" class="w3-card-4"  style="display: none;">
+        <form id="person" class="w3-container" style="padding: 10px;" action="/projects/<%= projID %>/rmd-person" method="post">
+          <p>
+          <label class="w3-text-blue"><b>姓名</b></label>
+          <input class="w3-input w3-border" name="name" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>e-mail</b></label>
+          <input class="w3-input w3-border" name="email" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>服務單位</b></label>
+          <input class="w3-input w3-border" name="serviceUnit" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>職稱</b></label>
+          <input class="w3-input w3-border" name="jobTitle" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>驗證</b></label>
+          <label class="switch" style="margin-top: 10px;">
+            <input name="verification" type="checkbox" value="true" >
+            <span class="slider round"></span>
+          </label></p>
+          <p>      
+          <button form="person" class="w3-btn w3-blue w3-right" style="margin: 20px;">新增</button></p>     
+        </form>
+      </div>
     </div>
   </div>
 
