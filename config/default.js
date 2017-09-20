@@ -23,7 +23,7 @@ module.exports = {
 
   // aws s3
   AWS: {
-    accessKeyId: YourAcessKey,
-    secretAccessKey: YourSecretAccessKey,
+    accessKeyId: 'YourAcessKey',
+    secretAccessKey: 'YourSecretAccessKey',
   },
 };
