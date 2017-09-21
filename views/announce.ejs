@@ -29,7 +29,7 @@
 	  <a href="/projects/<%= projID%>/student-form" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
 	  <a href="/projects/<%= projID%>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID%>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
-	  <a href="/projects/<%= projID%>/edit" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+	  <a href="/projects/<%= projID%>/student" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
 	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
 	</div>
 
@@ -54,24 +54,22 @@
     <div class="w3-third">
     	<div class="w3-white w3-text-grey w3-card-4">
         <div class="w3-display-container">
-          <div class="w3-display-bottomleft w3-container w3-text-black">
-            <h2>公告列表</h2>
-          </div>
+
         </div>
         <div class="w3-container">
           <a href="#" id="add-post-btn"><p class="img-text"><img src="/img/edit-post.svg">新增公告</p></a>
           <hr>
-          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
-          <p>發佈時間</p></a>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">[公告] 推甄即將結束！請注意日期</i></b></p>
+          <p>Sep 21, 2017</p></a>
+          <hr>          
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">[提醒] 記得邀請推薦人填寫推薦信噢</i></b></p>
+          <p>Sep 16, 2017</p></a>
           <hr>
-          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
-          <p>發佈時間</p></a>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">[注意] 備審資料電子化</i></b></p>
+          <p>Sep 13, 2017</p></a>
           <hr>
-          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
-          <p>發佈時間</p></a>
-          <hr>
-          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">公告標題</i></b></p>
-          <p>發佈時間</p></a>
+          <a href=""><p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray">[公告] 推甄日期公佈</i></b></p>
+          <p>Sep 11, 2017</p></a>
           <hr>
           <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-blue-gray"><%= announce.title %></i></b></p>
           <p><%= announce.timestamp %></p>
@@ -91,6 +89,7 @@
 	        </h2>
 	        <div class="w3-container">
 	        	<textarea id="letter-content" form="announce-create" name="content" id="newPostContent" class="w3-input w3-text-grey w3-border-top" style="height: 400px; outline: none;">公告內容...</textarea>
+            <input type="date" value="" style="display :none;">
 	        	<input type="file" id="file">
 			    	<div form="announce-create" id="announce-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin: 20px;">新增 ❯</div>
 	        </div>
@@ -98,22 +97,28 @@
       </div>
 
 			<div class="w3-container w3-card-2 w3-white w3-margin-bottom">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-blue-gray"></i>Work Experience</h2>
+        <h2 class="w3-text-grey w3-padding-16"><i class="w3-margin-right w3-xxlarge w3-text-blue-gray"></i>公告列表</h2>
         <div class="w3-container">
-          <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5>
-          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2015 - <span class="w3-tag w3-blue-gray w3-round">Current</span></h6>
+          <h5 class="w3-opacity"><b>[公告] 推甄即將結束！請注意日期</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Sep 21, 2017<span class="w3-tag w3-blue-gray w3-round">Current</span></h6>
           <p>Lorem ipsum dolor sit amet. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
           <hr>
         </div>
         <div class="w3-container">
-          <h5 class="w3-opacity"><b>Web Developer / something.com</b></h5>
-          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2012 - Dec 2014</h6>
+          <h5 class="w3-opacity"><b>[提醒] 記得邀請推薦人填寫推薦信噢</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Sep 16, 2017</h6>
           <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
           <hr>
         </div>
         <div class="w3-container">
-          <h5 class="w3-opacity"><b>Graphic Designer / designsomething.com</b></h5>
-          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2010 - Mar 2012</h6>
+          <h5 class="w3-opacity"><b>[注意] 備審資料電子化</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Sep 13, 2017</h6>
+          <p>Consectetur adipisicing elit. Praesentium magnam consectetur vel in deserunt aspernatur est reprehenderit sunt hic. Nulla tempora soluta ea et odio, unde doloremque repellendus iure, iste.</p>
+          <hr>
+        </div>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>[公告] 推甄日期公佈</b></h5>
+          <h6 class="w3-text-blue-gray"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Sep 11, 2017</h6>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p><br>
         </div>
       </div>
@@ -122,9 +127,9 @@
     </div>
 	</div>
 	</div>
-	<footer>
+<!-- 	<footer>
 	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-	</footer>
+	</footer> -->
  <script type="text/javascript">
 
  	$("#add-post-btn").click(function() {

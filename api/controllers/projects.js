@@ -651,15 +651,16 @@ exports.studentList = (req, res, next) => {
     .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec())
     .then((students) => {
       res.format({
-        'application/json': () => {
-          res.send(students);
-        },
+        // 'application/json': () => {
+        //   res.send(students);
+        // },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+          // TODO
+          res.render('apply', {
+            projID: req.params.projID,
+            students
           });
-          */
+          
         },
       });
     });

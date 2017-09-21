@@ -29,6 +29,17 @@ button.submit{
   margin-left:80%;
 }
 
+table a:link, a:visited{
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  color: grey;
+}
+
+table a:hover, a:active{
+  color: black;  
+}
+
 a:link .img-text, a:visited .img-text{
 	font-size: 18px;
 	text-align: center;

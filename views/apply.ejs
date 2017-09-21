@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+  <link rel="stylesheet" type="text/css" href="/css/content.css">
+  <link rel="stylesheet" type="text/css" href="/css/form.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/form.js"></script>
+</head>
+<body>
+  <header>
+    <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+    <div class="navbar">
+      <a href=""><img src="/img/black-mail.svg"/></a>
+      <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+    </div>
+  </header>
+  
+  <div id="menu" class="sidenav" style="width: 250px;">
+    <span class="close" onclick="toggleNav()">&#9776;</span>
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+    <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+    <a href="/projects/<%= projID %>/edit" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+    <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+    <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+    <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+    <a href="/projects/<%= projID %>/student" id="apply" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+    <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
+  </div>
+  <div id="content" class="open">
+  <h1 id="title">報名管理</h1> 
+  <div class="w3-container">
+    <div class="w3-responsive">
+      <table class="w3-table w3-bordered w3-hoverable">
+          <thead>
+            <tr class="w3-brown">
+              <th>姓名</th>
+              <th>畢業學校</th>
+              <th>在校成績</th>
+              <th>推薦人1</th>
+              <th>推薦人2</th>
+              <th>報名狀況</th>
+              <th>詳細資料</th>
+            </tr>
+          </thead>
+        <tr id="userid1" class="w3-hover-sand student">
+            <td>王小明</td>
+            <td>成大資訊</td>
+            <td>50/120</td>
+            <td>王大明</td>
+            <td>王鐘銘</td>
+            <td>2/2</td>
+            <td><a href="#student-ans">❯</a></td>
+        </tr>
+        <tr id="userid2" class="w3-hover-sand student">
+            <td>黃小明</td>
+            <td>成大資訊</td>
+            <td>48/120</td>
+            <td>王大明</td>
+            <td>王鐘銘</td>
+            <td>2/2</td>
+            <td><a href="#student-ans">❯</a></td>
+        </tr>
+        <tr id="userid3" class="w3-hover-sand student">
+            <td>張小明</td>
+            <td>成大資訊</td>
+            <td>51/120</td>
+            <td>王大明</td>
+            <td>王鐘銘</td>
+            <td>2/2</td>
+            <td><a href="#student-ans">❯</a></td>
+        </tr>
+        <tr id="userid4" class="w3-hover-sand student">
+            <td>江小明</td>
+            <td>成大資訊</td>
+            <td>49/120</td>
+            <td>王大明</td>
+            <td>王鐘銘</td>
+            <td>2/2</td>
+            <td><a href="#student-ans">❯</a></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>
+  
+  <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
+    <h2>詳細資料</h2>
+    <div class="w3-card-4">
+      <table class="w3-table w3-striped">
+        <thead>
+          <tr class="w3-light-grey">
+            <th>姓名</th>
+            <th id="name"><%= name["userid2"] %></th>
+            <th>畢業學校</th>
+            <th>成大資訊</th>
+          </tr>
+        </thead>
+          <tr>
+            <td>電話</td>
+            <td>06-2757575</td>
+            <td>手機</td>
+            <td>0911222333</td>
+          </tr>
+          <tr>
+            <td>地址</td>
+            <td colspan="3">台南市東區大學路1號</td>
+          </tr>
+          <tr>
+            <td>e-mail</td>
+            <td colspan="3">abcde@gmail.com</td>
+          </tr>
+          <tr>
+            <td>在學成績</td>
+            <td>王大明</td>
+            <td>系所排名</td>
+            <td>成大資訊</td>
+          </tr>
+          <tr>
+            <td>在學成績</td>
+            <td>89.4</td>
+            <td>系所排名</td>
+            <td id="grade">50/120</td>
+          </tr>
+          <tr>
+            <td colspan="2">推薦信1</td>
+            <td>推薦人1</td>
+            <td>王小明</td>
+          </tr>
+          <tr>
+            <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容1</td>
+          </tr>
+          <tr>
+            <td colspan="2">推薦信2</td>
+            <td>推薦人2</td>
+            <td>王鐘銘</td>
+          </tr>
+          <tr>
+            <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容2</td>
+          </tr>
+          <tr>
+            <td colspan="1">備註</td>
+            <td colspan="3"><input type="text"></td>
+          </tr>
+      </table>
+      <p></p>
+    </div>
+      <div class="w3-bar" style="margin-top: 50px;">
+        <button id="previous-btn" class="w3-button w3-left w3-sand w3-hover-brown">&laquo; Previous</button>
+        <button id="next-btn" class="w3-button w3-right w3-sand w3-hover-brown">Next &raquo;</button>
+      </div>
+  </div>
+  </div>
+<!--   <footer>
+    <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </footer> -->
+
+<script>
+$(document).ready(function(){
+
+  document.addEventListener('keydown',function(e) {
+    switch (e.keyCode) {
+      case '37':
+        console.log("left");
+        break;
+      case '39': 
+        console.log("right");
+        break;
+    }
+  });
+ });
+  $("#previous-btn").click(function(){
+    var nameArr = ["王小明","黃小明","張小明","江小明"];
+    var gradeArr = ["50/120","48/120","51/120","49/120"];
+
+    var studentName = $("th#name").html();
+    var index = nameArr.findIndex(function(element){
+      return element == studentName;
+    });
+    if(index > 0){
+      $("th#name").html(nameArr[index-1]);
+      $("td#grade").html(gradeArr[index-1]);
+    }
+  });
+
+  $("#next-btn").click(function(){
+    var nameArr = ["王小明","黃小明","張小明","江小明"];
+    var gradeArr = ["50/120","48/120","51/120","49/120"];
+    var studentName = $("th#name").html();
+    var index = nameArr.findIndex(function(element){
+      return element == studentName;
+    });
+    if(index < nameArr.length-1){
+      $("th#name").html(nameArr[index+1]);
+      $("td#grade").html(gradeArr[index+1]);
+    }
+  });
+
+  $(".student").click(function(e){
+    // console.log($(this).attr("id"));
+    $("#student-ans").css("display","block");
+    var id = $(this).attr("id");
+    var name = {"userid1":"王小明",
+          "userid2":"黃小明",
+          "userid3":"張小明",
+          "userid4":"江小明"
+        };
+    var grade = {"userid1":"50/120",
+      "userid2":"48/120",
+      "userid3":"51/120",
+      "userid4":"49/120"
+    };
+    $("th#name").html(name[id]);
+    $("td#grade").html(grade[id]);
+    // $.ajax({ 
+    //   url: '/projects/<%= projID %>/invite-letter',
+    //   data: {title: $("#letter-title").val(), content: $("#letter-content").val()},
+    //   type: 'put'
+    // }).done(function(responseData) {
+    //     console.log('Done: ', responseData);
+    //     location.reload();
+    // }).fail(function() {
+    //     console.log('Fail');
+    // });
+  });
+</script>
+     
+</body>
+</html> 
