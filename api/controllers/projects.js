@@ -318,7 +318,8 @@ exports.projPhoneEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      //res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -341,7 +342,8 @@ exports.projEmailEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      //res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -365,7 +367,8 @@ exports.projDeadlineEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);

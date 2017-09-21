@@ -37,20 +37,19 @@
 	<!-- <div id="topbar"></div> -->
 	<div id="content" class="project-manage open">
 		<h1 id="title">專案管理</h1>
-
 		<div class="w3-container form">
 		  <div class="w3-card-4">
 		  	<form action="" method="put">
 			    <div class="w3-container">
 			      <h2><input id="titleZh" type="text" value="<%= project.titleZh %>" placeholder="<%= project.titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.titleZh %>'" onchange=""></h2>
 			      <label>聯絡電話</label>
-			      <input class="w3-input" type="tel" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'">
+			      <input id="phone" class="w3-input" type="tel" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'">
 			      <label>e-mail</label>     
-			      <input class="w3-input" type="e-mail" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'">
+			      <input id="email" class="w3-input" type="e-mail" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'">
 			      <label>報名開始日期</label>
-			      <input class="w3-input" type="text" placeholder="<%= project.startTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+			      <input name="startTime" class="w3-input" type="text" placeholder="<%= project.startTime %>" onfocus="this.type='date'" onblur="this.type='text'">
 			      <label>報名截止日期</label>     
-				     <input class="w3-input" type="text" placeholder="<%= project.endTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+				     <input name="startTime" class="w3-input" type="text" placeholder="<%= project.endTime %>" onfocus="this.type='date'" onblur="this.type='text'">
 
 				  <label>報名網站子網域</label>     
 			      <input type="text" id="subdomain" class="w3-input" placeholder="<%= project.subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.subdomainName %>'"><br>
@@ -90,6 +89,35 @@ $(document).ready(function(){
       type: 'put'
 	  }).done(function(responseData) {
 	      console.log('Done: ', responseData);
+	      location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#phone").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/phone',
+      data: { phone: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#email").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/email',
+      data: { email: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      location.reload();
 	  }).fail(function() {
 	      console.log('Fail');
 	  });
@@ -103,6 +131,7 @@ $(document).ready(function(){
       type: 'put'
 	  }).done(function(responseData) {
 	      console.log('Done: ', responseData);
+	      location.reload();
 	  }).fail(function() {
 	      console.log('Fail');
 	  });
