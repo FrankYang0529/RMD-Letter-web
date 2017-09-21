@@ -129,7 +129,7 @@ exports.projAddPost = (req, res, next) => {
         */
       }
 
-      if (req.files && req.files.file) {
+      if (JSON.stringify(req.files) !== '{}') {
         const file = req.files.file;
         const stream = fs.createReadStream(file.path);
 
@@ -197,7 +197,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
           body.title = req.body.announcement.title;
           body.text = req.body.announcement.text;
 
-          if (req.files && req.files.file) {
+          if (JSON.stringify(req.files) !== '{}') {
             const file = req.files.file;
             const stream = fs.createReadStream(file.path);
 

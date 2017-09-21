@@ -145,6 +145,8 @@
                                                                 <input type="text" class="form-control <%= question._id %>"/>
                                                             <% } else if (question.questionType === 'textArea') { %>
                                                                 <textarea  class="form-control <%= question._id %>"></textarea>
+                                                            <%  } else if (question.questionType === 'file') { %>
+                                                                <input class="form-control <%= question._id %>" type="file">
                                                             <%  } else { 
                                                                     question.options.forEach(function(option) {
                                                                         if (question.questionType === 'single') {

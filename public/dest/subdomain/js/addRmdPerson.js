@@ -3,6 +3,7 @@ function submitAddPerson() {
   const jobTitle = document.getElementById('jobTitle').value;
   const serviceUnit = document.getElementById('serviceUnit').value;
   const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
 
   if (name.length === 0 || jobTitle.length === 0 || serviceUnit.length === 0 || email.length === 0) {
     swal({
@@ -49,8 +50,8 @@ function submitStudentForm() {
       });
     } else {
       $.getJSON('/projects/student-form', (data) => {
-        console.log(data);
         let answer = [];
+        let postData = new FormData();
 
         data.questions.forEach((question) => {
           if (question.questionType === 'text' || question.questionType === 'textArea') {
@@ -78,40 +79,39 @@ function submitStudentForm() {
               text: '',
               textSet: [],
             });
+          } else {
+            postData.append(question._id, $(`.${question._id}`)[0].files[0]);
+            console.log(postData);
+
+            answer.push({
+              question_id: question._id,
+              choices: [],
+              file_url: 'file',
+              text: '',
+              textSet: [],
+            });
           }
-          /* else { //  textSet
-                      let textSet = [];
-                      question.subQuestions.forEach((sub) => {
-                        textSet.push({
-                          subQuestion_id: sub._id,
-                          text: $(`#${sub._id}`).val(),
-                        });
-                      });
-                      answer.push({
-                        question_id: question._id,
-                        choices: [],
-                        file_url: '',
-                        text: $(`.${question._id}`).val(),
-                        textSet,
-                      });
-                    }*/
         });
+
+        postData.append("answers", JSON.stringify(answer));
 
         $.ajax({
           url: '/projects/student-form',
           type: 'POST',
-          data: {
-            answers: JSON.stringify(answer),
+          data: postData,
+          processData: false,
+          contentType: false,
+          success: () => {
+            swal({
+              type: 'success',
+              html: '<p>成功填寫完畢!</p><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
+              confirmButtonAriaLabel: '我知道了',
+            });
           },
-        });
-        swal({
-          type: 'success',
-          html: '成功填寫完畢!',
-          showCloseButton: true,
-          showCancelButton: false,
-          focusConfirm: false,
-          confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
-          confirmButtonAriaLabel: '我知道了',
         });
       });
     }
@@ -136,6 +136,7 @@ function updateStudentForm() {
         console.log(data);
 
         let answer = [];
+        let postData = new FormData();
 
         data.questions.forEach((question) => {
           if (question.questionType === 'text' || question.questionType === 'textArea') {
@@ -163,44 +164,40 @@ function updateStudentForm() {
               text: '',
               textSet: [],
             });
+          } else {  // file type
+            postData.append(question._id, $(`.${question._id}`)[0].files[0]);
+
+            answer.push({
+              question_id: question._id,
+              choices: [],
+              file_url: 'file',
+              text: '',
+              textSet: [],
+            });
           }
-          /* else { //  textSet
-                  let textSet = [];
-                  question.subQuestions.forEach((sub) => {
-                    textSet.push({
-                      subQuestion_id: sub._id,
-                      text: $(`#${sub._id}`).val(),
-                    });ub._id}`).val(),
-                    });
-                  });
-                  answer.push({
-                    question_id: question._id,
-                    choices: [],
-                    file_url: '',
-                    text: $(`.${question._id}`).val(),
-                    textSet,
-                  });
-                }*/
         });
+
+        postData.append('answers', JSON.stringify(answer));
 
         $.ajax({
           url: '/projects/student-form',
           type: 'PUT',
-          data: {
-            answers: JSON.stringify(answer),
+          data: postData,
+          processData: false,
+          contentType: false,
+          success: () => {
+            swal({
+              type: 'success',
+              html: '<p>成功修改完畢!</p><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '關閉',
+              confirmButtonAriaLabel: '關閉',
+            });
           },
         });
-        swal({
-          type: 'success',
-          html: '成功修改完畢!',
-          showCloseButton: true,
-          showCancelButton: false,
-          focusConfirm: false,
-          confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
-          confirmButtonAriaLabel: '關閉',
-        });
       });
-
     }
   });
 }

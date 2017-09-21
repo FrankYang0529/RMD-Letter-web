@@ -75,121 +75,79 @@
         <div style="padding-top: 88px;">
             <script>
                 function submitRmdLtForm(projID) {
-                    $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
-                        let answer = [];
-
-                        data.questions.forEach((question) => {
-                            if (question.questionType === 'text' || question.questionType ===
-                                'textArea') {
-                                answer.push({
-                                    question_id: question._id,
-                                    choices: [],
-                                    file_url: '',
-                                    text: $(`.${question._id}`).val(),
-                                    textSet: [],
-                                });
-                            } else if (question.questionType === 'single' || question.questionType ===
-                                'multiple') {
-                                let optionAnswers = [];
-                                question.options.forEach((option) => {
-                                    if ($(`#${option._id}`).is(':checked')) {
-                                        optionAnswers.push({
-                                            option_id: option._id, // 所選選項的ID
-                                            option: option.option,
+                    swal({
+                        title: '確定送出?',
+                        text: "送出後即無法修改!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '是, 送出!'
+                        }).then(function () {
+                            $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
+                                let answer = [];
+        
+                                data.questions.forEach((question) => {
+                                    if (question.questionType === 'text' || question.questionType ===
+                                        'textArea') {
+                                        answer.push({
+                                            question_id: question._id,
+                                            choices: [],
+                                            file_url: '',
+                                            text: $(`.${question._id}`).val(),
+                                            textSet: [],
+                                        });
+                                    } else if (question.questionType === 'single' || question.questionType ===
+                                        'multiple') {
+                                        let optionAnswers = [];
+                                        question.options.forEach((option) => {
+                                            if ($(`#${option._id}`).is(':checked')) {
+                                                optionAnswers.push({
+                                                    option_id: option._id, // 所選選項的ID
+                                                    option: option.option,
+                                                });
+                                            }
+                                        });
+                                        answer.push({
+                                            question_id: question._id,
+                                            choices: optionAnswers,
+                                            file_url: '',
+                                            text: '',
+                                            textSet: [],
                                         });
                                     }
                                 });
-                                answer.push({
-                                    question_id: question._id,
-                                    choices: optionAnswers,
-                                    file_url: '',
-                                    text: '',
-                                    textSet: [],
+        
+        
+        
+                                $.ajax({
+                                    url: window.location.href,
+                                    type: 'POST',
+                                    data: {
+                                        answers: JSON.stringify(answer),
+                                    },
+                                    success: () => {
+                                        swal({
+                                            type: 'success',
+                                            html: '<p>成功填寫完畢!</p><p>跳轉中請稍後...</p',
+                                            timer: 2500,
+                                            onOpen: () => {
+                                            swal.showLoading();
+                                            },
+                                        })
+                                        .then(
+                                            () => {},
+                                            // handling the promise rejection
+                                            (dismiss) => {
+                                            if (dismiss === 'timer') {
+                                                location.reload();
+                                            }
+                                            },
+                                        );
+                                    },
                                 });
-                            }
-                        });
-
-
-
-                        $.ajax({
-                            url: window.location.href,
-                            type: 'POST',
-                            data: {
-                                answers: JSON.stringify(answer),
-                            },
-                        });
-
-                        swal({
-                            type: 'success',
-                            html: '成功填寫完畢!',
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            focusConfirm: false,
-                            confirmButtonText: '我知道了',
-                            confirmButtonAriaLabel: '我知道了',
-                        });
-
-                        location.reload();
-                    });
-                }
-
-                function updateRmdLtForm(projID) {
-
-
-                    $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
-                        console.log(data);
-
-                        let answer = [];
-
-                        data.questions.forEach((question) => {
-                            if (question.questionType === 'text' || question.questionType ===
-                                'textArea') {
-                                answer.push({
-                                    question_id: question._id,
-                                    choices: [],
-                                    file_url: '',
-                                    text: $(`.${question._id}`).val(),
-                                    textSet: [],
-                                });
-                            } else if (question.questionType === 'single' || question.questionType ===
-                                'multiple') {
-                                let optionAnswers = [];
-                                question.options.forEach((option) => {
-                                    if ($(`#${option._id}`).is(':checked')) {
-                                        optionAnswers.push({
-                                            option_id: option._id, // 所選選項的ID
-                                            option: option.option,
-                                        });
-                                    }
-                                });
-                                answer.push({
-                                    question_id: question._id,
-                                    choices: optionAnswers,
-                                    file_url: '',
-                                    text: '',
-                                    textSet: [],
-                                });
-                            }
-                        });
-
-                        $.ajax({
-                            url: window.location.href,
-                            type: 'PUT',
-                            data: {
-                                answers: JSON.stringify(answer),
-                            },
-                        });
-                        swal({
-                            type: 'success',
-                            html: '成功修改完畢!',
-                            showCloseButton: true,
-                            showCancelButton: false,
-                            focusConfirm: false,
-                            confirmButtonText: '關閉',
-                            confirmButtonAriaLabel: '關閉',
-                        });
-                        location.reload();
-                    });
+                            });
+                    })
                 }
             </script>
 
@@ -315,79 +273,9 @@
                                             <button class="btn btn-default" onclick="submitRmdLtForm('<%= proj._id %>')">送出
                                             </button>
                                         </div>
-                                        <% } else { %>
-                                            <form class="form-horizontal question-form">
-                                                <% questions.questions.forEach( function (question, index) { 
-                                                if (question.questionType === 'textSet') {                                                  
-                                            %>
-                                                    <div class="form-group row">
-                                                        <label class="col-xs-1 control-label"><%= question.questionTitle %></label>
-                                                        <% 
-                                                            const num = question.subQuestions.length + 1;
-                                                            let questionRange = Math.floor((12 - num) / num);
-                                                            if (questionRange < 1) { questionRange = 1; }
-                                                        %>
-                                                            <div class="col-xs-<%= questionRange %>">
-                                                                <input type="text" class="form-control <%= question._id %>" id="text" />
-                                                            </div>
-                                                            <% question.subQuestions.forEach(function(sub) { %>
-                                                                <label class="col-xs-1 control-label"><%=sub.title %></label>
-                                                                <div class="col-xs-<%= questionRange %>">
-                                                                    <input type="text" class="form-control <%= question._id %>" id="<%= sub._id %>" />
-                                                                </div>
-                                                                <% }); %>
-                                                    </div>
-                                                    <%  } else { %>
-                                                        <div class="form-group row">
-                                                            <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
-                                                            <div class="col-xs-10">
-                                                                <% if (question.questionType === 'text') { %>
-                                                                    <input type="text" class="form-control <%= question._id %>" />
-                                                                    <% } else if (question.questionType === 'textArea') { %>
-                                                                        <textarea class="form-control <%= question._id %>"></textarea>
-                                                                        <%  } else { 
-                                                                    question.options.forEach(function(option) {
-                                                                        if (question.questionType === 'single') {
-                                                            %>
-                                                                            <div class="radio-inline">
-                                                                                <label><input type="radio" class="<%= question._id %>" id="<%= option._id %>" name="<%= question._id %>"><%= option.option %></label>
-                                                                            </div>
-                                                                            <%          } else { %>
-                                                                                <div class="checkbox-inline">
-                                                                                    <label><input type="checkbox" class="<%= question._id %>" id="<%= option._id %>"><%= option.option %></label>
-                                                                                </div>
-                                                                                <%          } 
-                                                                    }); 
-                                                                } 
-                                                            %>
-                                                            </div>
-                                                        </div>
-                                                        <% }}); %>
-                                            </form>
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <button class="btn btn-default" onclick="updateRmdLtForm('<%= proj._id %>')">送出
-                                            </button>
-                                            </div>
-                                            <script>
-                                                const currentUrl = window.location.href;
-                                                const url = currentUrl.substring(currentUrl.indexOf('rmd-person') + 10, currentUrl.length);
-                                                $.getJSON(`/rmd-person/get-form-answer${url}`, function (data) {
-                                                    if (data !== null) {
-                                                        data.answers.forEach(function (answer) {
-                                                            if (answer.text !== '') {
-                                                                $(`.${answer.question_id}`).val(answer.text);
-                                                            } else {
-                                                                answer.choices.forEach(function (choice) {
-                                                                    $(
-                                                                        `.${answer.question_id}#${choice.option_id}`
-                                                                    ).prop("checked", true);
-                                                                });
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            </script>
-                                            <% } %>
+                                    <% } else { %>
+                                        <h2 style="text-align: center; padding-top:20px;">你已經送出推薦信了，無法進行修改。</h2>
+                                    <% } %>
                                 </div>
                             </div>
 

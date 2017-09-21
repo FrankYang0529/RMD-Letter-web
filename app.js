@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 const Promise = require('bluebird');
 const vhost = require('vhost');
 const passport = require('./auth/passport');
+//const flash = require('connect-flash');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { path: '/', httpOnly: true, maxAge: null },
 }));
+//app.use(flash());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);

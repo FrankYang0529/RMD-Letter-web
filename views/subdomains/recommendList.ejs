@@ -104,7 +104,7 @@
                        </script>
 
 
-        <div class="custom-container">
+        <div class="custom-container" style="width:800px !important;">
             <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                 <div class="row" style="margin-top:12px;">
                     
@@ -119,7 +119,8 @@
                                                 <div class="panel-heading">
                                                     <h2 class="panel-title"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp;推薦人名單</h2>
                                                 </div>
-                                                <hr>
+                                                <span style="padding-left: 15px; color: gray; font-weight: bold;">註： 至多寄出<span style="color: red;">三封</span>推薦信，如有任何問題歡迎來信</span>
+                                                <hr style="margin-top: 10px;">
                                                 <table class="table table-hover">
                                                         <thead>
                                                             <tr>
@@ -127,6 +128,7 @@
                                                                 <th>姓名</th>
                                                                 <th>服務單位</th>
                                                                 <th>職稱</th>
+                                                                <th>連絡電話</th>
                                                                 <th>email</th> 
                                                             </tr>
                                                         </thead>
@@ -140,6 +142,7 @@
                                                             <% } %>
                                                             <td><%= person.serviceUnit %></td>
                                                             <td><%= person.jobTitle %></td>
+                                                            <td><%= person.phone %></td>
                                                             <td><%= person.email %></td>
                                                         </tr>
                                                         <% }); %>

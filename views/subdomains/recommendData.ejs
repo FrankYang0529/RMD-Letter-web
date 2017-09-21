@@ -173,6 +173,13 @@
                                                                     %>
                                                                 </td>
                                                             </tr>
+                                            <%          } else {  %>
+                                                            <tr>
+                                                                <th><%= question.questionTitle %>：</th>
+                                                                <td>
+                                                                    <a href="<%= answer.file_url %>"><%= answer.text %></a>
+                                                                </td>
+                                                            </tr>
                                             <%          }
                                                     }
                                                 });
