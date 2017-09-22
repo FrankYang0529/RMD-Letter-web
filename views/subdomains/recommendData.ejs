@@ -2,6 +2,7 @@
 <html lang="zh-Hant">
 
 <head>
+    <meta charset='utf-8'>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="/subdomain/css/style.css">
     <!-- 最新編譯和最佳化的 CSS -->
@@ -14,188 +15,278 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
     <script type="text/javascript" src="/subdomain/js/addRmdPerson.js"></script>
+    <script src="/subdomain/js/pdfmake.min.js"></script>
+    <script src="/subdomain/js/vfs_fonts.js"></script>
 
-    <title><%= proj.titleZh %></title>
+    <title>
+        <%= proj.titleZh %>
+    </title>
 
 </head>
 
 <body>
     <div class="wrapper" style=" height:100%; width:100%;">
-            <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
-                    <div class="container-fluid">
-                      <!-- Brand and toggle get grouped for better mobile display -->
-                      <div class="navbar-header">
-                        <h1><%= proj.titleZh %></h1>
-                      </div>
-                  
-                        <ul class="nav navbar-nav navbar-right">
-                                <% if ( typeof user == 'undefined' ) { %>
-                                    <li><a href="/users/login">登入</a> </li>
-                                    <li><a href="/users">註冊</a> </li>
-                                    <li><a href="#" onclick="intro()">使用說明</a></li>
-                                    <li><a href="#" onclick="contact()">連絡我們</a></li>
-                                <% } else { %>
-                                    <li id="display-name"><%= user.displayName %>， 您好</li>
-                                    <li><a href="/users/logout">登出</a> </li>
-                                    <li><a href="/users/me">個人資料</a> </li>
-                                    <li><a href="#" onclick="intro()">使用說明</a></li>
-                                    <li><a href="#" onclick="contact()">聯絡我們</a></li>
-                                <% } %>
+        <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <h1>
+                        <%= proj.titleZh %>
+                    </h1>
+                </div>
 
-                        </ul>
-                    </div>
-                  </nav>
-                  
+                <ul class="nav navbar-nav navbar-right">
+                    <% if ( typeof user == 'undefined' ) { %>
+                        <li><a href="/users/login">登入</a> </li>
+                        <li><a href="/users">註冊</a> </li>
+                        <li><a href="#" onclick="intro()">使用說明</a></li>
+                        <li><a href="#" onclick="contact()">連絡我們</a></li>
+                        <% } else { %>
+                            <li id="display-name">
+                                <%= user.displayName %>， 您好</li>
+                            <li><a href="/users/logout">登出</a> </li>
+                            <li><a href="/users/me">個人資料</a> </li>
+                            <li><a href="#" onclick="intro()">使用說明</a></li>
+                            <li><a href="#" onclick="contact()">聯絡我們</a></li>
+                            <% } %>
+
+                </ul>
+            </div>
+        </nav>
+
         <style>
-                th {
-                    padding-left: 20px !important; 
-                    border-top: 3px solid #ddd !important;
-                    background-color: #82d5ec;
-                    width: 15%;
-                }
+            th {
+                padding-left: 20px !important;
+                border-top: 2px solid #ddd !important;
+                background-color: #e8edff;
+                width: 18%;
+            }
 
-                table {
-                    table-layout: fixed;     
-                    border: 3px solid #ddd;
-                }
+            table {
+                table-layout: fixed;
+                border: 2px solid #ddd;
+            }
 
-                td {
-                    border-right: 3px solid #ddd;
-                    border-top: 3px solid #ddd !important;    
-                }
+            pre {
+                font-family: Microsoft JhengHei !important;
+                background-color: white;
+                border: none;
+                border-radius: none;
+                font-size: 14px;
+                padding: 0px;
+            }
+
+            td {
+                border-right: 2px solid #ddd;
+                border-top: 2px solid #ddd !important;
+            }
         </style>
 
         <div style="padding-top: 88px;">
-                <% if ( typeof user != 'undefined' ) { %>
-                    <nav class="navbar navbar-default operater-navbar" style="background: white;">
-                        <div class="collapse navbar-collapse">
-                            <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
-                                <li><a href="/" class="dropdown-toggle">系所公告</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header_bottomlime">
-                                            <a href="/recommendData">我的資料</a>
-                                        </li>
-                                        <li class="header_bottomlime">
-                                            <a href="/fill-student-form">填寫資料</a>
-                                        </li>
-                                        <li class="header_bottomlime">
-                                            <a href="/update-student-form">修改資料</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header_bottomlime">
-                                            <a href="/projects/rmd-person">推薦人名單</a>
-                                        </li>
-                                        <li class="header_bottomlime">
-                                            <a href="/projects/addRmdPerson">新增推薦人</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a href="/schedule">進度查詢</a></li>
-                            </ul>
-                        </div>
-                    </nav>
-                    <% } %>
+            <% if ( typeof user != 'undefined' ) { %>
+                <nav class="navbar navbar-default operater-navbar" style="background: white;">
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
+                            <li><a href="/" class="dropdown-toggle">系所公告</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li class="header_bottomlime">
+                                        <a href="/recommendData">我的資料</a>
+                                    </li>
+                                    <li class="header_bottomlime">
+                                        <a href="/fill-student-form">填寫資料</a>
+                                    </li>
+                                    <li class="header_bottomlime">
+                                        <a href="/update-student-form">修改資料</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li class="header_bottomlime">
+                                        <a href="/projects/rmd-person">推薦人名單</a>
+                                    </li>
+                                    <li class="header_bottomlime">
+                                        <a href="/projects/addRmdPerson">新增推薦人</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="/schedule">進度查詢</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <% } %>
                     <script>
-                            function contact() {
-                                swal({
-                                    type: 'info',
-                                    html:
-                                        '<b style="font-size: 22px;">email： </b><span style="font-size: 22px;"><%= proj.email %></span><br><br>' +
-                                        '<b style="font-size: 22px;">TEL： </b><span style="font-size: 22px;"><%= proj.phone %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                    showCloseButton: true,
-                                    showCancelButton: false,
-                                    focusConfirm: false,
-                                    confirmButtonText: '我知道了',
-                                    confirmButtonAriaLabel: '我知道了',
-                                });
-                            }
-                       </script>
+                        function contact() {
+                            swal({
+                                type: 'info',
+                                html: '<b style="font-size: 22px;">email： </b><span style="font-size: 22px;"><%= proj.email %></span><br><br>' +
+                                    '<b style="font-size: 22px;">TEL： </b><span style="font-size: 22px;"><%= proj.phone %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                confirmButtonText: '我知道了',
+                                confirmButtonAriaLabel: '我知道了',
+                            });
+                        }
+
+                        function downloadPDF() {
+                            let body = [
+                                [{
+                                    text: '學生資料',
+                                    bold: true
+                                }, '']
+                            ];
+                            $('.table > tbody > tr').each(function () {
+                                const th = $(this).children('th');
+                                const td = $(this).children('td');
+
+                                const title = th.html();
+                                let content = '';
+
+                                if (td.hasClass('multiple')) {
+                                    td.children('span').each(function () {
+                                        content = content + $(this).html();
+                                    })
+                                } else if (td.hasClass('file')) {
+                                    content = td.children('a').attr('href');
+                                } else if (td.hasClass('area')) {
+                                    content = td.children('pre').html();
+                                }else {
+                                    content = td.html();
+                                }
+                                body.push([{
+                                    text: title,
+                                    bold: true
+                                }, content]);
+                            });
+
+                            pdfMake.fonts = {
+                                msjh: {
+                                    normal: "msjh.ttf",
+                                    bold: "msjhbd.ttf",
+                                    italics: "msjh.ttf",
+                                    bolditalics: "msjh.ttf",
+                                }
+                            };
+                            const docDefinition = {
+                                content: [{
+                                    layout: 'lightHorizontalLines', // optional
+                                    table: {
+                                        headerRows: 1,
+                                        widths: [100, 400],
+                                        body: body
+                                    }
+                                }],
+                                defaultStyle: {
+                                    font: "msjh"
+                                }
+                            };
+
+                            pdfMake.createPdf(docDefinition).download('學生資料表');
+                        }
+                    </script>
 
 
-        <div class="custom-container">
-            <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
-                <div class="row" style="margin-top:12px;">
-                    
-                        <div style="background-color: white; border-radius: 10px;">
-                        <% if ( typeof user != 'undefined' ) { %>
-                            <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 169px);">
-                        <% } else { %>
-                            <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 119px);">
-                        <% } %>
-                        <div class="panel-body">
-                                <div class="panel-heading">
-                                    <h2 class="panel-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;我的資料</h2>
-                                </div>
-                                <hr>
-                                <% if ( answers === null ) { %>
+                    <div class="custom-container">
+                        <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
+                            <div class="row" style="margin-top:12px;">
+                                <div style="background-color: white; border-radius: 10px;">
+                                <% if ( typeof user != 'undefined' ) { %>
+                                    <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 169px);">
+                                <% } else { %>
+                                    <div class="panel" style="margin-bottom: 15px; min-height: calc(100vh - 119px);">
+                                <% } %>
+                                    <div class="panel-body">
+                                        <div class="panel-heading">
+                                        <h2 class="panel-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;我的資料</h2>
+                                    </div>
+                                    <hr>
+                                    <% if ( answers === null ) { %>
                                     <h2 style="text-align: center; padding-top:20px;">你目前還沒有填寫資料喔! 趕快去填吧! <a href="/fill-student-form">填寫資料</a></h2>
-                                <% } else { %> 
-                                    
+                                    <% } else { %>
                                     <table class="table">
-                                            <% 
-                                            questions.questions.forEach( function (question) { 
-                                                answers.answers.forEach( function (answer) {
-                                                    if (question._id == answer.question_id) { 
-                                                        if (question.questionType == 'text') {                                                                                                                
-                                            %>
-                                                            <tr>
-                                                                <th><%= question.questionTitle %>：</th>
-                                                                <td><%= answer.text %></td>
-                                                            </tr>
-                                            <%          } else if (question.questionType == 'textArea') {   %>
-                                                            <tr>
-                                                                <th><%= question.questionTitle %>：</th>
-                                                                <td style="white-space:pre"><%= answer.text %></td>
-                                                            </tr>
-                                            <%          } else if (question.questionType == 'single') { %>
-                                                            <tr>
-                                                                <th><%= question.questionTitle %>：</th>
-                                                                <td><%= answer.choices[0].option %></td>
-                                                            </tr>
-                                            <%          } else if (question.questionType == 'multiple') {  %>
-                                                            <tr>
-                                                                <th><%= question.questionTitle %>：</th>
-                                                                <td>
-                                                                    <% answer.choices.forEach( function (choice, index) { 
+                                    <% 
+                                                                        questions.questions.forEach( function (question) { 
+                                                                            answers.answers.forEach( function (answer) {
+                                                                                if (question._id == answer.question_id) { 
+                                                                                    if (question.questionType == 'text') {                                                                                                                
+                                                                        %>
+                                                                            <tr>
+                                                                                <th>
+                                                                                    <%= question.questionTitle %>
+                                                                                </th>
+                                                                                <td>
+                                                                                    <%= answer.text %>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <%          } else if (question.questionType == 'textArea') {   %>
+                                                                                <tr>
+                                                                                    <th>
+                                                                                        <%= question.questionTitle %>
+                                                                                    </th>
+                                                                                    <td class="area">
+                                                                                        <pre><%= answer.text %></pre>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <%          } else if (question.questionType == 'single') { %>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <%= question.questionTitle %>
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            <%= answer.choices[0].option %>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <%          } else if (question.questionType == 'multiple') {  %>
+                                                                                        <tr>
+                                                                                            <th>
+                                                                                                <%= question.questionTitle %>
+                                                                                            </th>
+                                                                                            <td class="multiple">
+                                                                                                <% answer.choices.forEach( function (choice, index) { 
                                                                         if (index == 0) {
                                                                     %>
-                                                                            <span><%= choice.option %></span>
-                                                                    <%  } else { %>
-                                                                            <span>、 <%= choice.option %></span>
-                                                                    <%  }
+                                                                                                    <span><%= choice.option %></span>
+                                                                                                    <%  } else { %>
+                                                                                                        <span>、 <%= choice.option %></span>
+                                                                                                        <%  }
                                                                        });
                                                                     %>
-                                                                </td>
-                                                            </tr>
-                                            <%          } else {  %>
-                                                            <tr>
-                                                                <th><%= question.questionTitle %>：</th>
-                                                                <td>
-                                                                    <a href="<%= answer.file_url %>"><%= answer.text %></a>
-                                                                </td>
-                                                            </tr>
-                                            <%          }
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <%          } else {  %>
+                                                                                            <tr>
+                                                                                                <th>
+                                                                                                    <%= question.questionTitle %>
+                                                                                                </th>
+                                                                                                <td class="file">
+                                                                                                    <a href="<%= answer.file_url %>">
+                                                                                                        <%= answer.text %>
+                                                                                                    </a>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <%          }
                                                     }
                                                 });
                                                });
                                             %>
-                                            </table>
-                                <% } %>
+                                                                    </table>
+                                                                    <div class="col-sm-offset-10 col-sm-2">
+                                                                        <button class="btn btn-default" onclick="downloadPDF()" style="width: 100px;">下載表格</button>
+                                                                    </div>
+                                                                    <% } %>
+                                                        </div>
+                                                </div>
+
+                                        </div>
+                                </div>
                             </div>
-                            </div>
-                       
+                        </div>
                     </div>
-                </div>
-            </div>
         </div>
-        </div>
-    </div>
 </body>
 
 </html>

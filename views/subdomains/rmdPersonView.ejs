@@ -33,19 +33,29 @@
 
         <style>
             th {
-                border-top: 3px solid #ddd !important;
-                background-color: #82d5ec;
-                width: 20%;
+                padding-left: 20px !important; 
+                border-top: 2px solid #ddd !important;
+                background-color: #e8edff;
+                width: 18%;
             }
 
             table {
-                table-layout: fixed;
-                border: 3px solid #ddd;
+                table-layout: fixed;     
+                border: 2px solid #ddd;
             }
 
             td {
-                border-right: 3px solid #ddd;
-                border-top: 3px solid #ddd !important;
+                border-right: 2px solid #ddd;
+                border-top: 2px solid #ddd !important;    
+            }
+
+            pre {
+                font-family: Microsoft JhengHei !important;
+                background-color: white;
+                border: none;
+                border-radius: none;
+                font-size: 14px;
+                padding: 0px;
             }
 
             .btn-student {
@@ -200,8 +210,10 @@
                                         <tr>
                                             <th>
                                                 <%= question.questionTitle %>：</th>
-                                            <td style="white-space:pre">
-                                                <%= answer.text %>
+                                            <td>
+                                                <pre>
+                                                    <%= answer.text %>
+                                                </pre>
                                             </td>
                                         </tr>
                                         <%          } else if (question.questionType == 'single') { %>
