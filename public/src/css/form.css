@@ -1,6 +1,15 @@
 /*.form{
 	padding: 5% 10%;
 }*/
+
+form[name="create-prj-form"] input::-webkit-input-placeholder {
+  color: red;
+}
+
+/*form[name="create-prj-form"] input[name="titleZh"]::-webkit-input-placeholder {
+  color: black;
+}*/
+
 .rmdlt{
   height: 300px;
   margin-bottom: 30px;
@@ -69,6 +78,22 @@ input[type=submit]{
 	padding-right: 20%;*/
 }
 
+form[name=update-prj-form] input{
+  border: none;
+  width: 85%;
+  padding: 1px;
+  margin: 2px 0;
+  display: inline-block;
+
+}
+
+form[name=update-prj-form] input[name=startTime], form[name=update-prj-form] input[name=endTime]{
+  width: 100px;
+}
+form[name=update-prj-form] input[type=date]{
+  width: 145px;
+}
+
 input[type=text].option, button.option, button.upload{
 	display: inline-block;
 	width: calc(100% - 100px);
@@ -81,11 +106,14 @@ input[type=text].option:focus {
 	border-bottom: 2px solid #444;
 }
 
+input[type=file]{
+  border: none;
+}
+
 button.option, button.upload{
   width: inherit;
   background-color: none;
 }
-
 button.upload{
   border: 2px solid #ccc;
 }

@@ -27,7 +27,6 @@
     <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
     <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
     <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-    <a href="/projects/<%= projID %>/edit" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
     <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
     <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
     <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
@@ -39,19 +38,19 @@
     <div class="w3-container list">
       <h1 id="title">推薦人列表</h1>
       <ul class="w3-ul w3-card-4">
+        <% if (personList != null){%>
         <% var list = personList.person; %>
-        <% if (list != ""){%>
+        <% if (list != ""){ %>
         <% list.forEach(function(person) { %>
         <% if (person != null){%>
-
-        <% var url = "/projects/" + person.name %>
+        <% var verifyID = "img"+ Math.random().toString(36).substr(2, 5); %>
         <a>
           <li class="w3-bar">
           <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
           <% if(person.verification == true){%>
-          <img src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
           <% }else{ %>
-          <img src="/img/checked.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <img id="<%= person._id %>" src="/img/checked.svg" onclick="verify(id);" class="w3-bar-item w3-circle w3-hide-small">
           <% } %>
           <div class="w3-bar-item">
             <span class="w3-large"><%=  person.name %></span><br>
@@ -62,6 +61,8 @@
         </a>
         <% } %>
         <% }); %>
+        <% } %>
+        
         <% } %>
 
 
@@ -76,18 +77,18 @@
       </ul>
       <div id="addRmdForm" class="w3-card-4"  style="display: none;">
         <form id="person" class="w3-container" style="padding: 10px;" action="/projects/<%= projID %>/rmd-person" method="post">
+          <p>      
+          <label class="w3-text-blue"><b>服務單位</b></label>
+          <input class="w3-input w3-border" name="serviceUnit" type="text"></p>
           <p>
           <label class="w3-text-blue"><b>姓名</b></label>
           <input class="w3-input w3-border" name="name" type="text"></p>
           <p>      
-          <label class="w3-text-blue"><b>e-mail</b></label>
-          <input class="w3-input w3-border" name="email" type="text"></p>
-          <p>      
-          <label class="w3-text-blue"><b>服務單位</b></label>
-          <input class="w3-input w3-border" name="serviceUnit" type="text"></p>
-          <p>      
           <label class="w3-text-blue"><b>職稱</b></label>
           <input class="w3-input w3-border" name="jobTitle" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>e-mail</b></label>
+          <input class="w3-input w3-border" name="email" type="text"></p>
           <p>      
           <label class="w3-text-blue"><b>驗證</b></label>
           <label class="switch" style="margin-top: 10px;">
@@ -104,7 +105,24 @@
 <!--   <footer>
     <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
   </footer> -->
-     
+<script>
+
+function verify(id){
+  var src = $("#"+id).attr("src","/img/checked-on.svg");
+  console.log($("#"+id).attr("src"));
+  $.ajax({ 
+    url: '/projects/<%= projID  %>/rmd-person/'+id,
+    data: { "verification": true },
+    type: 'post'
+  }).done(function(responseData) {
+      console.log('Done: ', responseData);
+      // location.reload();
+  }).fail(function() {
+      console.log('Fail');
+  });
+}
+
+</script>     
 </body>
 </html> 
 

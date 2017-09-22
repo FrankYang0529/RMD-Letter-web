@@ -27,8 +27,7 @@
 	  <span class="close" onclick="toggleNav()">&#9776;</span>
 	  <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
 	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
-	  <a href="/projects/<%= projID%>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-	  <a href="/projects/<%= projID%>/edit" id="announce" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+	  <a href="/projects/<%= projID%>" id="prjManage" onclick="clickMenu(id);" class="selectedMenu" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
 	  <a href="/projects/<%= projID%>/student-form" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
 	  <a href="/projects/<%= projID%>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID%>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
@@ -39,8 +38,7 @@
 	<!-- <div id="topbar"></div> -->
 	<div id="content" class="announce-edit open">
 		<h1 id="title">專案管理</h1>
-		<!-- announcement = <%= proj.announcement %> -->
-		<% var announce = proj.announcement; %>
+		<% var announce = project.announcement; %>
 
 	    
     <% var startMonth = "0"; %>
@@ -129,11 +127,11 @@
     			<div class="w3-container w3-card-2 w3-white w3-margin-bottom">
             <h2 class="w3-text-grey w3-padding-16"><i class="w3-margin-right w3-xxlarge w3-text-teal"></i>公告編輯</h2>
 
-            <% var announce = proj.announcement; %>
             <% var current = true; %>
             <% announce.forEach(function(post){  %>
             <% if( post != null){ %>
             <div id="<%= post._id %>" class="w3-container">
+              <span onclick="editPost($(this).parent().attr('id'));" class="w3-bar-item w3-button w3-xlarge w3-right fa fa-edit"></span>
               <h5 class="w3-opacity"><b><%= post.title %></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= post.timestamp.toLocaleDateString() %>
               <!-- <% if(current){%>
@@ -160,23 +158,10 @@
 	</footer> -->
  <script type="text/javascript">
 
-  function check(name){
-    var map = {
-      titleZh : "專案名稱",
-      email: "email",
-      phone: "聯絡電話",
-      startTime: "報名起始日期",
-      endTime: "報名截止日期",
-      subdomainName: "子網域名稱"
-    }
-    var x = document.forms["update-prj-form"][name];
-    if (x.value == ""){
-      x.placeholder = "請填入"+map[name];
-      return false;
-    }
-    else{
-      return true;
-    }
+  function editPost(postID){
+    console.log(postID);
+    
+
   }
 
  	$("#add-post-btn").click(function() {

@@ -13,6 +13,7 @@ const AWS = require('aws-sdk');
 // not  api
 exports.createPage = (req, res, next) => {
   res.render('projectCreate', {
+    email: req.user.email,
     title: '',
     body: '',
     error: '',
@@ -30,7 +31,8 @@ exports.editPage = (req, res, next) => {
         default: () => {
           // TODO
           res.render('announce', {
-            proj,  
+            proj, 
+            project: proj,
             projID: req.params.projID
           });
         },
@@ -73,7 +75,7 @@ exports.projDetail = (req, res, next) => {
         //   res.send(proj);
         // },
         default: () => {
-          res.render('projectManage', {
+          res.render('projectEdit', {
             project: proj,
             projID: req.params.projID
           });
@@ -126,7 +128,6 @@ exports.projCreate = (req, res, next) => {
 };
 
 exports.projAddPost = (req, res, next) => {
-  console.log(req.body);
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
       //if (req.body.announcement.length < 1) {    //  must to filled the blank
@@ -177,14 +178,14 @@ exports.projAddPost = (req, res, next) => {
             }
           });
       } else {
-        proj.announcement.push(req.body.announcement);
+        proj.announcement.push(req.body);
       }
 
       return proj.save();
     })
     .then((proj) => {
-      // res.send('success');
-      res.redirect(`/projects/${proj._id}/edit`);
+      res.send('success');
+      // res.redirect(`/projects/${proj._id}/edit`);
     })
     .catch((err) => {
       res.send(err);
@@ -638,11 +639,11 @@ exports.modifyVerification = (req, res, next) => {
           person.verification = req.body.verification;
         }
       });
-
       return personList.save();
     })
     .then((person) => {
-      res.redirect(`/projects/${req.params.projID}/rmd-person`);
+      res.send('success');
+      // res.redirect(`/projects/${req.params.projID}/rmd-person`);
     })
     .catch((err) => {
       res.send(err);

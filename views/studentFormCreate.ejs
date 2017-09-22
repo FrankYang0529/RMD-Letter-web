@@ -27,7 +27,6 @@
 	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
 	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
 	  <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-	  <a href="/projects/<%= projID %>/edit" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
 	  <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
 	  <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
 	  <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
@@ -37,12 +36,11 @@
 
 	<div id="content" class="open">
 		<h1 id="title">創建學生報名表單</h1>	
-		projID = <%= projID %>
 		<div class="w3-container form">
 		  <div class="w3-card-4">
 		    <form id="form-edit" class="w3-container">
 		    	<div class="w3-container">
-			      <h2><input type="text" name="title" value="" placeholder="成大資工所推甄入學報名表" onfocus="this.placeholder = ''" onblur="this.placeholder = '請填入學生表單名稱'" ></h2>
+			      <h2><input type="text" name="title" value="" placeholder="請填入學生表單標題" onfocus="this.placeholder = ''" onblur="this.placeholder = '請填入學生表單標題'" ></h2>
 			    </div>
 			    <div id="qidic6kl" class="question-pannel text-answer">
 		    		<span onclick="removeQuestion('qidic6kl');" class="w3-bar-item w3-button w3-white w3-hover-opacity w3-hover-black w3-border w3-xlarge w3-right">×</span>

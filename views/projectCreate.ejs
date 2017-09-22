@@ -34,19 +34,19 @@
   <h1 id="title">創建新專案</h1>
 	<div class="w3-container form">
 	  <div class="w3-card-4">
-	  	<form action="/projects" method="post">
+	  	<form name="create-prj-form" action="/projects" method="post" onsubmit="return validateForm();">
 		    <div class="w3-container">
-		      <h2><input class="w3-input" type="text" name = 'titleZh' id = 'titleZh' placeholder='106年成大資工所博士推甄' onfocus="this.placeholder = ''" onblur="this.placeholder = '106年成大資工所博士推甄'" value="106年成大資工所博士推甄"></h2>
-	 	      <label>email</label>
-		      <input class="w3-input" type="email" name = 'email' id = 'email' placeholder='abc@gmail.com' onfocus="this.placeholder = ''" onblur="this.placeholder = 'abc@gmail.com'">
-          <label>phone</label>
-          <input class="w3-input" type="phone" name = 'phone' id = 'phone' placeholder='06-2757575' onfocus="this.placeholder = ''" onblur="this.placeholder = '06-2757575'">
-          <label>startTime</label>
-          <input class="w3-input" type="date" name = 'startTime' id = 'startTime' placeholder='2017/10/02' onfocus="this.placeholder = ''" onblur="this.placeholder = '2017/10/02'">
-          <label>endTime</label>
-          <input class="w3-input" type="date" name = 'endTime' id = 'endTime' placeholder='2017/11/02' onfocus="this.placeholder = ''" onblur="this.placeholder = '2017/11/02'">
-		      <label>subdomainName</label>    
-		      <input class="w3-input" type="text" name = 'subdomainName' id = 'subdomainName' placeholder='abc.xyz' onfocus="this.placeholder = ''" onblur="this.placeholder = 'abc.xyz'">
+		      <h2><input class="w3-input" type="text" name = 'titleZh' id = 'titleZh' placeholder='專案名稱' onfocus="this.placeholder = ''"onblur="check(name);" value=""></h2>
+	 	      <label>e-mail</label>
+		      <input class="w3-input" type="email" name = 'email' id = 'email' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);" value="<%= email %>">
+          <label>聯絡電話</label>
+          <input class="w3-input" type="phone" name = 'phone' id = 'phone' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);">
+          <label>報名開始</label>
+          <input class="w3-input" type="text" name = 'startTime' id = 'startTime' placeholder='' onfocus="(this.type='date')" onblur="(this.type='text'); check(name);">
+          <label>報名結束</label>
+          <input class="w3-input" type="text" name = 'endTime' id = 'endTime' placeholder='' onfocus="(this.type='date')" onblur="(this.type='text'); check(name);">
+		      <label>學生報名網站</label>    
+		      <input class="w3-input" type="text" name = 'subdomainName' id = 'subdomainName' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);">
 		      <button class="w3-btn w3-blue-grey submit">新增專案</button>
 		    </div>
   	  </form>
@@ -56,6 +56,40 @@
 <!-- <footer>
   <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 </footer> -->
-     
+<script>
+
+function check(name){
+  var map = {
+    titleZh : "專案名稱",
+    email: "email",
+    phone: "聯絡電話",
+    startTime: "報名起始日期",
+    endTime: "報名截止日期",
+    subdomainName: "子網域名稱"
+  }
+  var x = document.forms["create-prj-form"][name];
+  if (x.value == ""){
+    x.placeholder = "請填入"+map[name];
+    return false;
+  }
+  else{
+    return true;
+  }
+}
+
+function validateForm() {
+  // var y = $('form[name="create-prj-form"] input[name="titleZh"]').val();
+  // console.log(y);
+  var flag = true;
+  var nameList = [titleZh, email, phone, startTime, endTime, subdomainName];
+  nameList.forEach(function(element){
+    var next = check(element.name);
+    flag = flag && next;
+  });
+  return flag;
+}
+
+</script>
+
 </body>
 </html> 

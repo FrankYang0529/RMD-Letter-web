@@ -40,23 +40,17 @@ table a:hover, a:active{
   color: black;  
 }
 
-a:link .img-text, a:visited .img-text{
-	font-size: 18px;
-	text-align: center;
-  text-decoration: none;
-  color: grey;
-  background-color: white;
+#add-post-btn{
   padding: 14px 25px;
   margin-top: 15px;
+
+  font-size: 18px;
+  text-align: center;
 
   display: -webkit-flex; /* Safari */
   -webkit-align-items: center; /* Safari 7.0+ */
   display: flex;
   align-items: center;
-}
-
-a:hover .img-text, a:active .img-text{
-  color: black;
 }
 
 .img-text img{
