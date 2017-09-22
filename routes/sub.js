@@ -9,14 +9,14 @@ const multiparty = require('connect-multiparty');
 multipartyMiddleware = multiparty();
 
 router.get('/', subroutes.index);
-router.get('/recommendData', subroutes.recommendData); //  get self student-form data
-router.get('/projects/addRmdPerson', subroutes.addRmdPersonView);
+router.get('/recommendData', Policy.studentLoggedIn, subroutes.recommendData); //  get self student-form data
+router.get('/projects/addRmdPerson', Policy.studentLoggedIn, subroutes.addRmdPersonView);
 
 //  get announcement detail
 router.get('/announcement/:announcementID', subroutes.announcementDetail);
 
 //  get recommended letter schedule
-router.get('/schedule', subroutes.scheduleView);
+router.get('/schedule', Policy.studentLoggedIn, subroutes.scheduleView);
 
 //  register
 router.get('/users', subroutes.registerPage);
@@ -42,6 +42,9 @@ router.post('/projects/rmd-person', Policy.studentLoggedIn, subroutes.addRmdPers
 
 //  Send Recommend Letter Invitation
 router.get('/projects/:rmdPersonID/send-letter', Policy.studentLoggedIn, subroutes.sentLetter);
+
+//  get student sent letter (for blocking too many letter had sent)
+router.get('/projects/letter-number', Policy.studentLoggedIn, subroutes.letterNumber);
 
 //  Fill in student form
 router.get('/fill-student-form', Policy.studentLoggedIn, subroutes.studentFormView);

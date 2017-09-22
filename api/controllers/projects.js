@@ -9,6 +9,8 @@ const RmdLtFormAns = require('../models/rmdltFormAns');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 
+const s3 = new AWS.S3();
+
 // not  api
 exports.createPage = (req, res, next) => {
   /* res.render('projectCreate', {
@@ -133,17 +135,15 @@ exports.projAddPost = (req, res, next) => {
         const file = req.files.file;
         const stream = fs.createReadStream(file.path);
 
-        const s3 = new AWS.S3({
-          params: {
+        const params = {
             Bucket: 'rmd-letter',
             Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
             ACL: 'public-read',  //  檔案權限
-          },
-        });
-        
-        s3.upload({
-          Body: stream,
-        }).on('httpUploadProgress', (progress) => {
+            Body: stream,
+            ContentType: file.type,
+        };
+
+        s3.upload(params).on('httpUploadProgress', (progress) => {
             //  上傳進度
           console.log(`${progress.loaded} of ${progress.total} bytes`);
         })
@@ -192,26 +192,25 @@ exports.projAnnouncementEdit = (req, res, next) => {
         });
         */
       }
-      proj.announcement.forEach((body) => {
+      proj.announcement.forEach((body, index) => {
         if (body._id == req.params.announcementID) { // must be == not ===
-          body.title = req.body.announcement.title;
-          body.text = req.body.announcement.text;
+          proj.announcement[index].title = req.body.announcement.title;
+          proj.announcement[index].text = req.body.announcement.text;
 
           if (JSON.stringify(req.files) !== '{}') {
             const file = req.files.file;
             const stream = fs.createReadStream(file.path);
 
-            const s3 = new AWS.S3({
-              params: {
-                Bucket: 'rmd-letter',
-                Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
-                ACL: 'public-read',  //  檔案權限
-              },
-            });
-
-            s3.upload({
+            const params = {
+              Bucket: 'rmd-letter',
+              Key: `${req.params.projID}/${file.originalFilename}`, //  檔案名稱
+              ACL: 'public-read',  //  檔案權限
               Body: stream,
-            }).on('httpUploadProgress', (progress) => {
+              ContentType: file.type,
+            };
+
+
+            s3.upload(params).on('httpUploadProgress', (progress) => {
                 //  上傳進度
               console.log(`${progress.loaded} of ${progress.total} bytes`);
             })
@@ -227,14 +226,15 @@ exports.projAnnouncementEdit = (req, res, next) => {
                 if (err) {
                   console.log(err);
                 } else {
-                  body.file = `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`;
+                  proj.announcement[index].file = `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`;
+                  return proj.save();
                 }
               });
+          } else {
+            return proj.save();
           }
         }
       });
-
-      return proj.save();
     })
     .then((proj) => {
       res.redirect(`/projects/${proj._id}`);  //  回到detail

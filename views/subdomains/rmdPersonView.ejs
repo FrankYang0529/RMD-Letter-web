@@ -83,13 +83,19 @@
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: '是, 送出!'
-                        }).then(function () {
-                            $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
-                                let answer = [];
-        
+                    }).then(function () {
+
+                        $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
+                            let answer = [];
+                            const BreakException = {};
+
+                            try {
                                 data.questions.forEach((question) => {
                                     if (question.questionType === 'text' || question.questionType ===
                                         'textArea') {
+                                        if (question.require && !$(`.${question._id}`).val()) {
+                                            throw BreakException;
+                                        }
                                         answer.push({
                                             question_id: question._id,
                                             choices: [],
@@ -99,6 +105,10 @@
                                         });
                                     } else if (question.questionType === 'single' || question.questionType ===
                                         'multiple') {
+                                        if (question.require && !$(`.${question._id}`).is(
+                                                ':checked')) {
+                                            throw BreakException;
+                                        }
                                         let optionAnswers = [];
                                         question.options.forEach((option) => {
                                             if ($(`#${option._id}`).is(':checked')) {
@@ -117,9 +127,9 @@
                                         });
                                     }
                                 });
-        
-        
-        
+
+
+
                                 $.ajax({
                                     url: window.location.href,
                                     type: 'POST',
@@ -128,86 +138,109 @@
                                     },
                                     success: () => {
                                         swal({
-                                            type: 'success',
-                                            html: '<p>成功填寫完畢!</p><p>跳轉中請稍後...</p',
-                                            timer: 2500,
-                                            onOpen: () => {
-                                            swal.showLoading();
-                                            },
-                                        })
-                                        .then(
-                                            () => {},
-                                            // handling the promise rejection
-                                            (dismiss) => {
-                                            if (dismiss === 'timer') {
-                                                location.reload();
-                                            }
-                                            },
-                                        );
+                                                type: 'success',
+                                                html: '<p>成功填寫完畢!</p><p>跳轉中請稍後...</p',
+                                                timer: 2500,
+                                                onOpen: () => {
+                                                    swal.showLoading();
+                                                },
+                                            })
+                                            .then(
+                                                () => {},
+                                                // handling the promise rejection
+                                                (dismiss) => {
+                                                    if (dismiss === 'timer') {
+                                                        location.reload();
+                                                    }
+                                                },
+                                            );
                                     },
                                 });
-                            });
+                            } catch (e) { //  required missing
+                                if (e !== BreakException) throw e;
+                                swal({
+                                    type: 'error',
+                                    html: '<p>請確認所有必填選項都已經填寫</p>',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    focusConfirm: false,
+                                    confirmButtonText: '我知道了',
+                                    confirmButtonAriaLabel: '我知道了',
+                                });
+                            }
+                        });
+
                     })
                 }
             </script>
 
-        <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h3 class="modal-title">學生資料</h3>
-            </div>
-            <div class="modal-body">
-                    <table class="table">
-                            <% 
+            <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title">學生資料</h3>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <% 
                             studentQues.questions.forEach( function (question) { 
                                 studentAns.answers.forEach( function (answer) {
                                     if (question._id == answer.question_id) { 
                                         if (question.questionType == 'text') {                                                                                                                
                             %>
+                                    <tr>
+                                        <th>
+                                            <%= question.questionTitle %>：</th>
+                                        <td>
+                                            <%= answer.text %>
+                                        </td>
+                                    </tr>
+                                    <%          } else if (question.questionType == 'textArea') {   %>
+                                        <tr>
+                                            <th>
+                                                <%= question.questionTitle %>：</th>
+                                            <td style="white-space:pre">
+                                                <%= answer.text %>
+                                            </td>
+                                        </tr>
+                                        <%          } else if (question.questionType == 'single') { %>
                                             <tr>
-                                                <th><%= question.questionTitle %>：</th>
-                                                <td><%= answer.text %></td>
-                                            </tr>
-                            <%          } else if (question.questionType == 'textArea') {   %>
-                                            <tr>
-                                                <th><%= question.questionTitle %>：</th>
-                                                <td style="white-space:pre"><%= answer.text %></td>
-                                            </tr>
-                            <%          } else if (question.questionType == 'single') { %>
-                                            <tr>
-                                                <th><%= question.questionTitle %>：</th>
-                                                <td><%= answer.choices[0].option %></td>
-                                            </tr>
-                            <%          } else if (question.questionType == 'multiple') {  %>
-                                            <tr>
-                                                <th><%= question.questionTitle %>：</th>
+                                                <th>
+                                                    <%= question.questionTitle %>：</th>
                                                 <td>
-                                                    <% answer.choices.forEach( function (choice, index) { 
+                                                    <%= answer.choices[0].option %>
+                                                </td>
+                                            </tr>
+                                            <%          } else if (question.questionType == 'multiple') {  %>
+                                                <tr>
+                                                    <th>
+                                                        <%= question.questionTitle %>：</th>
+                                                    <td>
+                                                        <% answer.choices.forEach( function (choice, index) { 
                                                         if (index == 0) {
                                                     %>
                                                             <span><%= choice.option %></span>
-                                                    <%  } else { %>
-                                                            <span>、 <%= choice.option %></span>
-                                                    <%  }
+                                                            <%  } else { %>
+                                                                <span>、 <%= choice.option %></span>
+                                                                <%  }
                                                        });
                                                     %>
-                                                </td>
-                                            </tr>
-                            <%          }
+                                                    </td>
+                                                </tr>
+                                                <%          }
                                     }
                                 });
                                });
                             %>
                             </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-            </div>
-          </div>
-        </div>
-      </div>
             <div class="custom-container">
                 <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                     <div class="row" style="margin-top:12px;">
@@ -244,7 +277,12 @@
                                                 </div>
                                                 <%  } else { %>
                                                     <div class="form-group row">
-                                                        <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
+                                                        <label for="name" class="col-xs-2 control-label">
+                                                            <% if (question.require) { %>
+                                                                <span style="color:red">*&nbsp;</span>
+                                                            <% } %>
+                                                            <%= question.questionTitle %>
+                                                        </label>
                                                         <div class="col-xs-10">
                                                             <% if (question.questionType === 'text') { %>
                                                                 <input type="text" class="form-control <%= question._id %>" />
@@ -273,9 +311,9 @@
                                             <button class="btn btn-default" onclick="submitRmdLtForm('<%= proj._id %>')">送出
                                             </button>
                                         </div>
-                                    <% } else { %>
-                                        <h2 style="text-align: center; padding-top:20px;">你已經送出推薦信了，無法進行修改。</h2>
-                                    <% } %>
+                                        <% } else { %>
+                                            <h2 style="text-align: center; padding-top:20px;">你已經送出推薦信了，無法進行修改。</h2>
+                                            <% } %>
                                 </div>
                             </div>
 

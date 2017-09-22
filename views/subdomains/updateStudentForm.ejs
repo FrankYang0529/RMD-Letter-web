@@ -138,7 +138,12 @@
                                         </div>
                                 <%  } else { %>
                                         <div class="form-group row">
-                                            <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
+                                            <label for="name" class="col-xs-2 control-label">
+                                                <% if (question.require) { %>
+                                                    <span style="color:red">*&nbsp;</span>
+                                                <% } %>
+                                                <%= question.questionTitle %>
+                                            </label>
                                             <div class="col-xs-10">
                                                 <% if (question.questionType === 'text') { %>
                                                     <input type="text" class="form-control <%= question._id %>"/>

@@ -18,7 +18,7 @@ function submitAddPerson() {
   } else {
     swal({
         type: 'success',
-        html: '<p>新增成功!尚需交由管理者審核通過!</p><p>跳轉中請稍後...</p',
+        html: '<h3>新增成功!尚需交由管理者審核通過!</h3><p>跳轉中請稍後...</p',
         timer: 3000,
         onOpen: () => {
           swal.showLoading();
@@ -52,67 +52,94 @@ function submitStudentForm() {
       $.getJSON('/projects/student-form', (data) => {
         let answer = [];
         let postData = new FormData();
+        const BreakException = {};
 
-        data.questions.forEach((question) => {
-          if (question.questionType === 'text' || question.questionType === 'textArea') {
-            answer.push({
-              question_id: question._id,
-              choices: [],
-              file_url: '',
-              text: $(`.${question._id}`).val(),
-              textSet: [],
-            });
-          } else if (question.questionType === 'single' || question.questionType === 'multiple') {
-            let optionAnswers = [];
-            question.options.forEach((option) => {
-              if ($(`#${option._id}`).is(':checked')) {
-                optionAnswers.push({
-                  option_id: option._id, // 所選選項的ID
-                  option: option.option,
-                });
+        try {
+          data.questions.forEach((question) => {
+            if (question.questionType === 'text' || question.questionType === 'textArea') {
+              if (question.require && !$(`.${question._id}`).val()) {
+                throw BreakException;
               }
-            });
-            answer.push({
-              question_id: question._id,
-              choices: optionAnswers,
-              file_url: '',
-              text: '',
-              textSet: [],
-            });
-          } else {
-            postData.append(question._id, $(`.${question._id}`)[0].files[0]);
-            console.log(postData);
 
-            answer.push({
-              question_id: question._id,
-              choices: [],
-              file_url: 'file',
-              text: '',
-              textSet: [],
-            });
-          }
-        });
+              answer.push({
+                question_id: question._id,
+                choices: [],
+                file_url: '',
+                text: $(`.${question._id}`).val(),
+                textSet: [],
+              });
+            } else if (question.questionType === 'single' || question.questionType === 'multiple') {
+              let optionAnswers = [];
+              if (question.require && !$(`.${question._id}`).is(':checked')) {
+                throw BreakException;
+              }
 
-        postData.append("answers", JSON.stringify(answer));
+              question.options.forEach((option) => {
+                if ($(`#${option._id}`).is(':checked')) {
+                  optionAnswers.push({
+                    option_id: option._id, // 所選選項的ID
+                    option: option.option,
+                  });
+                }
+              });
+              answer.push({
+                question_id: question._id,
+                choices: optionAnswers,
+                file_url: '',
+                text: '',
+                textSet: [],
+              });
+            } else {
+              if (question.require && !$(`.${question._id}`)[0].files[0]) {
+                throw BreakException;
+              }
 
-        $.ajax({
-          url: '/projects/student-form',
-          type: 'POST',
-          data: postData,
-          processData: false,
-          contentType: false,
-          success: () => {
-            swal({
-              type: 'success',
-              html: '<p>成功填寫完畢!</p><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
-              showCloseButton: true,
-              showCancelButton: false,
-              focusConfirm: false,
-              confirmButtonText: '<a href="/recommendData" style="color: white">我知道了</a>',
-              confirmButtonAriaLabel: '我知道了',
-            });
-          },
-        });
+              postData.append(question._id, $(`.${question._id}`)[0].files[0]);
+
+              answer.push({
+                question_id: question._id,
+                choices: [],
+                file_url: 'file',
+                text: '',
+                textSet: [],
+              });
+            }
+          });
+
+          postData.append('answers', JSON.stringify(answer));
+
+          $.ajax({
+            url: '/projects/student-form',
+            type: 'POST',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: () => {
+              swal({
+                type: 'success',
+                html: '<h3>成功填寫完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: '我知道了',
+                confirmButtonAriaLabel: '我知道了',
+              }).then(() => {
+                document.location.href = '/recommendData';
+              });
+            },
+          });
+        } catch (e) {  //  required missing
+          if (e !== BreakException) throw e;
+          swal({
+            type: 'error',
+            html: '<p>請確認所有必填選項都已經填寫</p>',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: '我知道了',
+            confirmButtonAriaLabel: '我知道了',
+          });
+        }
       });
     }
   });
@@ -133,81 +160,100 @@ function updateStudentForm() {
     } else {
 
       $.getJSON('/projects/student-form', (data) => {
-        console.log(data);
-
         let answer = [];
         let postData = new FormData();
+        const BreakException = {};
 
-        data.questions.forEach((question) => {
-          if (question.questionType === 'text' || question.questionType === 'textArea') {
-            answer.push({
-              question_id: question._id,
-              choices: [],
-              file_url: '',
-              text: $(`.${question._id}`).val(),
-              textSet: [],
-            });
-          } else if (question.questionType === 'single' || question.questionType === 'multiple') {
-            let optionAnswers = [];
-            question.options.forEach((option) => {
-              if ($(`#${option._id}`).is(':checked')) {
-                optionAnswers.push({
-                  option_id: option._id, // 所選選項的ID
-                  option: option.option,
-                });
+        try {
+          data.questions.forEach((question) => {
+            if (question.questionType === 'text' || question.questionType === 'textArea') {
+              if (question.require && !$(`.${question._id}`).val()) {
+                throw BreakException;
               }
-            });
-            answer.push({
-              question_id: question._id,
-              choices: optionAnswers,
-              file_url: '',
-              text: '',
-              textSet: [],
-            });
-          } else {  // file type
-            postData.append(question._id, $(`.${question._id}`)[0].files[0]);
+              answer.push({
+                question_id: question._id,
+                choices: [],
+                file_url: '',
+                text: $(`.${question._id}`).val(),
+                textSet: [],
+              });
+            } else if (question.questionType === 'single' || question.questionType === 'multiple') {
+              let optionAnswers = [];
+              if (question.require && !$(`.${question._id}`).is(':checked')) {
+                throw BreakException;
+              }
+              question.options.forEach((option) => {
+                if ($(`#${option._id}`).is(':checked')) {
+                  optionAnswers.push({
+                    option_id: option._id, // 所選選項的ID
+                    option: option.option,
+                  });
+                }
+              });
+              answer.push({
+                question_id: question._id,
+                choices: optionAnswers,
+                file_url: '',
+                text: '',
+                textSet: [],
+              });
+            } else {  // file type
+              if (question.require && !$(`.${question._id}`)[0].files[0]) {
+                throw BreakException;
+              }
+              postData.append(question._id, $(`.${question._id}`)[0].files[0]);
 
-            answer.push({
-              question_id: question._id,
-              choices: [],
-              file_url: 'file',
-              text: '',
-              textSet: [],
-            });
-          }
-        });
+              answer.push({
+                question_id: question._id,
+                choices: [],
+                file_url: 'file',
+                text: '',
+                textSet: [],
+              });
+            }
+          });
 
-        postData.append('answers', JSON.stringify(answer));
+          postData.append('answers', JSON.stringify(answer));
 
-        $.ajax({
-          url: '/projects/student-form',
-          type: 'PUT',
-          data: postData,
-          processData: false,
-          contentType: false,
-          success: () => {
-            swal({
-              type: 'success',
-              html: '<p>成功修改完畢!</p><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
-              showCloseButton: true,
-              showCancelButton: false,
-              focusConfirm: false,
-              confirmButtonText: '關閉',
-              confirmButtonAriaLabel: '關閉',
-            });
-          },
-        });
+          $.ajax({
+            url: '/projects/student-form',
+            type: 'PUT',
+            data: postData,
+            processData: false,
+            contentType: false,
+            success: () => {
+              swal({
+                type: 'success',
+                html: '<h3>成功修改完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
+                showCloseButton: true,
+                showCancelButton: false,
+                focusConfirm: false,
+                confirmButtonText: '關閉',
+                confirmButtonAriaLabel: '關閉',
+              }).then(() => {
+                document.location.href = '/recommendData';
+              });
+            },
+          });
+        } catch (e) {  //  required missing
+          if (e !== BreakException) throw e;
+          swal({
+            type: 'error',
+            html: '<p>請確認所有必填選項都已經填寫</p>',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: '我知道了',
+            confirmButtonAriaLabel: '我知道了',
+          });
+        }
       });
     }
   });
 }
 
-
 function sendLetter(rmdPersonID) {
-  console.log(rmdPersonID);
-
-  $.get('/projects/student-form-answer', function (data) {
-    console.log(data);
+  $.get('/projects/student-form-answer', (data) => {
     if (data === null) {
       swal({
         type: 'error',
@@ -219,17 +265,31 @@ function sendLetter(rmdPersonID) {
         confirmButtonAriaLabel: '我知道了',
       });
     } else {
-      swal({
-        type: 'success',
-        html: '成功送出',
-        showCloseButton: true,
-        showCancelButton: false,
-        focusConfirm: false,
-        confirmButtonText: '關閉',
-        confirmButtonAriaLabel: '關閉',
-      });
+      $.get('/projects/letter-number', (student) => {
+        if (student.number >= 3) {
+          swal({
+            type: 'error',
+            html: '<p>已經送出超過三封推薦信請求</p><p>如有任何需求，歡迎來信。</p>',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: '關閉',
+            confirmButtonAriaLabel: '關閉',
+          });
+        } else {
+          swal({
+            type: 'success',
+            html: '<h3>成功送出</h3><p>如進度尚未更新請稍後，請勿重複寄信</p>',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: '關閉',
+            confirmButtonAriaLabel: '關閉',
+          });
 
-      $.get(`/projects/${rmdPersonID}/send-letter`);
+          $.get(`/projects/${rmdPersonID}/send-letter`);
+        }
+      });
     }
   });
 }

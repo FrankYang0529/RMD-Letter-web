@@ -133,7 +133,7 @@
                                     <% } else { 
                                             user.sentLetter.forEach(function (rmdPerson) { %>
                                                 <tr>
-                                                    <td><%= rmdPerson.sendTime.getFullYear() %>-<%= ("00" + (rmdPerson.sendTime.getMonth()+1)).slice(-2) %>-<%= ("00" + rmdPerson.sendTime.getDate()).slice(-2)%>&nbsp;&nbsp;&nbsp;&nbsp;<%= ("00" + (rmdPerson.sendTime. getHours()+1)).slice(-2) %>時<%= ("00" + (rmdPerson.sendTime. getMinutes()+1)).slice(-2) %>分</td>
+                                                    <td><%= rmdPerson.sendTime.getFullYear() %>-<%= ("00" + (rmdPerson.sendTime.getMonth()+1)).slice(-2) %>-<%= ("00" + rmdPerson.sendTime.getDate()).slice(-2)%>&nbsp;&nbsp;&nbsp;&nbsp;<%= ("00" + (rmdPerson.sendTime. getHours())).slice(-2) %>時<%= ("00" + (rmdPerson.sendTime. getMinutes())).slice(-2) %>分</td>
                                                     <td><%= rmdPerson.rmdPersonName %></td>
                                                     <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                                     <%          if (rmdlts.length == 0) { %>
