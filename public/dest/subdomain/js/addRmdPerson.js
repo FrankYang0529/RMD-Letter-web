@@ -222,6 +222,7 @@ function updateStudentForm() {
             processData: false,
             contentType: false,
             success: () => {
+              console.log('success');
               swal({
                 type: 'success',
                 html: '<h3>成功修改完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',

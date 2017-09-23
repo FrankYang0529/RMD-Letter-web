@@ -22,7 +22,8 @@ router.get('/schedule', Policy.studentLoggedIn, subroutes.scheduleView);
 router.get('/users', subroutes.registerPage);
 router.post('/users', passport.authenticate('stu-local-signup', {
     successRedirect: '/',
-    failureRedirect: '/users?err=true',
+    failureRedirect: '/users',
+    failureFlash: true,
   })
 );
 router.put('/users', subroutes.changePassword);

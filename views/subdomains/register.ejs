@@ -14,20 +14,19 @@
   
   <body>
     <% 
-    console.log(err);
-    if (err) { %>
+    if (err.length > 0) { %>
       <script>
         swal({
-                                type: 'error',
-                                html:
-                                    `<p>註冊失敗，請檢查是否有欄位尚未填寫</p>
-                                    <p>或者此帳號或email已經被使用</p>`,
-                                showCloseButton: true,
-                                showCancelButton: false,
-                                focusConfirm: false,
-                                confirmButtonText: '我知道了',
-                                confirmButtonAriaLabel: '我知道了',
-                            });
+            type: 'error',
+            html:
+              '<h3>註冊失敗</h3>'+
+              '<p><%= err[0] %></p>',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: '我知道了',
+            confirmButtonAriaLabel: '我知道了',
+        });
       </script>
     <% } %>
 

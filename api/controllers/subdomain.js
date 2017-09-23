@@ -10,6 +10,7 @@ const passwordHash = require('password-hash');
 const StudentForm = require('../models/stuForms');
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const flash = require('connect-flash');
 const s3 = new AWS.S3();
 
 // mail config
@@ -163,10 +164,11 @@ exports.updateStudentFormView = (req, res, next) => {
 };
 
 exports.registerPage = (req, res, next) => {
-  let err = false;
-  if (req.query.err) {
-    err = true;
+  let err = req.flash('error');
+  if (err[0] === 'Missing credentials') {
+    err[0] = '請確認所有欄位都已填寫完畢';
   }
+
   res.format({
     default: () => {
       res.render('subdomains/register', {
@@ -180,6 +182,7 @@ exports.login = (req, res, next) => {
   res.format({
     default: () => {
       res.render('subdomains/login', {
+        err: req.flash('error'),
       });
     },
   });
@@ -191,7 +194,10 @@ exports.auth = (req, res, next) => {
   // generate the authenticate method and pass the req/res
   passport.authenticate('stu-local-login', (err, user, info) => {
     if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
+    if (!user) {
+      req.flash('error', '登入失敗');
+      return res.redirect('/users/login'); 
+    }
 
     // req / res held in closure
     req.logIn(user, (err) => {
@@ -345,7 +351,7 @@ exports.sentLetter = (req, res, next) => {
       subject: letter.title,
       text: lt,
     };
-
+    console.log('send success');
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
@@ -496,6 +502,9 @@ exports.updateStudentForm = (req, res, next) => {
       answerList.answers = answers;
       return answerList.save();
     }
+  })
+  .then((proj) => {
+    res.rend('OK');
   })
   .catch((err) => {
     res.send(err);

@@ -8,10 +8,27 @@
     <!-- 最新編譯和最佳化的 JavaScript -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
   </head>
   
   <body>
-    
+      <% 
+      if (err.length > 0) { %>
+        <script>
+          swal({
+              type: 'error',
+              html:
+                '<h3>登入失敗</h3>'+
+                '<p>請再次檢查帳號密碼是否有誤</p>',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '我知道了',
+              confirmButtonAriaLabel: '我知道了',
+          });
+        </script>
+      <% } %>
     <div class="container">
       <div class="header">
         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>

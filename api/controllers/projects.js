@@ -237,7 +237,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
       });
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.rend('OK');  //  回到detail
     })
     .catch((err) => {
       console.log(err);
