@@ -116,27 +116,33 @@
                                 <hr>
                                 <form id="rmdPerson" action="/projects/rmd-person/" method="post" class="form-horizontal" style="margin-top:40px;">
                                     <div class="form-group">
-                                        <label for="name" class="col-sm-2 control-label">推薦人姓名</label>
+                                        <label for="name" class="col-sm-2 control-label"><span style="color:red">*&nbsp;</span>推薦人姓名</label>
                                         <div class="col-sm-9">
                                             <input type="name" name="name" class="form-control" id="name" placeholder="請輸入姓名">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="serviceUnit" class="col-sm-2 control-label">服務單位</label>
+                                        <label for="serviceUnit" class="col-sm-2 control-label"><span style="color:red">*&nbsp;</span>服務單位</label>
                                         <div class="col-sm-9">
                                             <input type="serviceUnit" name="serviceUnit" class="form-control" id="serviceUnit" placeholder="請輸入推薦人之服務單位">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="jobTitle" class="col-sm-2 control-label">職稱</label>
+                                        <label for="jobTitle" class="col-sm-2 control-label"><span style="color:red">*&nbsp;</span>職稱</label>
                                         <div class="col-sm-9">
                                             <input type="jobTitle" name="jobTitle" class="form-control" id="jobTitle" placeholder="請輸入推薦人之職稱">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email" class="col-sm-2 control-label">Email</label>
+                                        <label for="jobTitle" class="col-sm-2 control-label">連絡電話</label>
                                         <div class="col-sm-9">
-                                            <input type="email" name="email" class="form-control" id="email" placeholder="請輸入推薦人之email">
+                                            <input type="phone" name="phone" class="form-control" id="phone" placeholder="請輸入推薦人之連絡電話">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="col-sm-2 control-label"><span style="color:red">*&nbsp;</span>Email</label>
+                                        <div class="col-sm-9">
+                                            <input type="email" name="email" class="form-control" id="email" placeholder="請輸入推薦人之email(校內公開信箱為佳)">
                                         </div>
                                     </div>
                                 </form>

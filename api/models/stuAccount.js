@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const rmdPerson = new Schema({
   rmdPersonID: String,
   rmdPersonName: String,
+  sendTime: Date,
 });
 
 const stuAccount = new Schema({

@@ -171,3 +171,9 @@ textarea {
     resize: none;
     min-height: 150px;
 }
+
+.searchBar {
+    float: right;
+    font-size: 15px;
+    margin-top: -10px;
+}

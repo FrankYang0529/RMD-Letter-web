@@ -8,6 +8,7 @@ const Person = new Schema({
   serviceUnit: String,   //  服務單位
   jobTitle: String,       //  職稱
   verification: Boolean,
+  phone: String,
 });
 
 const RecommendPerson = new Schema({

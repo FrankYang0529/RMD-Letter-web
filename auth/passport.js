@@ -35,8 +35,10 @@ passport.use('stu-local-signup', new LocalStrategy({
     StuAccount.find({ subdomain: req.vhost[0] }).exec()
       .then(function (accounts) {
         accounts.forEach(function (account) {
-          if (account.email == req.body.email || account.username == req.body.username) {
-            throw err;
+          if (account.email === req.body.email) {
+            throw '此信箱已經被使用過';
+          } else if (account.username === req.body.username) {
+            throw '此帳號已經被使用過';
           }
         })
 
@@ -50,13 +52,13 @@ passport.use('stu-local-signup', new LocalStrategy({
           type: 'student',
           sentLetter: [],
         }).save(function (err,user) {
-            if (err) { return done(null, false, { message: 'err' }); }
+            if (err) { return done(null, false, { message: '不符合email格式' }); }
 
             return done(null, user);
           });
         })
         .catch(function (err) {
-          return done(null, false, { message: 'Duplicate username at the same subdomain' });
+          return done(null, false, { message: err });
         })
   }
 ));
