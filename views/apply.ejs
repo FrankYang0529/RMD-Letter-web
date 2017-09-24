@@ -8,6 +8,8 @@
   <link rel="stylesheet" type="text/css" href="/css/menu.css">
   <link rel="stylesheet" type="text/css" href="/css/content.css">
   <link rel="stylesheet" type="text/css" href="/css/form.css">
+  <link rel="stylesheet" type="text/css" href="/css/circle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
@@ -33,61 +35,170 @@
     <a href="/projects/<%= projID %>/student" id="apply" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
     <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
   </div>
-  <div id="content" class="open">
-  <h1 id="title">報名管理</h1> 
+  <div id="content" class="apply open">
+  <h1 id="title">報名管理</h1>
+
+  <div class="circle-parent">
+
+    <div class="ko-progress-circle" data-progress="0">
+      <div class="ko-circle">
+        <div class="full ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+        </div>
+        <div class="ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+        </div>
+      </div>
+      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+      <span class="datatitle">test</span>
+    </div>
+
+    <div class="ko-progress-circle" data-progress="0">
+      <div class="ko-circle">
+        <div class="full ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+        </div>
+        <div class="ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+        </div>
+      </div>
+      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+      <span class="datatitle">test</span>
+    </div>
+
+    <div class="ko-progress-circle" data-progress="0">
+      <div class="ko-circle">
+        <div class="full ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+        </div>
+        <div class="ko-progress-circle__slice">
+          <div class="ko-progress-circle__fill"></div>
+          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+        </div>
+      </div>
+      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+      <span class="datatitle">test</span>
+    </div>
+
+  </div>
+
+
+  <%= %>
+  projID = <%= projID %><br>
+  students = <%= students %><br>
+  studentform = <%= studentform %><br>
+  rmdletter = <%= rmdletter %><br>
+  <br><br>
+
+  <% students.forEach(function(student) {%>
+  <% var id = student.username; %>
+  name = <%= student.displayName %><br>
+  email = <%= student.email %><br>
+  setLt = <%= student.sentLetter %><br>
+  <% var ltCnt = setLt.length; %>
+  letter count = <%= ltCnt %><br>
+  <% var form =  studentform.filter( function(item){return (item.stuID==id);} );%>
+  student form = <%= form %><br>
+  <% var letters = rmdletter.filter( function(item){return (item.stuID==id);} );%>
+  letters = <%= letters %><br>
+  <% });%>
+
+  Total = <%= students.length %><br>
+
+
   <div class="w3-container">
     <div class="w3-responsive">
-      <table class="w3-table w3-bordered w3-hoverable">
-          <thead>
-            <tr class="w3-brown">
-              <th>姓名</th>
-              <th>畢業學校</th>
-              <th>在校成績</th>
-              <th>推薦人1</th>
-              <th>推薦人2</th>
-              <th>報名狀況</th>
-              <th>詳細資料</th>
-            </tr>
-          </thead>
-        <tr id="userid1" class="w3-hover-sand student">
-            <td>王小明</td>
-            <td>成大資訊</td>
-            <td>50/120</td>
-            <td>王大明</td>
-            <td>王鐘銘</td>
-            <td>2/2</td>
-            <td><a href="#student-ans">❯</a></td>
+    <table class="w3-table w3-striped w3-hoverable w3-card-4 w3-centered">
+      <thead>
+        <tr class="w3-brown">
+          <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
+          <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
+          <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
+          <th><i class="fa fa-send" style="font-size:17px; "> 邀請推薦人</i></th>
+          <th><i class="fa fa-thumbs-up" style="font-size:17px; "> 推薦人填寫</i></th>
+          <th><i class="fa fa-tachometer" style="font-size:17px; "> 報名進度</th>
+          <th><i class="fa fa-eye" style="font-size:17px; "></th>
         </tr>
-        <tr id="userid2" class="w3-hover-sand student">
-            <td>黃小明</td>
-            <td>成大資訊</td>
-            <td>48/120</td>
-            <td>王大明</td>
-            <td>王鐘銘</td>
-            <td>2/2</td>
-            <td><a href="#student-ans">❯</a></td>
-        </tr>
-        <tr id="userid3" class="w3-hover-sand student">
-            <td>張小明</td>
-            <td>成大資訊</td>
-            <td>51/120</td>
-            <td>王大明</td>
-            <td>王鐘銘</td>
-            <td>2/2</td>
-            <td><a href="#student-ans">❯</a></td>
-        </tr>
-        <tr id="userid4" class="w3-hover-sand student">
-            <td>江小明</td>
-            <td>成大資訊</td>
-            <td>49/120</td>
-            <td>王大明</td>
-            <td>王鐘銘</td>
-            <td>2/2</td>
-            <td><a href="#student-ans">❯</a></td>
-        </tr>
-      </table>
+      </thead>
+
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>testtest@gmail.com</td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">0/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">0/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">0/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">1/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">2/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">0/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">1/2</b></td>
+          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+      <tr id="userid0" class="w3-hover-sand student">
+          <th>王小豬</th>
+          <td>test@gmail.com</td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><b class="" style="font-size:15px">2/2</b></td>
+          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
+          <td><a href="#student-ans">❯</a></td>
+      </tr>
+    </table>
     </div>
   </div>
+
   <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>
   
   <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
@@ -156,6 +267,7 @@
         <button id="next-btn" class="w3-button w3-right w3-sand w3-hover-brown">Next &raquo;</button>
       </div>
   </div>
+
   </div>
 <!--   <footer>
     <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -163,6 +275,68 @@
 
 <script>
 $(document).ready(function(){
+
+  // $("#testBtn").click(function(){
+  //   let url="/projects"; 
+
+  //   fetch(url)
+  //   .then(res => res.json())
+  //   .then((out) => {
+  //     console.log('Checkout this JSON! ', out);
+  //   })
+  //   .catch(err => console.error(err));
+
+  // });
+
+  // $("#testBtn").click(function(){
+  //   $.ajax({
+  //       url: '/projects',
+  //       type: "GET",
+  //       dataType: "jsonp",
+  //       async: false,
+  //       success: function(msg)  {
+  //           JsonpCallback(msg);
+  //       },
+  //       error: function()  {
+  //           ErrorFunction();
+  //       }
+  //   });
+  // });
+
+  // function JsonpCallback(json)  {
+  //     document.getElementById('summary').innerHTML = json.result;
+  // }
+
+  // $.get( "/projects", function( data ) {
+  //   $("#summary").html( data );
+  //   alert( "Load was performed." );
+  // });
+
+  // $.get( "/projects", function(data) {
+  //   //alert( "success");
+  //   console.log($("#summary").text());
+  //   console.log("data", data);
+  //   data.forEach(function(element){
+  //     console.log(element.ownerID);
+  //   });
+  // })
+  //   .done(function() {
+  //     alert( "second success" );
+  //   })
+  //   .fail(function() {
+  //     alert( "error" );
+  //   })
+  //   .always(function() {
+  //     alert( "finished" );
+  //   });
+
+  window.randomize = function() {
+    $('.ko-progress-circle').attr('data-progress', Math.floor(Math.random() * 100));
+    $(".percent").text($(".ko-progress-circle").attr("data-progress")+"%");
+  }
+  setTimeout(window.randomize, 200);
+  $('.ko-progress-circle').click(window.randomize);
+
 
   document.addEventListener('keydown',function(e) {
     switch (e.keyCode) {

@@ -27,7 +27,7 @@
   /*margin: 0;*/
 }
 
-#content.announce-edit{
+#content.announce-edit, #content.apply{
   padding: 0 3%;
 }
 

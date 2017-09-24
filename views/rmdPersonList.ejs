@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/css/content.css">
   <link rel="stylesheet" type="text/css" href="/css/form.css">
   <link rel="stylesheet" type="text/css" href="/css/project.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
   <script src="/js/list.js"></script>
@@ -45,7 +46,7 @@
         <% if (person != null){%>
         <% var verifyID = "img"+ Math.random().toString(36).substr(2, 5); %>
         <a>
-          <li class="w3-bar">
+          <li class="w3-bar w3-hover-light-blue">
           <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
           <% if(person.verification == true){%>
           <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
@@ -55,7 +56,7 @@
           <div class="w3-bar-item">
             <span class="w3-large"><%=  person.name %></span><br>
             <span><%=  person.serviceUnit%> - <%=person.jobTitle%></span><br>
-            <span><%=  person.email%></span><br>
+            <span><%=  person.phone %> - <%=  person.email%></span><br>
           </div>
           </li>
         </a>
@@ -67,7 +68,7 @@
 
 
         <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-blue">
-          <span class="w3-bar-item w3-button w3-xlarge w3-right">Ｖ</span>
+          <span class="w3-bar-item w3-button w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
           <img src="/img/user-3.svg" class="w3-bar-item w3-circle w3-hide-small">
           <div class="w3-bar-item">
             <span class="w3-large">新增推薦人</span><br>
@@ -87,9 +88,12 @@
           <label class="w3-text-blue"><b>職稱</b></label>
           <input class="w3-input w3-border" name="jobTitle" type="text"></p>
           <p>      
-          <label class="w3-text-blue"><b>e-mail</b></label>
+          <label class="w3-text-blue"><b>電子信箱</b></label>
           <input class="w3-input w3-border" name="email" type="text"></p>
-          <p>      
+          <p>
+          <label class="w3-text-blue"><b>聯絡電話</b></label>
+          <input class="w3-input w3-border" name="phone" type="text"></p>
+          <p>         
           <label class="w3-text-blue"><b>驗證</b></label>
           <label class="switch" style="margin-top: 10px;">
             <input name="verification" type="checkbox" value="true" >

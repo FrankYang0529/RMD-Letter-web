@@ -49,9 +49,9 @@ exports.projectList = (req, res, next) => {
   Projects.find({ ownerID: req.user.username }).exec()
     .then((projs) => {
        res.format({
-      //   'application/json': () => {
-      //     res.send(projs);
-      //   },
+        // 'application/json': () => {
+        //   res.send(projs);
+        // },
         default: () => {
           /* TODO*/
           res.render('projectList', {
@@ -651,23 +651,40 @@ exports.modifyVerification = (req, res, next) => {
 };
 
 exports.studentList = (req, res, next) => {
-  Projects.findById(req.params.projID).exec()
-    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec())
-    .then((students) => {
-      res.format({
-        // 'application/json': () => {
-        //   res.send(students);
-        // },
-        default: () => {
-          // TODO
-          res.render('apply', {
-            projID: req.params.projID,
-            students
-          });
-          
-        },
-      });
+  const a =  Projects.findById(req.params.projID).exec()
+    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec());
+  const b = StuFormAns.find({ projID: req.params.projID }).exec();
+  const c = RmdLtFormAns.find({ projID: req.params.projID }).exec();
+
+  return Promise.join(a, b, c, (students, studentform, rmdletter) => {
+    res.format({
+      default: () => {
+        res.render('apply', {
+          projID: req.params.projID,
+          students,
+          studentform,
+          rmdletter
+        });
+      },
     });
+  });
+  // Projects.findById(req.params.projID).exec()
+  //   .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec())
+  //   .then((students) => {
+  //     res.format({
+  //       // 'application/json': () => {
+  //       //   res.send(students);
+  //       // },
+  //       default: () => {
+  //         // TODO
+  //         res.render('apply', {
+  //           projID: req.params.projID,
+  //           students
+  //         });
+          
+  //       },
+  //     });
+  //   });
 };
 
 exports.filledStudentForm = (req, res, next) => {

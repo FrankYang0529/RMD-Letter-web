@@ -9,7 +9,8 @@
 	<link rel="stylesheet" type="text/css" href="/css/content.css">
   <link rel="stylesheet" type="text/css" href="/css/form.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
@@ -70,16 +71,16 @@
               <div id="add-post-btn"><p class="img-text"><img src="/img/edit-post.svg">新增公告</p></div>
               <hr>
               <form name="update-prj-form">
-              <p><i class="fa fa-folder-open fa-fw w3-margin-right w3-large w3-text-teal"></i><input id="titleZh" type="text" value="<%= project.titleZh %>" placeholder="<%= project.titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.titleZh %>'" onchange=""></p>
+              <p><i class="fa fa-folder-open fa-fw w3-margin-right w3-large w3-text-theme"></i><input id="titleZh" type="text" value="<%= project.titleZh %>" placeholder="<%= project.titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.titleZh %>'" onchange=""></p>
 
-              <p><i class="fa fa fa-calendar fa-fw w3-margin-right w3-large w3-text-teal"></i><input class="w3-input" type="text" name = 'startTime' id = 'startTime' value='<%= project.startTime.toLocaleDateString(); %>' placeholder='<%= project.startTime.toLocaleDateString(); %>' onfocus="(this.type='date')" onblur="(this.type='text');">
+              <p><i class="fa fa fa-calendar fa-fw w3-margin-right w3-large w3-text-theme"></i><input class="w3-input" type="text" name = 'startTime' id = 'startTime' value='<%= project.startTime.toLocaleDateString(); %>' placeholder='<%= project.startTime.toLocaleDateString(); %>' onfocus="(this.type='date')" onblur="(this.type='text');">
               -
               <input class="w3-input" type="text" name = 'endTime' id = 'endTime' value='<%= project.endTime.toLocaleDateString(); %>' placeholder='<%= project.endTime.toLocaleDateString(); %>' onfocus="(this.type='date')" onblur="(this.type='text');"></p>
 
-              <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i><input id="email" class="w3-input" type="e-mail" value="<%= project.email %>" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'"></p>
+              <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-theme"></i><input id="email" class="w3-input" type="e-mail" value="<%= project.email %>" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'"></p>
 
-              <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i><input id="phone" class="w3-input" type="tel" value="<%= project.phone %>" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'"></p>
-              <p><i class="fa fa-globe fa-fw w3-margin-right w3-large w3-text-teal"></i><input type="text" id="subdomain" class="w3-input" value="<%= project.subdomainName %>" placeholder="<%= project.subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.subdomainName %>'"></p>
+              <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-theme"></i><input id="phone" class="w3-input" type="tel" value="<%= project.phone %>" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'"></p>
+              <p><i class="fa fa-globe fa-fw w3-margin-right w3-large w3-text-theme"></i><input type="text" id="subdomain" class="w3-input" value="<%= project.subdomainName %>" placeholder="<%= project.subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.subdomainName %>'"></p>
               </form>
               <hr>
               <label>發布報名網站</label>
@@ -98,7 +99,7 @@
               <% announce.forEach(function(post){  %>
               <% if( post != null){ %> 
               <hr>
-              <a href="#<%= post._id %>"><p class="w3-large"><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i><%= post.title %></p>
+              <a href="#<%= post._id %>"><p class="w3-large"><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-theme"></i><%= post.title %></p>
               <p><%= post.timestamp.toDateString() %></p></a>
               <% } %>
               <% }); %> 
@@ -125,7 +126,7 @@
           </div>
 
     			<div class="w3-container w3-card-2 w3-white w3-margin-bottom">
-            <h2 class="w3-text-grey w3-padding-16"><i class="w3-margin-right w3-xxlarge w3-text-teal"></i>公告編輯</h2>
+            <h2 class="w3-text-grey w3-padding-16"><i class="w3-margin-right w3-xxlarge w3-text-theme"></i>公告編輯</h2>
 
             <% var current = true; %>
             <% announce.forEach(function(post){  %>
@@ -133,7 +134,7 @@
             <div id="<%= post._id %>" class="w3-container">
               <span onclick="editPost($(this).parent().attr('id'));" class="w3-bar-item w3-button w3-xlarge w3-right fa fa-edit"></span>
               <h5 class="w3-opacity"><b><%= post.title %></b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= post.timestamp.toLocaleDateString() %>
+              <h6 class="w3-text-theme"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= post.timestamp.toLocaleDateString() %>
               <!-- <% if(current){%>
                 <span class="w3-tag w3-blue-gray w3-round"> Current</span>
               <% current = false; %> 
