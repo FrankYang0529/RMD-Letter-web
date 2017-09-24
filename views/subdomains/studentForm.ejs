@@ -121,7 +121,12 @@
                                                 if (question.questionType === 'textSet') {                                                  
                                             %>
                                                     <div class="form-group row">
-                                                        <label class="col-xs-1 control-label"><%= question.questionTitle %></label>
+                                                        <label class="col-xs-1 control-label">
+                                                            <% if (question.require == true) { %>
+                                                                <span style="color:red">*&nbsp;</span>
+                                                            <% } %>
+                                                            <%= question.questionTitle %>
+                                                        </label>
                                                         <% 
                                                             const num = question.subQuestions.length + 1;
                                                             let questionRange = Math.floor((12 - num) / num);
@@ -139,12 +144,20 @@
                                                     </div>
                                             <%  } else { %>
                                                     <div class="form-group row">
-                                                        <label for="name" class="col-xs-2 control-label"><%= question.questionTitle %></label>
+                                                        <label for="name" class="col-xs-2 control-label">
+                                                            <% if (question.require) { %>
+                                                                <span style="color:red">*&nbsp;</span>
+                                                            <% } %>
+                                                            <%= question.questionTitle %>
+                                                        </label>
                                                         <div class="col-xs-10">
+                                                            
                                                             <% if (question.questionType === 'text') { %>
                                                                 <input type="text" class="form-control <%= question._id %>"/>
                                                             <% } else if (question.questionType === 'textArea') { %>
                                                                 <textarea  class="form-control <%= question._id %>"></textarea>
+                                                            <%  } else if (question.questionType === 'file') { %>
+                                                                <input class="form-control <%= question._id %>" type="file">
                                                             <%  } else { 
                                                                     question.options.forEach(function(option) {
                                                                         if (question.questionType === 'single') {

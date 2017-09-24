@@ -100,11 +100,42 @@
                             $(document).ready(() => {
                                 $('[data-toggle="tooltip"]').tooltip();   
                             });
+
+                            function search() {
+                                // Declare variables 
+                                let input, filter, table, tr, nameTd, schoolTd, i;
+                                input = document.getElementById("searchInput");
+                                filter = input.value.toUpperCase();
+                                table = document.getElementById("myTable");
+                                tr = table.getElementsByTagName("tr");
+                              
+                                // Loop through all table rows, and hide those who don't match the search query
+                                for (i = 0; i < tr.length; i++) {
+                                  nameTd = tr[i].getElementsByTagName("td")[1];
+                                  schoolTd = tr[i].getElementsByTagName("td")[2];
+
+                                  if (nameTd) {
+                                    if (schoolTd) {
+                                        if (nameTd.innerHTML.toUpperCase().indexOf(filter) > -1 || schoolTd.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                            tr[i].style.display = "";
+                                        } else {
+                                            tr[i].style.display = "none";
+                                        }
+                                    } else {
+                                        if (nameTd.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                            tr[i].style.display = "";
+                                        } else {
+                                            tr[i].style.display = "none";
+                                        }
+                                    }
+                                  }
+                                }
+                              }
                     
                        </script>
 
 
-        <div class="custom-container">
+        <div class="custom-container" style="width:800px !important;">
             <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                 <div class="row" style="margin-top:12px;">
                     
@@ -119,15 +150,21 @@
                                                 <div class="panel-heading">
                                                     <h2 class="panel-title"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp;推薦人名單</h2>
                                                 </div>
-                                                <hr>
-                                                <table class="table table-hover">
+                                                <div class="searchBar">
+                                                    <span class="glyphicon glyphicon-search" aria-hidden="true" style="font-size: 17px;"></span>&nbsp;
+                                                    <input type="text" id="searchInput" onkeyup="search()" placeholder="搜尋姓名或服務單位"> 
+                                                </div>
+                                                <span style="padding-left: 15px; color: gray; font-weight: bold;">註： 至多寄出<span style="color: red;">三封</span>推薦信，如有任何問題歡迎來信</span>
+                                                <hr style="margin-top: 10px;">
+                                                <table class="table table-hover" id="myTable" style="table-layout: inherit;">
                                                         <thead>
                                                             <tr>
-                                                                <th>寄出</th>
-                                                                <th>姓名</th>
-                                                                <th>服務單位</th>
-                                                                <th>職稱</th>
-                                                                <th>email</th> 
+                                                                <th width="61px">寄出</th>
+                                                                <th width="114px">姓名</th>
+                                                                <th width="125px">服務單位</th>
+                                                                <th width="94px">職稱</th>
+                                                                <th width="138px">連絡電話</th>
+                                                                <th width="216px">email</th> 
                                                             </tr>
                                                         </thead>
                                                         <% personList.forEach( function (person) { %>
@@ -140,6 +177,7 @@
                                                             <% } %>
                                                             <td><%= person.serviceUnit %></td>
                                                             <td><%= person.jobTitle %></td>
+                                                            <td><%= person.phone %></td>
                                                             <td><%= person.email %></td>
                                                         </tr>
                                                         <% }); %>

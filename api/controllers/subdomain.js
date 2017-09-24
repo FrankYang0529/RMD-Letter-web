@@ -9,9 +9,9 @@ const RmdltFormAnswer = require('../models/rmdltFormAns');
 const passwordHash = require('password-hash');
 const StudentForm = require('../models/stuForms');
 const AWS = require('aws-sdk');
-
+const fs = require('fs');
+const flash = require('connect-flash');
 const s3 = new AWS.S3();
-
 
 // mail config
 const nodemailer = require('nodemailer');
@@ -19,8 +19,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'Your account',
-    pass: 'Your password',
+    user: 'your account',
+    pass: 'your password',
   },
 });
 
@@ -73,9 +73,7 @@ exports.scheduleView = (req, res, next) => {
   const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
 
   return projs
-    .then((proj) => {
-      return RmdltFormAnswer.find({ projID: proj._id, stuID: req.user._id }).exec();
-    })
+    .then((proj) => RmdltFormAnswer.find({ projID: proj._id, stuID: req.user._id }).exec())
     .then((rmdlts) => {
       res.format({
         default: () => {
@@ -94,12 +92,8 @@ exports.scheduleView = (req, res, next) => {
 
 exports.recommendData = (req, res, next) => {
   const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-  const b = a.then((proj) => {
-    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
-  });
-  const c = a.then((proj) => {
-    return StudentForm.findOne({ projID: proj._id }).exec();
-  });
+  const b = a.then((proj) => StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec());
+  const c = a.then((proj) => StudentForm.findOne({ projID: proj._id }).exec());
 
   return Promise.join(a, b, c, (proj, answers, questions) => {
     res.format({
@@ -126,16 +120,14 @@ exports.addRmdPersonView = (req, res, next) => {
         });
       },
     });
-  })
+  });
 };
 
 exports.studentFormView = (req, res, next) => {
   const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
 
   return projs
-    .then((proj) => {
-      return StudentForm.findOne({ projID: proj._id }).exec();
-    })
+    .then((proj) => StudentForm.findOne({ projID: proj._id }).exec())
     .then((questions) => {
       res.format({
         default: () => {
@@ -154,12 +146,8 @@ exports.studentFormView = (req, res, next) => {
 
 exports.updateStudentFormView = (req, res, next) => {
   const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-  const b = a.then((proj) => {
-    return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
-  });
-  const c = a.then((proj) => {
-    return StudentForm.findOne({ projID: proj._id }).exec();
-  });
+  const b = a.then((proj) => StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec());
+  const c = a.then((proj) => StudentForm.findOne({ projID: proj._id }).exec());
 
   return Promise.join(a, b, c, (proj, answers, questions) => {
     res.format({
@@ -176,9 +164,15 @@ exports.updateStudentFormView = (req, res, next) => {
 };
 
 exports.registerPage = (req, res, next) => {
+  let err = req.flash('error');
+  if (err[0] === 'Missing credentials') {
+    err[0] = '請確認所有欄位都已填寫完畢';
+  }
+
   res.format({
     default: () => {
       res.render('subdomains/register', {
+        err,
       });
     },
   });
@@ -188,6 +182,7 @@ exports.login = (req, res, next) => {
   res.format({
     default: () => {
       res.render('subdomains/login', {
+        err: req.flash('error'),
       });
     },
   });
@@ -199,7 +194,10 @@ exports.auth = (req, res, next) => {
   // generate the authenticate method and pass the req/res
   passport.authenticate('stu-local-login', (err, user, info) => {
     if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
+    if (!user) {
+      req.flash('error', '登入失敗');
+      return res.redirect('/users/login'); 
+    }
 
     // req / res held in closure
     req.logIn(user, (err) => {
@@ -286,11 +284,9 @@ exports.changePassword = (req, res, next) => {
 
 exports.rmdPersonList = (req, res, next) => {
   const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-  
+
   return projs
-    .then((proj) => {
-      return RecommendedPerson.findOne({ projID: proj._id }).exec();
-    })
+    .then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec())
     .then((personList) => {
       console.log(personList);
       res.format({
@@ -310,15 +306,14 @@ exports.rmdPersonList = (req, res, next) => {
 
 exports.addRmdPerson = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return RecommendedPerson.findOne({ projID: proj._id }).exec();
-    })
+    .then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec())
     .then((personList) => {
       const person = {
         name: req.body.name,
         jobTitle: req.body.jobTitle,
         serviceUnit: req.body.serviceUnit,
         email: req.body.email,
+        phone: req.body.phone,
         verification: false,
       };
       personList.person.push(person);
@@ -332,21 +327,21 @@ exports.addRmdPerson = (req, res, next) => {
     });
 };
 
+exports.letterNumber = (req, res, next) => {
+  res.send({ number: req.user.sentLetter.length });
+};
+
 exports.sentLetter = (req, res, next) => {
   const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-  const b = a.then((proj) => {
-    return inviteLetter.findOne({ projID: proj._id }).exec();
-  });
-  const c = a.then((proj) => {
-    return RecommendedPerson.findOne({ projID: proj._id }).exec();
-  });
+  const b = a.then((proj) => inviteLetter.findOne({ projID: proj._id }).exec());
+  const c = a.then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec());
 
   return Promise.join(b, c, (letter, rmdPersonList) => {
     let lt = letter.content;
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
-    lt.replace(/\[@學生名稱\]/g, req.user.displayName);
-    lt.replace(/\[@教授名稱\]/g, rmdPerson.name);
+    lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
+    lt = lt.replace(/\[@教授名稱\]/g, rmdPerson.name);
     lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
     // mail config
@@ -356,15 +351,14 @@ exports.sentLetter = (req, res, next) => {
       subject: letter.title,
       text: lt,
     };
-
+    console.log('send success');
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
       } else {
         console.log(`Email sent: ${info.response}`);
-        req.user.sentLetter.push({ rmdPersonID: req.params.rmdPersonID, rmdPersonName: rmdPerson.name });
+        req.user.sentLetter.push({ rmdPersonID: req.params.rmdPersonID, rmdPersonName: rmdPerson.name, sendTime: new Date() });
         req.user.save();
-        res.redirect('/users/me');
       }
     });
   });
@@ -372,9 +366,7 @@ exports.sentLetter = (req, res, next) => {
 
 exports.getStudentForm = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentForm.findOne({ projID: proj._id }).exec();
-    })
+    .then((proj) => StudentForm.findOne({ projID: proj._id }).exec())
     .then((questions) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(questions));
@@ -386,9 +378,7 @@ exports.getStudentForm = (req, res, next) => {
 
 exports.getStudentFormAns = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentFormAnswer.findOne({ projID: proj._id, stuID: req.user._id }).exec();
-    })
+    .then((proj) => StudentFormAnswer.findOne({ projID: proj._id, stuID: req.user._id }).exec())
     .then((ans) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(ans));
@@ -401,12 +391,60 @@ exports.getStudentFormAns = (req, res, next) => {
 exports.studentForm = (req, res, next) => {
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
     .then((proj) => {
-      return new StudentFormAnswer({
-        projID: proj._id,
-        stuID: req.user._id,
-        remark: '',
-        answers: JSON.parse(req.body.answers),
-      }).save();
+      const answers = JSON.parse(req.body.answers);
+
+      if (JSON.stringify(req.files) !== '{}') {
+        answers.forEach((answer, index) => {
+          if (answer.file_url === 'file') {
+            const file = req.files[answer.question_id];
+            const stream = fs.createReadStream(file.path);
+
+
+            const params = {
+              Bucket: 'rmd-letter',
+              Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
+              ACL: 'public-read',  //  檔案權限
+              Body: stream,
+              ContentType: file.type,
+            };
+
+
+            s3.upload(params).on('httpUploadProgress', (progress) => {
+                //  上傳進度
+              console.log(`${progress.loaded} of ${progress.total} bytes`);
+            })
+              .send((err, data) => {
+                  // delete temp file
+                fs.unlink(file.path, (error) => {
+                  if (err) {
+                    console.error(error);
+                  }
+                  console.log('Temp File Delete');
+                });
+                  //  上傳完畢或是碰到錯誤
+                if (err) {
+                  console.log(err);
+                } else {
+                  answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
+                  answers[index].text = file.originalFilename;
+                  return new StudentFormAnswer({
+                    projID: proj._id,
+                    stuID: req.user._id,
+                    remark: '',
+                    answers,
+                  }).save();
+                }
+              });
+          }
+        });
+      } else {
+        return new StudentFormAnswer({
+          projID: proj._id,
+          stuID: req.user._id,
+          remark: '',
+          answers,
+        }).save();
+      }
     })
     .then((proj) => {
       res.redirect('/recommendData');
@@ -417,18 +455,58 @@ exports.studentForm = (req, res, next) => {
 };
 
 exports.updateStudentForm = (req, res, next) => {
-  Projects.findOne({ subdomainName: req.vhost[0] }).exec()
-    .then((proj) => {
-      return StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec();
-    })
-    .then((answer) => {
-      answer.answers = JSON.parse(req.body.answers);
-      return answer.save();
-    })
-    .then((proj) => {
-      res.redirect('/recommendData');
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+  const a = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
+  const b = a.then((proj) => StudentFormAnswer.findOne({ stuID: req.user._id, projID: proj._id }).exec());
+
+  return Promise.join(a, b, (proj, answerList) => {
+    const answers = JSON.parse(req.body.answers);
+    if (JSON.stringify(req.files) !== '{}') {
+      answers.forEach((answer, index) => {
+        if (answer.file_url === 'file') {
+          const file = req.files[answer.question_id];
+          const stream = fs.createReadStream(file.path);
+
+          const params = {
+            Bucket: 'rmd-letter',
+            Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
+            ACL: 'public-read',  //  檔案權限
+            Body: stream,
+            ContentType: file.type,
+          };
+
+          s3.upload(params, (err) => { console.log('in'); console.log(err); }).on('httpUploadProgress', (progress) => {
+            //  上傳進度
+            console.log(`${progress.loaded} of ${progress.total} bytes`);
+          })
+            .send((err, data) => {
+              // delete temp file
+              fs.unlink(file.path, (error) => {
+                if (err) {
+                  console.error(error);
+                }
+                console.log('Temp File Delete');
+              });
+              //  上傳完畢或是碰到錯誤
+              if (err) {
+                console.log(err);
+              } else {
+                answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
+                answers[index].text = file.originalFilename;
+                answerList.answers = answers;
+                return answerList.save();
+              }
+            });
+        }
+      });
+    } else {
+      answerList.answers = answers;
+      return answerList.save();
+    }
+  })
+  .then((proj) => {
+    res.rend('OK');
+  })
+  .catch((err) => {
+    res.send(err);
+  });
 };
