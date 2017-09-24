@@ -40,6 +40,12 @@ table a:hover, a:active{
   color: black;  
 }
 
+table.student-data a:link, table.student-data a:visited{
+  font-size: inherit;
+  color: inherit; 
+  text-decoration: underline; 
+}
+
 #add-post-btn{
   padding: 14px 25px;
   margin-top: 15px;

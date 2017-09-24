@@ -652,18 +652,22 @@ exports.modifyVerification = (req, res, next) => {
 
 exports.studentList = (req, res, next) => {
   const a =  Projects.findById(req.params.projID).exec()
-    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec());
-  const b = StuFormAns.find({ projID: req.params.projID }).exec();
-  const c = RmdLtFormAns.find({ projID: req.params.projID }).exec();
+    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec());    
+  const b = StuForms.find({ projID: req.params.projID }).exec();
+  const c = RmdLtForms.find({ projID: req.params.projID }).exec();
+  const d = StuFormAns.find({ projID: req.params.projID }).exec();
+  const e = RmdLtFormAns.find({ projID: req.params.projID }).exec();
 
-  return Promise.join(a, b, c, (students, studentform, rmdletter) => {
+  return Promise.join(a, b, c, d, e, (students, studentform, letterform, studentdata, lettercontent) => {
     res.format({
       default: () => {
         res.render('apply', {
           projID: req.params.projID,
           students,
           studentform,
-          rmdletter
+          letterform,
+          studentdata,
+          lettercontent
         });
       },
     });

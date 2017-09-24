@@ -46,7 +46,7 @@
         <% if (person != null){%>
         <% var verifyID = "img"+ Math.random().toString(36).substr(2, 5); %>
         <a>
-          <li class="w3-bar w3-hover-light-blue">
+          <li class="w3-bar w3-hover-light-gray">
           <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
           <% if(person.verification == true){%>
           <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
@@ -67,8 +67,8 @@
         <% } %>
 
 
-        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-blue">
-          <span class="w3-bar-item w3-button w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
+        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-gray">
+          <span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
           <img src="/img/user-3.svg" class="w3-bar-item w3-circle w3-hide-small">
           <div class="w3-bar-item">
             <span class="w3-large">新增推薦人</span><br>

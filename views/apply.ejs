@@ -36,237 +36,284 @@
     <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
   </div>
   <div id="content" class="apply open">
-  <h1 id="title">報名管理</h1>
+    <h1 id="title">報名管理</h1>
 
-  <div class="circle-parent">
+    <div class="circle-parent">
 
-    <div class="ko-progress-circle" data-progress="0">
-      <div class="ko-circle">
-        <div class="full ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
+      <div class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
         </div>
-        <div class="ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
-          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+        <span class="datatitle">test</span>
+      </div>
+
+      <div class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+        <span class="datatitle">test</span>
+      </div>
+
+      <div class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
+        <span class="datatitle">test</span>
+      </div>
+    </div>
+
+    <div class="w3-container">
+      <h2>學生報名狀況</h2>
+      <div class="w3-responsive">
+        <table class="w3-table w3-striped w3-hoverable w3-card-4 w3-centered">
+          <thead>
+            <tr class="w3-teal">
+              <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
+              <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
+              <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
+              <th><i class="fa fa-send" style="font-size:17px; "> 邀請推薦人</i></th>
+              <th><i class="fa fa-thumbs-up" style="font-size:17px; "> 推薦人填寫</i></th>
+              <th><i class="fa fa-tachometer" style="font-size:17px; "> 報名進度</i></th>
+              <th><i class="fa fa-eye" style="font-size:17px; "></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% students.forEach(function(student) {%>
+            <% var id = student._id; %>
+            <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
+            <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
+            <% var sentLt = student.sentLetter; %>
+            <% var complete = false; %>
+            <tr>
+              <th><%= student.displayName %></th>
+              <td><%= student.email %></td>
+              <td>
+              <% if(form.length == 0 ){ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <td>
+              <% if(sentLt.length > 2 ){ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <!-- <td><%= sentLt.length %>/2</td> -->
+              <td><b><%= letters.length %>/2</b></td>
+
+              <!-- <td><%= complete %></td> -->
+              <td>
+              <% if(complete == false){ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <td><a href="#<%= id %>">❯</a></td>
+            </tr>
+            <% });%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br>
+
+    <div id="total-student-ans" class="w3-container" style="margin-top: 30px;">
+      <h2>所有學生資料</h2>
+      <div class="w3-container">
+        <div class="w3-responsive">
+          <table class="w3-table w3-striped w3-hoverable w3-centered student-data">
+            <thead class="w3-teal">
+              <tr>
+                <th><p style="width: max-content;">姓名</p></th>
+                <% studentform.forEach(function(form){ %>
+                <% form.questions.forEach(function(q){ %>
+                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <% });%>
+                <% });%>
+                <% letterform.forEach(function(form){ %>
+                <% form.questions.forEach(function(q){ %>
+                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <% });%>
+                <% });%>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% students.forEach(function(student) {%>
+              <% var id = student._id; %>
+              <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
+              <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
+              <tr>
+                <th><p style="width: max-content;"><%= student.displayName %></p></th>
+                <% if(form.length < 1){ %>
+                <% for (i = 0; i < studentform[0].questions.length; i++) { %> 
+                <td></td>
+                <% } %>
+                <% }else{ %>
+                <% form.forEach(function(element){ %>                
+                <% element.answers.forEach(function(data){ %>
+                <% var target = studentform[0].questions.find(function(q) { %>
+                <%   return q._id == data.question_id; %>
+                <% }); %>
+                <% if( target.questionType == "text"){ %>
+                <td><p style="width: max-content;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "textArea"){ %>
+                <td><p style="width:500px;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "file"){ %>
+                <td><a href="<%= data.file_url %>"><%= data.file_url %></a></td>
+                <% }else{ %>
+                <td>
+                <% var flag = 0; %>
+                <% data.choices.forEach(function(option){ %>
+                <% if(flag == 1){ %>
+                、</p>
+                <% }else{ %>
+                <% flag = 1; %>
+                <% } %>
+                <p style="width: max-content;"><%= option.option %>
+                <% }); %>
+                </p></td>
+                <% } %>
+
+
+                <% }); %>
+                <% }); %>
+                <% } %>
+
+                <% if(letters.length < 1){ %>
+                <% for (i = 0; i < letterform[0].questions.length; i++) { %> 
+                <td></td>
+                <% } %>
+                <% }else{ %>
+                <% letter.forEach(function(element){ %>                
+                <% element.answers.forEach(function(data){ %>
+                <% var target = studentform[0].questions.find(function(q) { %>
+                <%   return q._id == data.question_id; %>
+                <% }); %>
+                <% if( target.questionType == "text"){ %>
+                <td><p style="width: max-content;><%= data.text %></p></td>
+                <% }else if(target.questionType == "textArea"){ %>
+                <td><p style="width:500px;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "file"){ %>
+                <td><a href="<%= data.file_url %>"><%= data.file_url %></a></td>
+                <% }else{ %>
+                <td>
+                <% var flag = 0; %>
+                <% data.choices.forEach(function(option){ %>
+                <% if(flag == 1){ %>
+                、</p>
+                <% }else{ %>
+                <% flag = 1; %>
+                <% } %>
+                <p style="width: max-content;"><%= option.option %>
+                <% }); %>
+                </td>
+                <% } %>
+                <% }); %>
+                <% }); %>
+                <% } %>
+                </p><td><textarea style="width: 500px; height:100px;"></textarea></td>
+              </tr>
+              <% });%>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-      <span class="datatitle">test</span>
     </div>
 
-    <div class="ko-progress-circle" data-progress="0">
-      <div class="ko-circle">
-        <div class="full ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
-        </div>
-        <div class="ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
-          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
-        </div>
+    <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>    
+    <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
+      <h2>詳細資料</h2>
+      <div class="w3-card-4">
+        <table class="w3-table w3-striped">
+          <thead>
+            <tr class="w3-light-grey">
+              <th>姓名</th>
+              <th id="name"><%= name["userid2"] %></th>
+              <th>畢業學校</th>
+              <th>成大資訊</th>
+            </tr>
+          </thead>
+            <tr>
+              <td>電話</td>
+              <td>06-2757575</td>
+              <td>手機</td>
+              <td>0911222333</td>
+            </tr>
+            <tr>
+              <td>地址</td>
+              <td colspan="3">台南市東區大學路1號</td>
+            </tr>
+            <tr>
+              <td>e-mail</td>
+              <td colspan="3">abcde@gmail.com</td>
+            </tr>
+            <tr>
+              <td>在學成績</td>
+              <td>王大明</td>
+              <td>系所排名</td>
+              <td>成大資訊</td>
+            </tr>
+            <tr>
+              <td>在學成績</td>
+              <td>89.4</td>
+              <td>系所排名</td>
+              <td id="grade">50/120</td>
+            </tr>
+            <tr>
+              <td colspan="2">推薦信1</td>
+              <td>推薦人1</td>
+              <td>王小明</td>
+            </tr>
+            <tr>
+              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容1</td>
+            </tr>
+            <tr>
+              <td colspan="2">推薦信2</td>
+              <td>推薦人2</td>
+              <td>王鐘銘</td>
+            </tr>
+            <tr>
+              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容2</td>
+            </tr>
+            <tr>
+              <td colspan="1">備註</td>
+              <td colspan="3"><input type="text"></td>
+            </tr>
+        </table>
+        <p></p>
       </div>
-      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-      <span class="datatitle">test</span>
-    </div>
-
-    <div class="ko-progress-circle" data-progress="0">
-      <div class="ko-circle">
-        <div class="full ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
-        </div>
-        <div class="ko-progress-circle__slice">
-          <div class="ko-progress-circle__fill"></div>
-          <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
-        </div>
-      </div>
-      <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-      <span class="datatitle">test</span>
-    </div>
-
-  </div>
-
-
-  <%= %>
-  projID = <%= projID %><br>
-  students = <%= students %><br>
-  studentform = <%= studentform %><br>
-  rmdletter = <%= rmdletter %><br>
-  <br><br>
-
-  <% students.forEach(function(student) {%>
-  <% var id = student.username; %>
-  name = <%= student.displayName %><br>
-  email = <%= student.email %><br>
-  setLt = <%= student.sentLetter %><br>
-  <% var ltCnt = setLt.length; %>
-  letter count = <%= ltCnt %><br>
-  <% var form =  studentform.filter( function(item){return (item.stuID==id);} );%>
-  student form = <%= form %><br>
-  <% var letters = rmdletter.filter( function(item){return (item.stuID==id);} );%>
-  letters = <%= letters %><br>
-  <% });%>
-
-  Total = <%= students.length %><br>
-
-
-  <div class="w3-container">
-    <div class="w3-responsive">
-    <table class="w3-table w3-striped w3-hoverable w3-card-4 w3-centered">
-      <thead>
-        <tr class="w3-brown">
-          <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
-          <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
-          <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
-          <th><i class="fa fa-send" style="font-size:17px; "> 邀請推薦人</i></th>
-          <th><i class="fa fa-thumbs-up" style="font-size:17px; "> 推薦人填寫</i></th>
-          <th><i class="fa fa-tachometer" style="font-size:17px; "> 報名進度</th>
-          <th><i class="fa fa-eye" style="font-size:17px; "></th>
-        </tr>
-      </thead>
-
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>testtest@gmail.com</td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">0/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">0/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">0/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">1/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">2/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">0/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">1/2</b></td>
-          <td><i class="fa fa-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-      <tr id="userid0" class="w3-hover-sand student">
-          <th>王小豬</th>
-          <td>test@gmail.com</td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><b class="" style="font-size:15px">2/2</b></td>
-          <td><i class="fa fa-check-square-o" style="font-size:24px"></i></td>
-          <td><a href="#student-ans">❯</a></td>
-      </tr>
-    </table>
-    </div>
-  </div>
-
-  <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>
-  
-  <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
-    <h2>詳細資料</h2>
-    <div class="w3-card-4">
-      <table class="w3-table w3-striped">
-        <thead>
-          <tr class="w3-light-grey">
-            <th>姓名</th>
-            <th id="name"><%= name["userid2"] %></th>
-            <th>畢業學校</th>
-            <th>成大資訊</th>
-          </tr>
-        </thead>
-          <tr>
-            <td>電話</td>
-            <td>06-2757575</td>
-            <td>手機</td>
-            <td>0911222333</td>
-          </tr>
-          <tr>
-            <td>地址</td>
-            <td colspan="3">台南市東區大學路1號</td>
-          </tr>
-          <tr>
-            <td>e-mail</td>
-            <td colspan="3">abcde@gmail.com</td>
-          </tr>
-          <tr>
-            <td>在學成績</td>
-            <td>王大明</td>
-            <td>系所排名</td>
-            <td>成大資訊</td>
-          </tr>
-          <tr>
-            <td>在學成績</td>
-            <td>89.4</td>
-            <td>系所排名</td>
-            <td id="grade">50/120</td>
-          </tr>
-          <tr>
-            <td colspan="2">推薦信1</td>
-            <td>推薦人1</td>
-            <td>王小明</td>
-          </tr>
-          <tr>
-            <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容1</td>
-          </tr>
-          <tr>
-            <td colspan="2">推薦信2</td>
-            <td>推薦人2</td>
-            <td>王鐘銘</td>
-          </tr>
-          <tr>
-            <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容2</td>
-          </tr>
-          <tr>
-            <td colspan="1">備註</td>
-            <td colspan="3"><input type="text"></td>
-          </tr>
-      </table>
-      <p></p>
-    </div>
       <div class="w3-bar" style="margin-top: 50px;">
-        <button id="previous-btn" class="w3-button w3-left w3-sand w3-hover-brown">&laquo; Previous</button>
-        <button id="next-btn" class="w3-button w3-right w3-sand w3-hover-brown">Next &raquo;</button>
+        <button id="previous-btn" class="w3-button w3-left w3-light-gray w3-hover-teal">&laquo; Previous</button>
+        <button id="next-btn" class="w3-button w3-right w3-light-gray w3-hover-teal">Next &raquo;</button>
       </div>
-  </div>
+    </div>
 
   </div>
 <!--   <footer>

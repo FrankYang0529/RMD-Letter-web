@@ -36,8 +36,8 @@
 				<% projects.forEach(function(project) { %>
 				<% var url = "/projects/" + project._id %>
 				<a href="/projects/<%= project._id %>">
-					<li class="w3-bar">
-					<span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span>
+					<li class="w3-bar w3-hover-light-gray">
+					<span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right">&#062;</span>
 				  <img src="/img/edit.svg" class="w3-bar-item w3-circle w3-hide-small">
 				  <div class="w3-bar-item">
 				    <span class="w3-large"><%=  project.titleZh %></span><br>
@@ -47,8 +47,8 @@
 				</a>
 				<% }); %>
 
-				<a href="/projects/create"><li class="w3-bar">
-				  <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span>
+				<a href="/projects/create"><li class="w3-bar w3-hover-light-gray">
+				  <span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right">&#062;</span>
 				  <img src="/img/add.svg" class="w3-bar-item w3-circle w3-hide-small">
 				  <div class="w3-bar-item">
 				    <span class="w3-large">創建新專案</span><br>
