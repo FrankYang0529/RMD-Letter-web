@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+<body>
+	<header>
+	  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+	  <div class="navbar">
+	    <a href=""><img src="/img/black-mail.svg"/></a>
+	    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+	  </div>
+	</header>
+
+	<div id="menu" class="sidenav" style="width: 250px;">
+	  <span class="close" onclick="toggleNav()">&#9776;</span>
+	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/projects/<%= projID%>" id="prjManage" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+	  <a href="/projects/<%= projID%>/edit" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="/img/megaphone.svg" />公告編輯</a>
+	  <a href="/projects/<%= projID%>/student-form" id="studentForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+	  <a href="/projects/<%= projID%>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+	  <a href="/projects/<%= projID%>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+	  <a href="/projects/<%= projID%>/student" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	</div>
+
+	<!-- <div id="topbar"></div> -->
+	<div id="content" class="project-manage open">
+		<h1 id="title">專案管理</h1>
+		<div class="w3-container form">
+		  <div class="w3-card-4">
+		  	<form action="" method="put">
+			    <div class="w3-container">
+			      <h2><input id="titleZh" type="text" value="<%= project.titleZh %>" placeholder="<%= project.titleZh %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.titleZh %>'" onchange=""></h2>
+			      <label>聯絡電話</label>
+			      <input id="phone" class="w3-input" type="tel" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'">
+			      <label>e-mail</label>     
+			      <input id="email" class="w3-input" type="e-mail" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'">
+			      <label>報名開始日期</label>
+			      <input name="startTime" class="w3-input" type="text" placeholder="<%= project.startTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+			      <label>報名截止日期</label>     
+				     <input name="startTime" class="w3-input" type="text" placeholder="<%= project.endTime %>" onfocus="this.type='date'" onblur="this.type='text'">
+
+				  <label>報名網站子網域</label>     
+			      <input type="text" id="subdomain" class="w3-input" placeholder="<%= project.subdomainName %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.subdomainName %>'"><br>
+
+			      <label>發布報名網站</label>
+			      <label class="switch">
+			      	<% if(project.isDeployed == "true"){ %>
+						  	<input type="checkbox" id="deployed" checked>
+						  <% }else{ %>
+						  	<input type="checkbox" id="deployed" >
+						  <% } %>
+						  <span class="slider round"></span>
+						</label>
+						<p style="font-size: 10px; color: grey;">確定要發布嗎？送出就無法修改囉</p>
+						<br><br>
+						
+			      <!-- <button class="w3-btn w3-blue-grey submit">儲存修改</button> -->
+			    </div>
+		    </form>
+		  </div>
+		</div>
+	</div>
+
+<!-- 	<footer>
+	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	</footer> -->
+
+<script>
+
+$(document).ready(function(){
+
+  $("#titleZh").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/titleZh',
+      data: { titleZh: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      // location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#phone").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/phone',
+      data: { phone: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      // location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#email").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/email',
+      data: { email: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      // location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#subdomain").on('change', function postinput(){
+    var value = $(this).val();
+  	$.ajax({ 
+      url: '/projects/<%= projID %>/subdomain',
+      data: { subdomainName: value },
+      type: 'put'
+	  }).done(function(responseData) {
+	      console.log('Done: ', responseData);
+	      // location.reload();
+	  }).fail(function() {
+	      console.log('Fail');
+	  });
+  });
+
+  $("#deployed").on('change', function postinput(){
+  	if($("#deployed").prop("checked")) {
+  		$.ajax({ 
+	      url: '/projects/<%= projID %>/deployed',
+	      data: {},
+	      type: 'get'
+		  }).done(function(responseData) {
+		      console.log('Done'/*, responseData*/);
+		  }).fail(function() {
+		      console.log('Fail');
+		  });
+  	}
+  	else{
+  		console.log("off");
+  	}
+  });
+
+  // $("input[type='text']").on('change', function postinput(){
+  // 	var id = $(this).attr('id');
+  //   var value = $(this).val();
+  //   var url = '/projects/<%= projID %>/' + id;
+  //   console.log(url);
+  //   subdomainName : subdomain
+  //   $.ajax({ 
+  //       url: url,
+  //       data: { id: value },
+  //       type: 'put'
+  //   }).done(function(responseData) {
+  //       console.log('Done: ', responseData);
+  //   }).fail(function() {
+  //       console.log('Fail');
+  //   });
+  // });
+
+}); 
+</script>
+     
+</body>
+</html> 

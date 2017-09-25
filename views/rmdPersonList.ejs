@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+  <link rel="stylesheet" type="text/css" href="/css/content.css">
+  <link rel="stylesheet" type="text/css" href="/css/form.css">
+  <link rel="stylesheet" type="text/css" href="/css/project.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/list.js"></script>
+</head>
+<body>
+  <header>
+    <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+    <div class="navbar">
+      <a href=""><img src="/img/black-mail.svg"/></a>
+      <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+    </div>
+  </header>
+
+  <div id="menu" class="sidenav" style="width: 250px;">
+    <span class="close" onclick="toggleNav()">&#9776;</span>
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+    <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+    <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+    <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+    <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+    <a href="/projects/<%= projID %>/student" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+    <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
+  </div>
+
+  <div id = "content" class="rmd-person-list open ">
+    <div class="w3-container list">
+      <h1 id="title">推薦人列表</h1>
+      <ul class="w3-ul w3-card-4">
+        <% if (personList != null){%>
+        <% var list = personList.person; %>
+        <% if (list != ""){ %>
+        <% list.forEach(function(person) { %>
+        <% if (person != null){%>
+        <% var verifyID = "img"+ Math.random().toString(36).substr(2, 5); %>
+        <a>
+          <li class="w3-bar w3-hover-light-gray">
+          <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
+          <% if(person.verification == true){%>
+          <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <% }else{ %>
+          <img id="<%= person._id %>" src="/img/checked.svg" onclick="verify(id);" class="w3-bar-item w3-circle w3-hide-small">
+          <% } %>
+          <div class="w3-bar-item">
+            <span class="w3-large"><%=  person.name %></span><br>
+            <span><%=  person.serviceUnit%> - <%=person.jobTitle%></span><br>
+            <span><%=  person.phone %> - <%=  person.email%></span><br>
+          </div>
+          </li>
+        </a>
+        <% } %>
+        <% }); %>
+        <% } %>
+        
+        <% } %>
+
+
+        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-gray">
+          <span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
+          <img src="/img/user-3.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <div class="w3-bar-item">
+            <span class="w3-large">新增推薦人</span><br>
+            <span>add new recommander</span>
+          </div>
+        </li></a>
+      </ul>
+      <div id="addRmdForm" class="w3-card-4"  style="display: none;">
+        <form id="person" class="w3-container" style="padding: 10px;" action="/projects/<%= projID %>/rmd-person" method="post">
+          <p>      
+          <label class="w3-text-blue"><b>服務單位</b></label>
+          <input class="w3-input w3-border" name="serviceUnit" type="text"></p>
+          <p>
+          <label class="w3-text-blue"><b>姓名</b></label>
+          <input class="w3-input w3-border" name="name" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>職稱</b></label>
+          <input class="w3-input w3-border" name="jobTitle" type="text"></p>
+          <p>      
+          <label class="w3-text-blue"><b>電子信箱</b></label>
+          <input class="w3-input w3-border" name="email" type="text"></p>
+          <p>
+          <label class="w3-text-blue"><b>聯絡電話</b></label>
+          <input class="w3-input w3-border" name="phone" type="text"></p>
+          <p>         
+          <label class="w3-text-blue"><b>驗證</b></label>
+          <label class="switch" style="margin-top: 10px;">
+            <input name="verification" type="checkbox" value="true" >
+            <span class="slider round"></span>
+          </label></p>
+          <p>      
+          <button form="person" class="w3-btn w3-blue w3-right" style="margin: 20px;">新增</button></p>     
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!--   <footer>
+    <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </footer> -->
+<script>
+
+function verify(id){
+  var src = $("#"+id).attr("src","/img/checked-on.svg");
+  console.log($("#"+id).attr("src"));
+  $.ajax({ 
+    url: '/projects/<%= projID  %>/rmd-person/'+id,
+    data: { "verification": true },
+    type: 'post'
+  }).done(function(responseData) {
+      console.log('Done: ', responseData);
+      // location.reload();
+  }).fail(function() {
+      console.log('Fail');
+  });
+}
+
+</script>     
+</body>
+</html> 
+

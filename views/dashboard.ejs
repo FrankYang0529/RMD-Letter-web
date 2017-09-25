@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+
+<body>
+
+<header>
+  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+  <div class="navbar">
+    <a href=""><img src="/img/black-mail.svg"/></a>
+    <a href='/users/logout' id="user">Logout<img src="img/user.svg"/></a>
+  </div>
+</header>
+
+<div id="menu" class="sidenav">
+  <span class="close" onclick="toggleNav()">&#9776;</span>
+  <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+  <a href="javascript:void(0)" id="prj-list" onclick="clickMenu(id);"><img class="menuIcon" src="img/folder.svg" />專案清單</a>
+  <a href="javascript:void(0)" id="prj-manage" onclick="clickMenu(id);"><img class="menuIcon" src="img/desk.svg" />專案管理</a>
+  <a href="javascript:void(0)" id="apply" onclick="clickMenu(id);"><img class="menuIcon" src="img/notepad.svg" />報名管理</a>
+  <a href="javascript:void(0)" id="announce" onclick="clickMenu(id);"><img class="menuIcon" src="img/megaphone.svg" />公告編輯</a>
+  <a href="javascript:void(0)" id="student-form" onclick="clickMenu(id);"><img class="menuIcon" src="img/student.svg" />學生報名表編輯</a>
+  <a href="javascript:void(0)" id="letter-form" onclick="clickMenu(id);"><img class="menuIcon" src="img/diploma.svg" />推薦信表單編輯</a>
+  <a href="javascript:void(0)" id="rmd-person" onclick="clickMenu(id);"><img class="menuIcon" src="img/medal.svg" />推薦人管理</a>
+  <a href="javascript:void(0)" id="user-manage" onclick="clickMenu(id);"><img class="menuIcon" src="img/scissors.svg" />帳戶管理</a>
+</div>
+
+<!-- <div id="content2">
+  <div id="prj-list-page" class="content" style="background-color: red; visibility: hidden;">
+    <h1 style="color: black; ">prj-list</h1>
+  </div>
+  <div id="prj-manage-page" class="content" style="background-color: brown; visibility: hidden;">
+    <h1 style="color: black;">prj-manage</h1>
+  </div>
+</div> -->
+<!-- <div id="topbar"></div> -->
+<iframe src="/" id="content"></iframe>
+
+<footer>
+  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</footer>
+     
+</body>
+</html> 
+

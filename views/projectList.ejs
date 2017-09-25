@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+	<link rel="stylesheet" type="text/css" href="/css/project.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+<body>
+	<header>
+	  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+	  <div class="navbar">
+	    <a href=""><img src="/img/black-mail.svg"/></a>
+	    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+	  </div>
+	</header>
+
+	<div id="menu" class="sidenav" style="width: 250px;">
+	  <span class="close" onclick="toggleNav()">&#9776;</span>
+	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	</div>
+
+	<!-- <div id="topbar"></div> -->
+	<div id = "content" class="prj-list open ">
+		<div class="w3-container list">
+			<h1 id="title">專案列表</h1>
+			<ul class="w3-ul w3-card-4">
+				<% projects.forEach(function(project) { %>
+				<% var url = "/projects/" + project._id %>
+				<a href="/projects/<%= project._id %>">
+					<li class="w3-bar w3-hover-light-gray">
+					<span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right">&#062;</span>
+				  <img src="/img/edit.svg" class="w3-bar-item w3-circle w3-hide-small">
+				  <div class="w3-bar-item">
+				    <span class="w3-large"><%=  project.titleZh %></span><br>
+				    <span><%=  project.subdomainName %></span>
+				  </div>
+					</li>
+				</a>
+				<% }); %>
+
+				<a href="/projects/create"><li class="w3-bar w3-hover-light-gray">
+				  <span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right">&#062;</span>
+				  <img src="/img/add.svg" class="w3-bar-item w3-circle w3-hide-small">
+				  <div class="w3-bar-item">
+				    <span class="w3-large">創建新專案</span><br>
+				    <span>create new project</span>
+				  </div>
+				</li></a>
+		  </ul>
+		</div>
+	</div>
+
+<!-- 	<footer>
+	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	</footer> -->
+     
+</body>
+</html> 

@@ -1,0 +1,127 @@
+*, body {
+  font-family: "Lato", "微軟正黑體", sans-serif;
+  border: 0;
+	/*border: 1px solid black;*/  
+	margin: 0;
+  padding: 0;
+}
+
+#introduction{
+  /*background-color: #A9C5FF;*/
+	background-color: rgba(255,255,255,0);	
+	height: 5000px;
+	margin: 0;
+
+}
+
+header{
+  position: static;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #DCDCDC;
+  /*background-color: rgba(255,255,255,0.5);*/
+  z-index: 5;
+}
+
+header .navbar {
+  float: none;   
+  margin: 0 auto;
+  width: 660px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  overflow: hidden;
+
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  display: flex;
+  align-items: center;
+}
+
+header .navbar img {
+  height: 50px;
+}
+
+header .navbar a {
+  display: block;
+  float: none;
+  margin: 0 auto;
+  padding: 14px 16px;
+  color: #C6C8CC;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+header .navbar a#user{
+	position: fixed;
+  right: 5%; 
+	border: 1px solid #C6C8CC;
+	border-radius: 25px;  
+}
+
+header .navbar #user img{
+	height: 20px;
+	padding-left: 3px;
+}	
+
+header .navbar a:hover, .offcanvas a:focus{
+  color: #7C7D7F;    
+}
+
+header .navbar a#user:hover, .offcanvas a:focus{
+  border: 1px solid #7C7D7F;
+}
+
+header .navbar a#user:hover img, .offcanvas a:focus img{
+	height: 20px;
+	content: url("/../img/user-hover.svg");
+}
+
+footer{
+	font-size: 10px;
+  text-align: center;
+  background-color: #585858;/*#29457F;*/
+  color: white;
+  padding: 50px;
+  margin-top: 100px;
+  margin-bottom: 0;
+}
+
+footer a:link, a:hover, a:visited, a:active {
+	color: white;
+	text-decoration: none;
+}
+
+@media all and (max-width: 970px) {
+  header .navbar a#user{
+		position: relative;
+		right: auto;
+		font-size: 0;		
+  }
+}
+
+@media all and (max-width: 660px) {
+
+  header .navbar{
+    position: relative;
+    left: 50px;
+  }
+
+
+/*  header.smaller {
+    height: 75px; 
+  }
+  header.smaller h1#logo {
+    height: 40px;
+    line-height: 40px;
+    font-size: 30px; 
+  }
+  header.smaller nav {
+    height: 35px; 
+  }
+  header.smaller nav a {
+    line-height: 35px; 
+  } */
+}

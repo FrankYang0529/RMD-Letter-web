@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+
+<body>
+
+<header>
+  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+  <div class="navbar">
+    <a href=""><img src="/img/black-mail.svg"/></a>
+    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+  </div>
+</header>
+
+  <div id="menu" class="sidenav" style="width: 250px;">
+    <span class="close" onclick="toggleNav()">&#9776;</span>
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="/projects" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+    <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
+  </div>
+<!-- <div id="topbar"></div> -->
+<div id="content" class="prj-create open">
+  <h1 id="title">創建新專案</h1>
+	<div class="w3-container form">
+	  <div class="w3-card-4">
+	  	<form name="create-prj-form" action="/projects" method="post" onsubmit="return validateForm();">
+		    <div class="w3-container">
+		      <h2><input class="w3-input" type="text" name = 'titleZh' id = 'titleZh' placeholder='專案名稱' onfocus="this.placeholder = ''"onblur="check(name);" value=""></h2>
+	 	      <label>e-mail</label>
+		      <input class="w3-input" type="email" name = 'email' id = 'email' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);" value="<%= email %>">
+          <label>聯絡電話</label>
+          <input class="w3-input" type="phone" name = 'phone' id = 'phone' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);">
+          <label>報名開始</label>
+          <input class="w3-input" type="text" name = 'startTime' id = 'startTime' placeholder='' onfocus="(this.type='date')" onblur="(this.type='text'); check(name);">
+          <label>報名結束</label>
+          <input class="w3-input" type="text" name = 'endTime' id = 'endTime' placeholder='' onfocus="(this.type='date')" onblur="(this.type='text'); check(name);">
+		      <label>學生報名網站</label>    
+		      <input class="w3-input" type="text" name = 'subdomainName' id = 'subdomainName' placeholder='' onfocus="this.placeholder = ''" onblur="check(name);">
+		      <button class="w3-btn w3-blue-grey submit">新增專案</button>
+		    </div>
+  	  </form>
+  	</div>
+  </div>
+</div>
+<!-- <footer>
+  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</footer> -->
+<script>
+
+function check(name){
+  var map = {
+    titleZh : "專案名稱",
+    email: "email",
+    phone: "聯絡電話",
+    startTime: "報名起始日期",
+    endTime: "報名截止日期",
+    subdomainName: "子網域名稱"
+  }
+  var x = document.forms["create-prj-form"][name];
+  if (x.value == ""){
+    x.placeholder = "請填入"+map[name];
+    return false;
+  }
+  else{
+    return true;
+  }
+}
+
+function validateForm() {
+  // var y = $('form[name="create-prj-form"] input[name="titleZh"]').val();
+  // console.log(y);
+  var flag = true;
+  var nameList = [titleZh, email, phone, startTime, endTime, subdomainName];
+  nameList.forEach(function(element){
+    var next = check(element.name);
+    flag = flag && next;
+  });
+  return flag;
+}
+
+</script>
+
+</body>
+</html> 

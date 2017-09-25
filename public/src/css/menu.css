@@ -1,0 +1,153 @@
+*, body {
+  font-family: "Lato", "微軟正黑體", sans-serif;
+  border: 0;
+  /*border: 1px solid black;*/
+  margin: 0;
+  padding: 0;
+  
+}
+/*body{
+  height: 100%;
+}*/
+
+#topbar{
+  height: 94px; 
+  background-color: rgba(255,255,255,1);
+}
+
+#content{
+  display: block;
+  position: relative;
+  width: 100%;
+  /*height: 100%;*/
+  /*height: -webkit-fill-available;*/
+  background-color: rgba(255,255,255,1); /*#ff9966;*/ 
+  padding: 5% 10%;
+  margin-bottom: 80px;
+  /*margin: 0;*/
+}
+
+#content.announce-edit, #content.apply{
+  padding: 0 3%;
+}
+
+#content.open {
+  width: calc(100% - 250px);
+  background-color: white;
+  left: 250px;
+}
+
+
+#menuButton{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 30px; 
+  color: black; 
+  cursor:pointer;
+  z-index: 1;
+}
+
+.sidenav {
+  position: fixed;
+  height: 100%;
+  width: 0;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  /*display: inline-block;*/
+  padding: 8px 8px 8px 32px;
+  margin-top: 10px;
+
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  display: flex;
+  align-items: center;
+}
+
+.sidenav a:hover, a:focus{
+  color: #f1f1f1;
+}
+
+.sidenav a .menuIcon{
+  height: 40px;
+  margin-right: 15px;
+}
+
+.sidenav .selectedMenu{
+  background-color: #666699;
+  color: #f1f1f1;
+}
+
+.sidenav .close{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size:30px; 
+  color:white; 
+  cursor:pointer;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+
+@media screen and (max-height: 450px) {
+/*  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}*/
+}
+@media all and (max-width: 970px) {
+  header .navbar a#user{
+    position: fixed;
+    right: 5%; 
+    font-size: 0;   
+  }
+}
+
+@media all and (max-width: 660px) {
+  header .navbar a#user{
+    position: relative;
+    right: auto; 
+  }
+}
+
+@media all and (max-width: 660px) {
+
+/*  header .navbar{
+    position: relative;
+    left: 50px;
+  }
+
+  header.smaller {
+    height: 75px; 
+  }
+  header.smaller h1#logo {
+    height: 40px;
+    line-height: 40px;
+    font-size: 30px; 
+  }
+  header.smaller nav {
+    height: 35px; 
+  }
+  header.smaller nav a {
+    line-height: 35px; 
+  } */
+}

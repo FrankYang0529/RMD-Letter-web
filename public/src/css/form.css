@@ -1,0 +1,223 @@
+/*.form{
+	padding: 5% 10%;
+}*/
+
+form[name="create-prj-form"] input::-webkit-input-placeholder {
+  color: red;
+}
+
+/*form[name="create-prj-form"] input[name="titleZh"]::-webkit-input-placeholder {
+  color: black;
+}*/
+
+.rmdlt{
+  height: 300px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+.question-pannel{
+  padding: 10px 50px;
+}
+
+.typeSelection{
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.questionType{
+  display: block;
+  color: white;
+  width: 160px;
+}
+
+h2{
+	font-size: 30px;
+}
+
+h2 input[type=text], h3 input[type=text]{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  /*border-bottom: 3px solid #ccc;*/
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+input/*[type=text], input[type=e-mail], input[type=date], input[type=password] , input[type=url], input[type=tel]*/{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+input:focus {
+	background-color: none;
+  border: none;
+  border-bottom: 2px solid #ccc;
+}
+
+input[type=submit]{
+	display: block;
+	/*background-color: white;*/
+	border: 1px solid #C6C8CC;
+	border-radius: 25px;
+	color: black;
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 15px;
+  padding: 15px;
+  margin: 25px;
+  margin-left:80%;
+/*	padding-top: 5%;
+	padding-right: 20%;*/
+}
+
+form[name=update-prj-form] input{
+  border: none;
+  width: 85%;
+  padding: 1px;
+  margin: 2px 0;
+  display: inline-block;
+
+}
+
+form[name=update-prj-form] input[name=startTime], form[name=update-prj-form] input[name=endTime]{
+  width: 100px;
+}
+form[name=update-prj-form] input[type=date]{
+  width: 145px;
+}
+
+input[type=text].option, button.option, button.upload{
+	display: inline-block;
+	width: calc(100% - 100px);
+	background-color: rgba(255,255,255,0);
+	border: none;
+  border-bottom: 2px solid #ccc;
+}
+
+input[type=text].option:focus {
+	border-bottom: 2px solid #444;
+}
+
+input[type=file]{
+  border: none;
+}
+
+button.option, button.upload{
+  width: inherit;
+  background-color: none;
+}
+button.upload{
+  border: 2px solid #ccc;
+}
+
+.add-q-button{
+  margin: 20px 60px;
+}
+
+.create-q-button{
+  margin: 20px 60px;
+}
+
+.radio-icon{
+	display: inline-block;
+	width:18px;
+	height:18px;
+	border-radius:9px;
+	border: 1px solid grey;
+	margin-right: 20px;
+}
+
+.check-icon{
+	display: inline-block;
+	width:18px;
+	height:18px;
+	border-radius: 5px;
+	border: 1px solid grey;
+	margin-right: 20px;
+}
+
+.empty-icon{
+  display: inline-block;
+  width:18px;
+  height:18px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+  margin-right: 20px;
+}
+
+.textarea{
+  height:100px; 
+  width: 80%; 
+  margin-left: 58px; 
+  border: 1px solid #ccc; 
+  color: #bbb; 
+  padding: 20px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-left: 15px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

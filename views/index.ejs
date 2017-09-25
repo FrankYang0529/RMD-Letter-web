@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>landing page</title>
-	</head>
-	<body>
-		<div class="topnav" id="myTopnav">
-      <a href="/" align="left"><img src="/img/mail.svg" height="30px" border="0"></a>
-      Recommand Letter System
-      <a href='/users/<%= log %>' align="right"><img src="/img/user.svg" height="30px" border="0"></a>
-    </div>
-	</body>
-</html>
+<head>
+  <title>推薦信系統</title>
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <a href="#news">News</a>
+    <a href="#contact">Contact</a>
+    <a href="/"><img src="/img/black-mail.svg"/></a>
+    <a href="#about">About</a>
+    <a href="#works">Works</a>
+    <a href='/users/<%= log %>' id="user"><%= log %><img src="img/user.svg"/></a>
+  </div>
+</header>
+<!-- <img src="/img/letter.jpg" style="width: 100%; margin-top: -200px;"> -->
+<div id="introduction" style="color: black;">
+   
+</div>
+<footer>
+  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</footer>
+     
+</body>
+</html> 
+
+

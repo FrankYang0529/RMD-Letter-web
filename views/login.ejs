@@ -1,23 +1,24 @@
 <html lang="zh-Hant">
   <head>
-    <link rel="stylesheet" type="text/css" href="/css/signInUp.css">
-    <!-- 最新編譯和最佳化的 CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/css/menu.css">
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <!-- 選擇性佈景主題 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-    <!-- 最新編譯和最佳化的 JavaScript -->
     <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/switch.js"></script>
   </head>
   
   <body>
-    <div class="topnav" id="myTopnav">
-      <a href="/" align="left"><img src="/img/mail.svg" height="30px" border="0"></a>
-      Recommand Letter System
-      <img src="/img/user.svg" height="30px" border="0">
-    </div>
-    
-    <div class="container">
+    <header>
+      <div class="navbar">
+        <a href="/"><img src="/img/black-mail.svg"/></a>
+      </div>
+    </header>
+
+    <div id="topbar"></div>
+    <div id="content" class="container user-form">
     	<div class="row">
         <div class="col-md-6 col-md-offset-3">
           <div class="panel panel-login">
@@ -35,7 +36,7 @@
             <div class="panel-body">
               <div class="row">
                 <div class="col-lg-12">
-                  <form id="login-form" action="" method="post" role="form" style="display: block;">
+                  <form id="login-form" action="/users/login" method="post" role="form" style="display: block;">
                     <div class="form-group">
                       <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="帳號或email" value="">
                     </div>
@@ -60,12 +61,15 @@
                       </div>
                     </div>
                   </form>
-                  <form id="register-form" action="" method="post" role="form" style="display: none;">
+                  <form id="register-form" action="/users" method="post" role="form" style="display: none;">
                     <div class="form-group">
-                      <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="帳號" value="">
+                      <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="帳號">
                     </div>
                     <div class="form-group">
-                      <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="email" value="">
+                      <input type="text" name="displayName" id="displayName" tabindex="1" class="form-control" placeholder="姓名">
+                    </div>
+                    <div class="form-group">
+                      <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="email">
                     </div>
                     <div class="form-group">
                       <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="密碼">
@@ -73,6 +77,9 @@
                     <div class="form-group">
                       <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="再確認一次">
                     </div>
+                    <!-- <div class="form-group" style="visibility: hidden;">
+                      <input type="hidden" name="gravitar" id="gravitar" tabindex="2" class="form-control" placeholder="" value="default">
+                    </div> -->
                     <div class="form-group">
                       <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
@@ -89,26 +96,9 @@
       </div>
     </div>
 
-    <div align="center">Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-
-    <script>
-      $(function() {
-        $('#login-form-link').click(function(e) {
-          $("#login-form").delay(100).fadeIn(100);
-          $("#register-form").fadeOut(100);
-          $('#register-form-link').removeClass('active');
-          $(this).addClass('active');
-          e.preventDefault();
-        });
-        $('#register-form-link').click(function(e) {
-          $("#register-form").delay(100).fadeIn(100);
-          $("#login-form").fadeOut(100);
-          $('#login-form-link').removeClass('active');
-          $(this).addClass('active');
-          e.preventDefault();
-        });
-      });
-    </script>
+    <footer>
+      <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    </footer>
 
   </body>
 </html>

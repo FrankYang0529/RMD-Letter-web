@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+	<link rel="stylesheet" type="text/css" href="/css/content.css">
+	<link rel="stylesheet" type="text/css" href="/css/form.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="/js/menu.js"></script>
+</head>
+
+<body>
+
+	<header>
+	  <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+	  <div class="navbar">
+	    <a href=""><img src="/img/black-mail.svg"/></a>
+	    <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+	  </div>
+	</header>
+
+	<div id="menu" class="sidenav" style="width: 250px;">
+	  <span class="close" onclick="toggleNav()">&#9776;</span>
+	 	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+	  <a href="/projects" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+	  <a href="/users/me" id="userManage" onclick="clickMenu(id);"  class="selectedMenu"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a>	
+	</div>
+	<!-- <div id="topbar"></div> -->
+	<!-- <iframe id="content"></iframe> -->
+	<div id = "content" class="user-manage open">
+
+		<h1 id="title">帳戶管理</h1>
+		<div class="w3-container form">
+		  <div class="w3-card-4">
+		  	<form action="/users/me" method="put">
+			    <div class="w3-container">
+			      <h2><input class="w3-input" type="text" placeholder='<%= name %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= name %>'"></h2>
+		 	      <label>使用者帳號</label>
+			      <input class="w3-input" type="text" placeholder='<%= username %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= username %>'">
+			      <label>e-mail</label>
+			      <input class="w3-input" type="e-mail" placeholder='<%= email %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= email %>'">
+			      <label>gravitar</label>  
+			      <input class="w3-input" type="url" value="https://www.npmjs.com/package/gravatar" placeholder='<%= gravatar %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= gravatar %>'">
+			      <button class="w3-btn w3-blue-grey submit">儲存修改</button>
+			    </div>
+			  </form>
+		  </div>
+		</div>
+	</div>
+<!-- 	<footer>
+	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+	</footer> -->
+     
+</body>
+</html> 

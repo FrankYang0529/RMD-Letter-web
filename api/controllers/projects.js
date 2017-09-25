@@ -6,6 +6,7 @@ const RecommendedPerson = require('../models/rmdPerson');
 const StuAccount = require('../models/stuAccount');
 const StuFormAns = require('../models/stuFormAns');
 const RmdLtFormAns = require('../models/rmdltFormAns');
+const Promise = require('bluebird');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 
@@ -13,20 +14,31 @@ const s3 = new AWS.S3();
 
 // not  api
 exports.createPage = (req, res, next) => {
-  /* res.render('projectCreate', {
+  res.render('projectCreate', {
+    email: req.user.email,
     title: '',
     body: '',
     error: '',
     subdomainName: '',
-  }); */
+  });
 };
 
 exports.editPage = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      /* TODO
-        show edit page
-      */
+      res.format({
+        // 'application/json': () => {
+        //   res.send(proj);
+        // },
+        default: () => {
+          // TODO
+          res.render('announce', {
+            proj, 
+            project: proj,
+            projID: req.params.projID
+          });
+        },
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -38,16 +50,17 @@ exports.editPage = (req, res, next) => {
 exports.projectList = (req, res, next) => {
   Projects.find({ ownerID: req.user.username }).exec()
     .then((projs) => {
-      res.format({
-        'application/json': () => {
-          res.send(projs);
-        },
+       res.format({
+        // 'application/json': () => {
+        //   res.send(projs);
+        // },
         default: () => {
-          /* TODO
+          /* TODO*/
           res.render('projectList', {
-            projects
+            username: req.user.username,
+            projects: projs
           });
-          */
+          
         },
       });
     })
@@ -60,18 +73,14 @@ exports.projDetail = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
       res.format({
-        'application/json': () => {
-          res.send(proj);
-        },
+        // 'application/json': () => {
+        //   res.send(proj);
+        // },
         default: () => {
-          /* TODO
-          res.render('projectDetail', {
-            titleZh: user.titleZh,
-            hbr: user.hbr,
-            subdomainName: user.subdomainName,
+          res.render('projectEdit', {
+            project: proj,
             projID: req.params.projID
           });
-          */
         },
       });
     })
@@ -81,20 +90,21 @@ exports.projDetail = (req, res, next) => {
 };
 
 exports.projCreate = (req, res, next) => {
+
   if (req.body.titleZh.length < 1) {    //  error handle
-    /*
+    
     res.render('projectCreate', {
       titleZh: req.body.titleZh,
       hbr: req.body.hbr,
       subdomainName: req.body.subdomainName
     });
-    */
+    
   }
 
   new Projects({
     ownerID: req.user.username,
     titleZh: req.body.titleZh,
-    announcement: req.body.announcement,
+    announcement: [],//req.body.announcement,
     email: req.body.email,
     phone: req.body.phone,
     startTime: req.body.startTime,
@@ -115,22 +125,23 @@ exports.projCreate = (req, res, next) => {
       person: [],
     }).save();
 
-    return res.redirect('/');  //  回到主畫面
+    return res.redirect('/projects');  //  回到主畫面
   });
 };
 
 exports.projAddPost = (req, res, next) => {
+  console.log(req.body);
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.announcement.length < 1) {    //  must to filled the blank
+      //if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
           proj
         });
         */
-      }
-
+      //}
+      console.log(req.files);
       if (JSON.stringify(req.files) !== '{}') {
         const file = req.files.file;
         const stream = fs.createReadStream(file.path);
@@ -149,32 +160,36 @@ exports.projAddPost = (req, res, next) => {
         })
           .send((err, data) => {
               // delete temp file
+              //  上傳完畢或是碰到錯誤
+            if (err) {
+              console.log(err);
+            } else {
+              proj.announcement.push({
+                title: req.body.title,
+                text: req.body.text,
+                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
+                timestamp: req.body.timestamp,
+              });
+              // console.log(proj.announcement);
+            }
+            return proj.save();
             fs.unlink(file.path, (error) => {
               if (err) {
                 console.error(error);
               }
               console.log('Temp File Delete');
             });
-              //  上傳完畢或是碰到錯誤
-            if (err) {
-              console.log(err);
-            } else {
-              proj.announcement.push({
-                title: req.body.announcement.title,
-                text: req.body.announcement.text,
-                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
-                timestamp: req.body.announcement.timestamp,
-              });
-            }
           });
       } else {
-        proj.announcement.push(req.body.announcement);
+        proj.announcement.push(req.body);
+        // console.log(proj.announcement);
+        return proj.save();
       }
-
-      return proj.save();
+      
     })
     .then((proj) => {
-      res.redirect('/');
+      res.send('success');
+      // res.redirect(`/projects/${proj._id}/edit`);
     })
     .catch((err) => {
       res.send(err);
@@ -184,18 +199,22 @@ exports.projAddPost = (req, res, next) => {
 exports.projAnnouncementEdit = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.announcement.length < 1) {    //  must to filled the blank
+      // if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
           proj
         });
         */
-      }
+      // }
       proj.announcement.forEach((body, index) => {
+
+        if (body == null){
+          return;
+        }
         if (body._id == req.params.announcementID) { // must be == not ===
-          proj.announcement[index].title = req.body.announcement.title;
-          proj.announcement[index].text = req.body.announcement.text;
+          proj.announcement[index].title = req.body.title;
+          proj.announcement[index].text = req.body.text;
 
           if (JSON.stringify(req.files) !== '{}') {
             const file = req.files.file;
@@ -222,6 +241,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
                   }
                   console.log('Temp File Delete');
                 });
+
                   //  上傳完畢或是碰到錯誤
                 if (err) {
                   console.log(err);
@@ -237,7 +257,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
       });
     })
     .then((proj) => {
-      res.rend('OK');  //  回到detail
+      res.send('OK');  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -260,7 +280,8 @@ exports.projTitleZhEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
     })
     .catch((err) => {
       console.log(err);
@@ -283,7 +304,8 @@ exports.projSubdomainEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
     })
     .catch((err) => {
       console.log(err);
@@ -306,7 +328,8 @@ exports.projPhoneEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      //res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -329,7 +352,8 @@ exports.projEmailEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      //res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -353,7 +377,8 @@ exports.projDeadlineEdit = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -368,7 +393,8 @@ exports.projDeployed = (req, res, next) => {
       return proj.save();
     })
     .then((proj) => {
-      res.redirect(`/projects/${proj._id}`);  //  回到detail
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
+      res.send('success');
     })
     .catch((err) => {
       console.log(err);
@@ -390,7 +416,7 @@ exports.createStuForm = (req, res, next) => {
   new StuForms({
     projID: req.params.projID,
     title: req.body.title,
-    questions: req.body.questions,
+    questions: JSON.parse(req.body.questions),//req.body.questions,
   }).save((err) => { //  存入db
     if (err) return next(err);
     return res.redirect(`/projects/${req.params.projID}/student-form`);
@@ -401,12 +427,13 @@ exports.updateStuForm = (req, res, next) => {
   StuForms.findOne({ projID: req.params.projID }).exec()
     .then((form) => {
       form.title = req.body.title;
-      form.questions = req.body.questions;
+      form.questions = JSON.parse(req.body.questions);
 
       return form.save();
     })
     .then((form) => {
-      res.redirect(`/projects/${req.params.projID}/student-form`);
+      res.send('success');
+      // res.redirect(`/projects/${req.params.projID}/student-form`);
     })
     .catch((err) => {
       res.send(err);
@@ -416,16 +443,23 @@ exports.updateStuForm = (req, res, next) => {
 exports.stuFormDetail = (req, res, next) => {
   StuForms.findOne({ projID: req.params.projID }).exec()
     .then((form) => {
+      console.log(form);
       res.format({
-        'application/json': () => {
-          res.send(form);
-        },
+        // 'application/json': () => {
+        //   res.send(form);
+        // },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
-          });
-          */
+          if (form == null){
+            res.render('studentFormCreate', {
+              projID: req.params.projID
+            });
+          }
+          else{
+            res.render('studentForm', {
+              form,
+              projID: req.params.projID
+            });
+          }
         },
       });
     })
@@ -438,23 +472,27 @@ exports.createRmdLtForm = (req, res, next) => {
   new RmdLtForms({
     projID: req.params.projID,
     title: req.body.title,
-    questions: req.body.questions,
+    questions: JSON.parse(req.body.questions),
   }).save((err) => { //  存入db
     if (err) return next(err);
+    // res.send('success');
     return res.redirect(`/projects/${req.params.projID}/rmdletter-form`);
   });
 };
 
 exports.updateRmdLtForm = (req, res, next) => {
+  // console.log(JSON.parse(req.body));
   RmdLtForms.findOne({ projID: req.params.projID }).exec()
     .then((form) => {
       form.title = req.body.title;
-      form.questions = req.body.questions;
+      form.questions = JSON.parse(req.body.questions);
 
       return form.save();
     })
     .then((form) => {
-      res.redirect(`/projects/${req.params.projID}/rmdletter-form`);
+      // console.log()
+      // res.redirect(`/projects/${req.params.projID}/rmdletter-form`);
+      res.send('success');
     })
     .catch((err) => {
       res.send(err);
@@ -462,24 +500,55 @@ exports.updateRmdLtForm = (req, res, next) => {
 };
 
 exports.rmdLtFormDetail = (req, res, next) => {
-  RmdLtForms.findOne({ projID: req.params.projID }).exec()
-    .then((form) => {
-      res.format({
-        'application/json': () => {
-          res.send(form);
-        },
-        default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+
+  const a = RmdLtForms.findOne({ projID: req.params.projID }).exec();
+  const b = InviteLetter.findOne({ projID: req.params.projID }).exec();
+
+  return Promise.join(a, b, (form, letter) => {
+    res.format({
+      default: () => {
+        if (form == null){
+          res.render('rmdFormCreate', {
+            letter,
+            projID: req.params.projID
           });
-          */
-        },
-      });
-    })
-    .catch((err) => {
-      res.send(err);
+        }
+        else{
+          res.render('rmdForm', {
+            form,
+            letter,
+            projID: req.params.projID
+          });
+        }
+      },
     });
+  });
+
+  // RmdLtForms.findOne({ projID: req.params.projID }).exec()
+  //   .then((form) => {
+  //     console.log(form);
+  //     res.format({
+  //       // 'application/json': () => {
+  //       //   res.send(form);
+  //       // },
+  //       default: () => {
+  //         if (form == null){
+  //           res.render('rmdFormCreate', {
+  //             projID: req.params.projID
+  //           });
+  //         }
+  //         else{
+  //           res.render('rmdForm', {
+  //             form,
+  //             projID: req.params.projID
+  //           });
+  //         }
+  //       },
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     res.send(err);
+  //   });
 };
 
 exports.inviteltDetail = (req, res, next) => {
@@ -504,15 +573,18 @@ exports.inviteltDetail = (req, res, next) => {
 };
 
 exports.updateInvitelt = (req, res, next) => {
+
   InviteLetter.findOne({ projID: req.params.projID }).exec()
     .then((letter) => {
+      console.log(letter);
       letter.title = req.body.title;
       letter.content = req.body.content;
 
       return letter.save();
     })
     .then((letter) => {
-      res.redirect(`/projects/${req.params.projID}/invite-letter`);
+      res.send('success');
+      // res.redirect(`/projects/${req.params.projID}/rmdletter-form`);
     })
     .catch((err) => {  //  assume that will display invitation-letter's detail, so there can absolutly find one in database
       res.send(err);
@@ -523,15 +595,15 @@ exports.rmdPersonList = (req, res, next) => {
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
       res.format({
-        'application/json': () => {
-          res.send(personList);
-        },
+        // 'application/json': () => {
+        //   res.send(personList);
+        // },
         default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
+           // TODO
+          res.render('rmdPersonList', {
+            personList,
+            projID: req.params.projID
           });
-          */
         },
       });
     })
@@ -541,12 +613,26 @@ exports.rmdPersonList = (req, res, next) => {
 };
 
 exports.addRmdPerson = (req, res, next) => {
+  if(req.body.verification == undefined){
+    req.body.verification = false;
+  }
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
-      personList.person.push(req.body.person);
+      // console.log(personList.person);
+      var rmdPerson = {
+        name: req.body.name,
+        email: req.body.email,
+        serviceUnit: req.body.serviceUnit,
+        jobTitle: req.body.jobTitle,
+        verification: req.body.verification
+      };
+      // console.log(rmdPerson);
+      personList.person.push(rmdPerson);
+      // console.log(personList.person);
       return personList.save();
     })
     .then((personList) => {
+      // res.send('success');
       res.redirect(`/projects/${req.params.projID}/rmd-person`);
     })
     .catch((err) => {
@@ -562,11 +648,11 @@ exports.modifyVerification = (req, res, next) => {
           person.verification = req.body.verification;
         }
       });
-
       return personList.save();
     })
     .then((person) => {
-      res.redirect(`/projects/${req.params.projID}/rmd-person`);
+      res.send('success');
+      // res.redirect(`/projects/${req.params.projID}/rmd-person`);
     })
     .catch((err) => {
       res.send(err);
@@ -574,22 +660,44 @@ exports.modifyVerification = (req, res, next) => {
 };
 
 exports.studentList = (req, res, next) => {
-  Projects.findById(req.params.projID).exec()
-    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec())
-    .then((students) => {
-      res.format({
-        'application/json': () => {
-          res.send(students);
-        },
-        default: () => {
-          /* TODO
-          res.render('formDetail', {
-            form
-          });
-          */
-        },
-      });
+  const a =  Projects.findById(req.params.projID).exec()
+    .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec());    
+  const b = StuForms.find({ projID: req.params.projID }).exec();
+  const c = RmdLtForms.find({ projID: req.params.projID }).exec();
+  const d = StuFormAns.find({ projID: req.params.projID }).exec();
+  const e = RmdLtFormAns.find({ projID: req.params.projID }).exec();
+
+  return Promise.join(a, b, c, d, e, (students, studentform, letterform, studentdata, lettercontent) => {
+    res.format({
+      default: () => {
+        res.render('apply', {
+          projID: req.params.projID,
+          students,
+          studentform,
+          letterform,
+          studentdata,
+          lettercontent
+        });
+      },
     });
+  });
+  // Projects.findById(req.params.projID).exec()
+  //   .then((proj) => StuAccount.find({ subdomain: proj.subdomainName }).exec())
+  //   .then((students) => {
+  //     res.format({
+  //       // 'application/json': () => {
+  //       //   res.send(students);
+  //       // },
+  //       default: () => {
+  //         // TODO
+  //         res.render('apply', {
+  //           projID: req.params.projID,
+  //           students
+  //         });
+          
+  //       },
+  //     });
+  //   });
 };
 
 exports.filledStudentForm = (req, res, next) => {
@@ -618,7 +726,8 @@ exports.fillStudentRemark = (req, res, next) => {
       return ans.save();
     })
     .then((ans) => {
-      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+      res.send("success");
+      // res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
     })
     .catch((err) => {
       res.send(err);
@@ -632,7 +741,8 @@ exports.updateStudentRemark = (req, res, next) => {
       return ans.save();
     })
     .then((ans) => {
-      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+      res.send("success");
+      // res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
     })
     .catch((err) => {
       res.send(err);

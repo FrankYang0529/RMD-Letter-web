@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="/css/header.css">
+  <link rel="stylesheet" type="text/css" href="/css/menu.css">
+  <link rel="stylesheet" type="text/css" href="/css/content.css">
+  <link rel="stylesheet" type="text/css" href="/css/form.css">
+  <link rel="stylesheet" type="text/css" href="/css/circle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/excellentexport.min.js"></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/form.js"></script>
+</head>
+<body>
+  <header>
+    <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+    <div class="navbar">
+      <a href=""><img src="/img/black-mail.svg"/></a>
+      <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
+    </div>
+  </header>
+  
+  <div id="menu" class="sidenav" style="width: 250px;">
+    <span class="close" onclick="toggleNav()">&#9776;</span>
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+    <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
+    <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
+    <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+    <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
+    <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+    <a href="/projects/<%= projID %>/student" id="apply" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
+    <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
+  </div>
+  <div id="content" class="apply open">
+    <h1 id="title">報名管理</h1>
+
+    <div class="circle-parent">
+      <% var totalStudent = students.length; %>
+      <% var fillForm = studentdata.length %>
+      <% var sendLetter = students.filter( function(item){return (item.sentLetter==2);} ).length; %>
+      <% var receiveLetter = lettercontent.length %>
+
+      <% if (totalStudent == 0){ %>
+      <% var fillPercent = 0;  %>
+      <% var sendPercent = 0; %>
+      <% var receivePercent = 0; %>
+      <% var completePercent = 0; %>
+      <% }else{ %>
+      <% var fillPercent =  Math.round(fillForm/totalStudent * 1000) /10 ; %>
+      <% var sendPercent = Math.round(sendLetter/totalStudent * 1000) /10 ; %>
+      <% var receivePercent = Math.round(receiveLetter/totalStudent * 1000) /10 ; %>
+      <% var completePercent =  Math.min(fillPercent, sendPercent, receivePercent);%>
+      <% }%>
+
+      <div class="w3-container">
+        <h2>總報名人數：<%= totalStudent %></h2>
+      </div>
+
+      <div id="filledForm" class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent fillPercent"><%= fillPercent %>%</span></div>
+        <span class="datatitle">填寫報名表</span>
+      </div>
+
+      <div id="sentLetter" class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent sendPercent"><%= sendPercent %>%</span></div>
+        <span class="datatitle">邀請推薦人x2</span>
+      </div>
+
+      <div id="getLetter" class="ko-progress-circle" data-progress="0">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent receivePercent"><%= receivePercent %>%</span></div>
+        <span class="datatitle">收到推薦信x2</span>
+      </div>
+
+      <div id="completeApply" class="ko-progress-circle" data-progress="completePercent">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent completePercent"><%= completePercent %>%</span></div>
+        <span class="datatitle">完成報名</span>
+      </div>
+      
+    </div>
+
+    <div class="w3-container" style="margin-top:50px;">
+      <h2>學生報名狀況</h2>
+      <div class="w3-responsive w3-card-4">
+        <table class="w3-table w3-striped w3-hoverable w3-centered">
+          <thead>
+            <tr class="w3-teal">
+              <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
+              <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
+              <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
+              <th><i class="fa fa-send" style="font-size:17px; "> 邀請推薦人</i></th>
+              <th><i class="fa fa-thumbs-up" style="font-size:17px; "> 推薦人填寫</i></th>
+              <th><i class="fa fa-tachometer" style="font-size:17px; "> 報名進度</i></th>
+              <th><i class="fa fa-eye" style="font-size:17px; "></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% students.forEach(function(student) {%>
+            <% var id = student._id; %>
+            <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
+            <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
+            <% var sentLt = student.sentLetter; %>
+            <% var complete = false; %>
+            <tr class="student">
+              <th><%= student.displayName %></th>
+              <td><%= student.email %></td>
+              <td>
+              <% if(form.length == 0 ){ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <td>
+              <% if(sentLt.length > 2 ){ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <!-- <td><%= sentLt.length %>/2</td> -->
+              <td><b><%= letters.length %>/2</b></td>
+
+              <!-- <td><%= complete %></td> -->
+              <td>
+              <% if(complete == false){ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% } %>  
+              </td>
+              <td><a href="#stuid<%= student._id %>">❯</a></td>
+            </tr>
+            <% });%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br>
+
+    <div id="total-student-ans" class="w3-container" style="margin-top: 50px;">
+      <h2>所有學生資料</h2>
+      <div class="w3-container">
+        <a download="student-data.xls" href="#" onclick="return ExcellentExport.excel(this, 'total-student-data', '學生資料總表');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button"><i class="fa fa-download" style="font-size:24px"></i>下載學生資料</a>
+      </div>
+      <div class="w3-container">
+        <div class="w3-responsive w3-card-4">
+          <table id="total-student-data" class="w3-table w3-striped w3-hoverable w3-centered student-data">
+            <thead class="w3-teal">
+              <tr>
+                <th><p style="width: max-content;">姓名</p></th>
+                <% studentform.forEach(function(form){ %>
+                <% form.questions.forEach(function(q){ %>
+                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <% });%>
+                <% });%>
+                <% letterform.forEach(function(form){ %>
+                <% form.questions.forEach(function(q){ %>
+                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <% });%>
+                <% });%>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% students.forEach(function(student) {%>
+              <% var id = student._id; %>
+              <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
+              <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
+              <tr id="stuid<%= student._id %>">
+                <th><p style="width: max-content;"><%= student.displayName %></p></th>
+                <% if(form.length < 1){ %>
+                <% for (i = 0; i < studentform[0].questions.length; i++) { %> 
+                <td></td>
+                <% } %>
+                <% }else{ %>
+                <% form.forEach(function(element){ %>                
+                <% element.answers.forEach(function(data){ %>
+                <% var target = studentform[0].questions.find(function(q) { %>
+                <%   return q._id == data.question_id; %>
+                <% }); %>
+                <% if( target.questionType == "text"){ %>
+                <td><p style="width: max-content;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "textArea"){ %>
+                <td><p style="width:500px;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "file"){ %>
+                <td><a href="<%= data.file_url %>"><%= data.file_url %></a></td>
+                <% }else{ %>
+                <td>
+                <% var flag = 0; %>
+                <% data.choices.forEach(function(option){ %>
+                <% if(flag == 1){ %>
+                、
+                <% }else{ %>
+                <% flag = 1; %>
+                <% } %>
+                <%= option.option %>
+                <% }); %>
+                </td>
+                <% } %>
+
+
+                <% }); %>
+                <% }); %>
+                <% } %>
+
+                <% if(letters.length < 1){ %>
+                <% for (i = 0; i < letterform[0].questions.length; i++) { %> 
+                <td></td>
+                <% } %>
+                <% }else{ %>
+                <% letter.forEach(function(element){ %>                
+                <% element.answers.forEach(function(data){ %>
+                <% var target = studentform[0].questions.find(function(q) { %>
+                <%   return q._id == data.question_id; %>
+                <% }); %>
+                <% if( target.questionType == "text"){ %>
+                <td><p style="width: max-content;><%= data.text %></p></td>
+                <% }else if(target.questionType == "textArea"){ %>
+                <td><p style="width:500px;"><%= data.text %></p></td>
+                <% }else if(target.questionType == "file"){ %>
+                <td><a href="<%= data.file_url %>"><%= data.file_url %></a></td>
+                <% }else{ %>
+                <td>
+                <% var flag = 0; %>
+                <% data.choices.forEach(function(option){ %>
+                <% if(flag == 1){ %>
+                、
+                <% }else{ %>
+                <% flag = 1; %>
+                <% } %>
+                <%= option.option %>
+                <% }); %>
+                </td>
+                <% } %>
+                <% }); %>
+                <% }); %>
+                <% } %>
+                </p>
+                <td>
+                  <% if(form.length == 0){ %>
+                  <textarea disabled style="width: 500px; height:100px;background-color: inherit;">-</textarea>
+                  <% }else{ %>
+                  <textarea class="remark-btn" style="width: 500px; height:100px;background-color: inherit;"><%= form[0].remark %></textarea>
+                  <% }%>
+                </td>
+              </tr>
+              <% });%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>    
+    <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
+      <h2>詳細資料</h2>
+      <div class="w3-card-4">
+        <table class="w3-table w3-striped">
+          <thead>
+            <tr class="w3-light-grey">
+              <th>姓名</th>
+              <th id="name"><%= name["userid2"] %></th>
+              <th>畢業學校</th>
+              <th>成大資訊</th>
+            </tr>
+          </thead>
+            <tr>
+              <td>電話</td>
+              <td>06-2757575</td>
+              <td>手機</td>
+              <td>0911222333</td>
+            </tr>
+            <tr>
+              <td>地址</td>
+              <td colspan="3">台南市東區大學路1號</td>
+            </tr>
+            <tr>
+              <td>e-mail</td>
+              <td colspan="3">abcde@gmail.com</td>
+            </tr>
+            <tr>
+              <td>在學成績</td>
+              <td>王大明</td>
+              <td>系所排名</td>
+              <td>成大資訊</td>
+            </tr>
+            <tr>
+              <td>在學成績</td>
+              <td>89.4</td>
+              <td>系所排名</td>
+              <td id="grade">50/120</td>
+            </tr>
+            <tr>
+              <td colspan="2">推薦信1</td>
+              <td>推薦人1</td>
+              <td>王小明</td>
+            </tr>
+            <tr>
+              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容1</td>
+            </tr>
+            <tr>
+              <td colspan="2">推薦信2</td>
+              <td>推薦人2</td>
+              <td>王鐘銘</td>
+            </tr>
+            <tr>
+              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容2</td>
+            </tr>
+            <tr>
+              <td colspan="1">備註</td>
+              <td colspan="3"><input type="text"></td>
+            </tr>
+        </table>
+        <p></p>
+      </div>
+      <div class="w3-bar" style="margin-top: 50px;">
+        <button id="previous-btn" class="w3-button w3-left w3-light-gray w3-hover-teal">&laquo; Previous</button>
+        <button id="next-btn" class="w3-button w3-right w3-light-gray w3-hover-teal">Next &raquo;</button>
+      </div>
+    </div>
+
+  </div>
+<!--   <footer>
+    <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+  </footer> -->
+
+<script>
+$(document).ready(function(){
+
+
+
+  // $("#testBtn").click(function(){
+  //   let url="/projects"; 
+
+  //   fetch(url)
+  //   .then(res => res.json())
+  //   .then((out) => {
+  //     console.log('Checkout this JSON! ', out);
+  //   })
+  //   .catch(err => console.error(err));
+
+  // });
+
+  // $("#testBtn").click(function(){
+  //   $.ajax({
+  //       url: '/projects',
+  //       type: "GET",
+  //       dataType: "jsonp",
+  //       async: false,
+  //       success: function(msg)  {
+  //           JsonpCallback(msg);
+  //       },
+  //       error: function()  {
+  //           ErrorFunction();
+  //       }
+  //   });
+  // });
+
+  // function JsonpCallback(json)  {
+  //     document.getElementById('summary').innerHTML = json.result;
+  // }
+
+  // $.get( "/projects", function( data ) {
+  //   $("#summary").html( data );
+  //   alert( "Load was performed." );
+  // });
+
+  // $.get( "/projects", function(data) {
+  //   //alert( "success");
+  //   console.log($("#summary").text());
+  //   console.log("data", data);
+  //   data.forEach(function(element){
+  //     console.log(element.ownerID);
+  //   });
+  // })
+  //   .done(function() {
+  //     alert( "second success" );
+  //   })
+  //   .fail(function() {
+  //     alert( "error" );
+  //   })
+  //   .always(function() {
+  //     alert( "finished" );
+  //   });
+
+  $(".remark-btn").on('change', function postinput(){
+    var value = $(this).val();
+    var student = $(this).parent().parent().attr("id").slice(5);
+    // console.log(value);
+    // console.log(student);
+    $.ajax({ 
+      url: '/projects/<%= projID %>/'+student+'/remark',
+      data: { remark: $(this).val()},
+      type: 'put'
+    }).done(function(responseData) {
+        console.log('Done: ', responseData);
+        // location.reload();
+    }).fail(function() {
+        console.log('Fail');
+    });
+  });
+
+  window.setsize = function() {
+    // var val = Math.floor(Math.random() * 100);
+    // $('.ko-progress-circle').attr('data-progress', val);
+    // $(".percent").text($(".ko-progress-circle").attr("data-progress")+"%");      
+
+    var fillValue = parseInt($(".fillPercent").text().slice(0,-1));
+    var sentValue = parseInt($(".sentLetter").text().slice(0,-1));
+    var getValue = parseInt($(".getLetter").text().slice(0,-1));
+    var completeValue = parseInt($(".completeApply").text().slice(0,-1));
+
+    $("#filledForm").attr('data-progress', fillValue);
+    $("#sentLetter").attr('data-progress', sentValue);
+    $("#getLetter").attr('data-progress', getValue);
+    $("#completeApply").attr('data-progress', completeValue);
+
+    // $("#filledForm .percent").text($("#filledForm").attr("data-progress")+"%");
+    // $("#sentLetter .percent").text($("#sentLetter").attr("data-progress")+"%");
+    // $("#getLetter .c").text($("#getLetter").attr("data-progress")+"%");
+    // $("#completeApply .percent").text($("#completeApply").attr("data-progress")+"%");
+    
+  }
+  // setTimeout(window.setsize(0), 0);
+  setTimeout(window.setsize(), 200);
+ 
+  $("#previous-btn").click(function(){
+    var nameArr = ["王小明","黃小明","張小明","江小明"];
+    var gradeArr = ["50/120","48/120","51/120","49/120"];
+
+    var studentName = $("th#name").html();
+    var index = nameArr.findIndex(function(element){
+      return element == studentName;
+    });
+    if(index > 0){
+      $("th#name").html(nameArr[index-1]);
+      $("td#grade").html(gradeArr[index-1]);
+    }
+  });
+
+  $("#next-btn").click(function(){
+    var nameArr = ["王小明","黃小明","張小明","江小明"];
+    var gradeArr = ["50/120","48/120","51/120","49/120"];
+    var studentName = $("th#name").html();
+    var index = nameArr.findIndex(function(element){
+      return element == studentName;
+    });
+    if(index < nameArr.length-1){
+      $("th#name").html(nameArr[index+1]);
+      $("td#grade").html(gradeArr[index+1]);
+    }
+  });
+
+  // $(".student").click(function(e){
+  //   // console.log($(this).attr("id"));
+  //   $("#student-ans").css("display","block");
+  //   var id = $(this).attr("id");
+  //   var name = {"userid1":"王小明",
+  //         "userid2":"黃小明",
+  //         "userid3":"張小明",
+  //         "userid4":"江小明"
+  //       };
+  //   var grade = {"userid1":"50/120",
+  //     "userid2":"48/120",
+  //     "userid3":"51/120",
+  //     "userid4":"49/120"
+  //   };
+  //   $("th#name").html(name[id]);
+  //   $("td#grade").html(grade[id]);
+    // $.ajax({ 
+    //   url: '/projects/<%= projID %>/invite-letter',
+    //   data: {title: $("#letter-title").val(), content: $("#letter-content").val()},
+    //   type: 'put'
+    // }).done(function(responseData) {
+    //     console.log('Done: ', responseData);
+    //     location.reload();
+    // }).fail(function() {
+    //     console.log('Fail');
+    // });
+  // });
+});
+
+</script>
+     
+</body>
+</html> 

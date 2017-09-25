@@ -7,9 +7,14 @@ const Promise = require('bluebird');
 exports.index = function (req, res, next) {
   res.format({
     default: () => {
-      // TODO
-      // res.render('register', {
-      // });
+      //TODO
+      res.render('projectList', {
+        log: 'logout',
+        username: req.user.username,
+        name: req.user.displayName,
+        gravatar: req.user.gravatar,
+        email: req.user.email
+      });
     }
   });
 };
@@ -31,7 +36,7 @@ exports.register = function (req, res, next) {
   register.call(Account, new Account({
     username: req.body.username,
     displayName: req.body.displayName,
-    gravatar: req.body.gravatar,
+    gravatar: "https://www.npmjs.com/package/gravatar",//req.body.gravatar,
     email: req.body.email,
     type: 'department',
   }), req.body.password)
@@ -43,11 +48,11 @@ exports.register = function (req, res, next) {
       return req.session.save();
     })
     .then(function (session) {
-      res.redirect('/');
+      res.redirect('/users/login');
     })
     .catch(function (err) {
       console.log(err);
-      res.redirect('/users');
+      res.redirect('/users/login');
     });
 };
 
@@ -67,18 +72,17 @@ exports.changePassword = function (req, res, next) {
 
 exports.profile = function (req, res, next) {
   res.format({
-    'application/json': function () {
-      res.send(req.user);
-    },
-    default () {
-      /* TODO
-      res.render('users', {
+    // 'application/json': function () {
+    //   res.send(req.user);
+    //},
+    default: () => {
+      //TODO
+      res.render('userManage', {
         username: req.user.username,
         name: req.user.displayName,
         gravatar: req.user.gravatar,
         email: req.user.email
       });
-      */
     }
   });
 };
@@ -112,12 +116,12 @@ exports.auth = function (req, res, next) {
   // generate the authenticate method and pass the req/res
   passport.authenticate('local', function (err, user, info) {
     if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
+    if (!user) { return res.redirect('/users/me'); }
 
     // req / res held in closure
     req.logIn(user, function (err) {
       if (err) { return next(err); }
-      res.redirect('/');
+      res.redirect('/projects');
     });
   })(req, res, next);
 };
@@ -127,7 +131,7 @@ exports.loginForm = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect('/');
+    res.redirect('/users/me');
   });
 };
 
