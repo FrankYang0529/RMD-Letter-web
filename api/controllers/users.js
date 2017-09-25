@@ -116,7 +116,7 @@ exports.auth = function (req, res, next) {
   // generate the authenticate method and pass the req/res
   passport.authenticate('local', function (err, user, info) {
     if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
+    if (!user) { return res.redirect('/users/me'); }
 
     // req / res held in closure
     req.logIn(user, function (err) {

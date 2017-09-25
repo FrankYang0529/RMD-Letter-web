@@ -99,7 +99,7 @@
               <% announce.forEach(function(post){  %>
               <% if( post != null){ %> 
               <hr>
-              <a href="#<%= post._id %>"><p class="w3-large"><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-theme"></i><%= post.title %></p>
+              <a href="#show<%= post._id %>"><p class="w3-large"><i class="fa fa-file-text-o fa-fw w3-margin-right w3-text-theme"></i><%= post.title %></p>
               <p><%= post.timestamp.toDateString() %></p></a>
               <% } %>
               <% }); %> 
@@ -118,7 +118,7 @@
     	        	<input type="text" id="newPostTitle" name="title" value="" placeholder="新增公告" onfocus="this.placeholder = ''" onblur="this.placeholder = '新增公告'" style="outline: none;">
     	        </h2>
     	        <div class="w3-container">
-    	        	<textarea id="newPostContent" form="announce-create" name="text" class="w3-input w3-text-grey w3-border-top" style="height: 400px; outline: none;">公告內容...</textarea>
+    	        	<textarea id="newPostContent" form="announce-create" name="text" class="w3-input w3-text-grey w3-opacity w3-border-top" style="height: 400px; outline: none;">公告內容</textarea>
                 <input type="file" id="file" name="file">
     			    	<div form="announce-create" id="announce-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin: 20px;">新增 ❯</div>
     	        </div>
@@ -131,8 +131,8 @@
             <% var current = true; %>
             <% announce.forEach(function(post){  %>
             <% if( post != null){ %>
-            <div id="<%= post._id %>" class="w3-container">
-              <span onclick="editPost($(this).parent().attr('id'));" class="w3-bar-item w3-button w3-xlarge w3-right fa fa-edit"></span>
+            <div id="show<%= post._id %>" class="w3-container" class="display: block;">
+              <span class="show-post w3-bar-item w3-button w3-xlarge w3-right w3-text-gray w3-hover-white fa fa-edit"></span>
               <h5 class="w3-opacity"><b><%= post.title %></b></h5>
               <h6 class="w3-text-theme"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= post.timestamp.toLocaleDateString() %>
               <!-- <% if(current){%>
@@ -141,8 +141,41 @@
               <% } %>-->
               </h6>
               <p><%= post.text %></p>
+              <% if(post.file !=""){ %>
+              <p><i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i><a href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/59c50dcafd18c90d13fc2554/", "") %></a></p>
+              <% } %>
               <hr>
-            </div> 
+            </div>
+
+            <div id="edit<%= post._id %>" class="w3-container" style="display: none;">
+              <span class="edit-post w3-bar-item w3-button w3-xlarge w3-right w3-text-gray w3-hover-white fa fa-mail-reply"></span>
+              <h5>
+                <input type="text" id="title<%= post._id %>" name="title" value="" placeholder="<%= post.title %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= post.title %>'" style="outline: none;border: none;">
+              </h5>
+
+              <h6 class="w3-text-theme">
+                <i class="fa fa-calendar fa-fw w3-margin-right"></i><%= post.timestamp.toLocaleDateString() %>
+              </h6>
+              
+              <div class="w3-container">
+                <textarea id="text<%= post._id %>" form="update-post" name="text" class="w3-input w3-text-grey w3-border-top" style="height: 650px; outline: none;">原公告內容<%= post.text %></textarea>
+                <% if(post.file !=""){ %>
+                <p>
+                  <i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i>
+                  <input type="file" id="file<%= post._id %>" name="file" style="display:none;" value="<%= post.file %>">
+                  <a id="oldfile<%= post._id %>" href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/59c50dcafd18c90d13fc2554/", "") %> </a>
+                  <i class="fa fa-remove fa-fw w3-margin-right w3-text-gray w3-hover-white remove-file" style="font-size: 12px;" onclick="$('#file<%= post._id %>').css('display', 'inline'); $('#oldfile<%= post._id %>').remove(); $(this).css('display','none');" ></i>
+                </p>
+                <% }else{ %>
+                <input type="file" id="file<%= post._id %>" name="file">
+                <% } %>
+                <div id="btn<%= post._id %>" form="update-post" class="w3-btn w3-padding w3-grey w3-right announce-edit-btn" style=" margin: 20px; padding: auto 10px;"><i class="fa fa-floppy-o fa-fw w3-margin-right" style="font-size: 18px;"></i>儲存修改</div>
+              </div>
+              <hr>
+            </div>
+            
+
+
             <% } %>
             <% }); %>
 
@@ -161,9 +194,30 @@
 
   function editPost(postID){
     console.log(postID);
+
+    var url = "/projects/announcement/:projID/:announcementID";
     
 
   }
+
+
+  $(".show-post").click(function(){
+    var showID = "#"+$(this).parent().attr("id");
+    var editID = "#edit"+$(this).parent().attr("id").slice(4);
+    console.log(showID);
+    console.log(editID);
+    $(showID).css("display", "none");
+    $(editID).css("display", "block");
+  });
+
+  $(".edit-post").click(function(){
+    var editID = "#"+$(this).parent().attr("id");
+    var showID = "#show"+$(this).parent().attr("id").slice(4);
+    console.log(editID);
+    console.log(showID);
+    $(editID).css("display", "none");
+    $(showID).css("display", "block");
+  });
 
  	$("#add-post-btn").click(function() {
  		$("#add-new-post").toggle();
@@ -171,16 +225,55 @@
 
   $("#announce-btn").click(function(e){  
     let postData = new FormData()
-
     postData.append("title", $("#newPostTitle").val());
     postData.append("text", $("#newPostContent").val());
     postData.append("timestamp", Date.now());
-    postData.append('file', $('#file')[0].files[0]);
-    console.log(postData);
     
+    if($('#file')[0].files[0] == undefined){
+      postData.append('file', '');
+    }else{
+      postData.append('file', $('#file')[0].files[0]);
+    }
+
     $.ajax({
       url: "/projects/announcement/<%= projID %>/",
       type: 'POST',
+      data: postData,
+      processData: false,
+      contentType: false,
+      success: function() {
+        console.log("success");
+      }
+    }).done(function(responseData) {
+        console.log('Done: ', responseData);
+        location.reload();
+    }).fail(function() {
+        console.log('Fail');
+    });
+  });
+
+  
+
+  $(".announce-edit-btn").click(function(e){
+    var postID = $(this).attr("id").slice(3);
+    var titleID = "#title" + postID;
+    var textID = "#text" + postID;
+    var fileID = "#file" + postID;
+
+    let postData = new FormData()
+    postData.append("title", $(titleID).val());
+    postData.append("text", $(textID).val());
+    
+    if( $(fileID)[0].files[0] === undefined ){
+      postData.append('file', '');
+    }else{
+      postData.append('file', $(fileID)[0].files[0]);
+    }
+
+    console.log(postData);
+    $.ajax({
+      url: "/projects/announcement/<%= projID %>/"+postID,
+      type: 'PUT',
       data: postData,
       processData: false,
       contentType: false,

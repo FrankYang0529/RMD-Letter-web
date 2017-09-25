@@ -2,6 +2,7 @@
 
 <html>
 <head>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" type="text/css" href="/css/header.css">
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/excellentexport.min.js"></script>
   <script src="/js/menu.js"></script>
   <script src="/js/form.js"></script>
 </head>
@@ -39,8 +41,28 @@
     <h1 id="title">報名管理</h1>
 
     <div class="circle-parent">
+      <% var totalStudent = students.length; %>
+      <% var fillForm = studentdata.length %>
+      <% var sendLetter = students.filter( function(item){return (item.sentLetter==2);} ).length; %>
+      <% var receiveLetter = lettercontent.length %>
 
-      <div class="ko-progress-circle" data-progress="0">
+      <% if (totalStudent == 0){ %>
+      <% var fillPercent = 0;  %>
+      <% var sendPercent = 0; %>
+      <% var receivePercent = 0; %>
+      <% var completePercent = 0; %>
+      <% }else{ %>
+      <% var fillPercent =  Math.round(fillForm/totalStudent * 1000) /10 ; %>
+      <% var sendPercent = Math.round(sendLetter/totalStudent * 1000) /10 ; %>
+      <% var receivePercent = Math.round(receiveLetter/totalStudent * 1000) /10 ; %>
+      <% var completePercent =  Math.min(fillPercent, sendPercent, receivePercent);%>
+      <% }%>
+
+      <div class="w3-container">
+        <h2>總報名人數：<%= totalStudent %></h2>
+      </div>
+
+      <div id="filledForm" class="ko-progress-circle" data-progress="0">
         <div class="ko-circle">
           <div class="full ko-progress-circle__slice">
             <div class="ko-progress-circle__fill"></div>
@@ -50,11 +72,11 @@
             <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
           </div>
         </div>
-        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-        <span class="datatitle">test</span>
+        <div class="ko-progress-circle__overlay"><span class="percent fillPercent"><%= fillPercent %>%</span></div>
+        <span class="datatitle">填寫報名表</span>
       </div>
 
-      <div class="ko-progress-circle" data-progress="0">
+      <div id="sentLetter" class="ko-progress-circle" data-progress="0">
         <div class="ko-circle">
           <div class="full ko-progress-circle__slice">
             <div class="ko-progress-circle__fill"></div>
@@ -64,11 +86,11 @@
             <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
           </div>
         </div>
-        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-        <span class="datatitle">test</span>
+        <div class="ko-progress-circle__overlay"><span class="percent sendPercent"><%= sendPercent %>%</span></div>
+        <span class="datatitle">邀請推薦人x2</span>
       </div>
 
-      <div class="ko-progress-circle" data-progress="0">
+      <div id="getLetter" class="ko-progress-circle" data-progress="0">
         <div class="ko-circle">
           <div class="full ko-progress-circle__slice">
             <div class="ko-progress-circle__fill"></div>
@@ -78,15 +100,30 @@
             <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
           </div>
         </div>
-        <div class="ko-progress-circle__overlay"><span class="percent"></span></div>
-        <span class="datatitle">test</span>
+        <div class="ko-progress-circle__overlay"><span class="percent receivePercent"><%= receivePercent %>%</span></div>
+        <span class="datatitle">收到推薦信x2</span>
       </div>
+
+      <div id="completeApply" class="ko-progress-circle" data-progress="completePercent">
+        <div class="ko-circle">
+          <div class="full ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+          </div>
+          <div class="ko-progress-circle__slice">
+            <div class="ko-progress-circle__fill"></div>
+            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
+          </div>
+        </div>
+        <div class="ko-progress-circle__overlay"><span class="percent completePercent"><%= completePercent %>%</span></div>
+        <span class="datatitle">完成報名</span>
+      </div>
+      
     </div>
 
-    <div class="w3-container">
+    <div class="w3-container" style="margin-top:50px;">
       <h2>學生報名狀況</h2>
-      <div class="w3-responsive">
-        <table class="w3-table w3-striped w3-hoverable w3-card-4 w3-centered">
+      <div class="w3-responsive w3-card-4">
+        <table class="w3-table w3-striped w3-hoverable w3-centered">
           <thead>
             <tr class="w3-teal">
               <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
@@ -105,7 +142,7 @@
             <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
             <% var sentLt = student.sentLetter; %>
             <% var complete = false; %>
-            <tr>
+            <tr class="student">
               <th><%= student.displayName %></th>
               <td><%= student.email %></td>
               <td>
@@ -133,7 +170,7 @@
               <i class="fa fa-check-square-o" style="font-size:24px"></i>
               <% } %>  
               </td>
-              <td><a href="#<%= id %>">❯</a></td>
+              <td><a href="#stuid<%= student._id %>">❯</a></td>
             </tr>
             <% });%>
           </tbody>
@@ -143,11 +180,14 @@
 
     <br>
 
-    <div id="total-student-ans" class="w3-container" style="margin-top: 30px;">
+    <div id="total-student-ans" class="w3-container" style="margin-top: 50px;">
       <h2>所有學生資料</h2>
       <div class="w3-container">
-        <div class="w3-responsive">
-          <table class="w3-table w3-striped w3-hoverable w3-centered student-data">
+        <a download="student-data.xls" href="#" onclick="return ExcellentExport.excel(this, 'total-student-data', '學生資料總表');" class="w3-button w3-white w3-border w3-round-large w3-medium w3-right create-q-button"><i class="fa fa-download" style="font-size:24px"></i>下載學生資料</a>
+      </div>
+      <div class="w3-container">
+        <div class="w3-responsive w3-card-4">
+          <table id="total-student-data" class="w3-table w3-striped w3-hoverable w3-centered student-data">
             <thead class="w3-teal">
               <tr>
                 <th><p style="width: max-content;">姓名</p></th>
@@ -169,7 +209,7 @@
               <% var id = student._id; %>
               <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
               <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
-              <tr>
+              <tr id="stuid<%= student._id %>">
                 <th><p style="width: max-content;"><%= student.displayName %></p></th>
                 <% if(form.length < 1){ %>
                 <% for (i = 0; i < studentform[0].questions.length; i++) { %> 
@@ -192,13 +232,13 @@
                 <% var flag = 0; %>
                 <% data.choices.forEach(function(option){ %>
                 <% if(flag == 1){ %>
-                、</p>
+                、
                 <% }else{ %>
                 <% flag = 1; %>
                 <% } %>
-                <p style="width: max-content;"><%= option.option %>
+                <%= option.option %>
                 <% }); %>
-                </p></td>
+                </td>
                 <% } %>
 
 
@@ -227,18 +267,25 @@
                 <% var flag = 0; %>
                 <% data.choices.forEach(function(option){ %>
                 <% if(flag == 1){ %>
-                、</p>
+                、
                 <% }else{ %>
                 <% flag = 1; %>
                 <% } %>
-                <p style="width: max-content;"><%= option.option %>
+                <%= option.option %>
                 <% }); %>
                 </td>
                 <% } %>
                 <% }); %>
                 <% }); %>
                 <% } %>
-                </p><td><textarea style="width: 500px; height:100px;"></textarea></td>
+                </p>
+                <td>
+                  <% if(form.length == 0){ %>
+                  <textarea disabled style="width: 500px; height:100px;background-color: inherit;">-</textarea>
+                  <% }else{ %>
+                  <textarea class="remark-btn" style="width: 500px; height:100px;background-color: inherit;"><%= form[0].remark %></textarea>
+                  <% }%>
+                </td>
               </tr>
               <% });%>
             </tbody>
@@ -323,6 +370,8 @@
 <script>
 $(document).ready(function(){
 
+
+
   // $("#testBtn").click(function(){
   //   let url="/projects"; 
 
@@ -377,25 +426,47 @@ $(document).ready(function(){
   //     alert( "finished" );
   //   });
 
-  window.randomize = function() {
-    $('.ko-progress-circle').attr('data-progress', Math.floor(Math.random() * 100));
-    $(".percent").text($(".ko-progress-circle").attr("data-progress")+"%");
-  }
-  setTimeout(window.randomize, 200);
-  $('.ko-progress-circle').click(window.randomize);
-
-
-  document.addEventListener('keydown',function(e) {
-    switch (e.keyCode) {
-      case '37':
-        console.log("left");
-        break;
-      case '39': 
-        console.log("right");
-        break;
-    }
+  $(".remark-btn").on('change', function postinput(){
+    var value = $(this).val();
+    var student = $(this).parent().parent().attr("id").slice(5);
+    // console.log(value);
+    // console.log(student);
+    $.ajax({ 
+      url: '/projects/<%= projID %>/'+student+'/remark',
+      data: { remark: $(this).val()},
+      type: 'put'
+    }).done(function(responseData) {
+        console.log('Done: ', responseData);
+        // location.reload();
+    }).fail(function() {
+        console.log('Fail');
+    });
   });
- });
+
+  window.setsize = function() {
+    // var val = Math.floor(Math.random() * 100);
+    // $('.ko-progress-circle').attr('data-progress', val);
+    // $(".percent").text($(".ko-progress-circle").attr("data-progress")+"%");      
+
+    var fillValue = parseInt($(".fillPercent").text().slice(0,-1));
+    var sentValue = parseInt($(".sentLetter").text().slice(0,-1));
+    var getValue = parseInt($(".getLetter").text().slice(0,-1));
+    var completeValue = parseInt($(".completeApply").text().slice(0,-1));
+
+    $("#filledForm").attr('data-progress', fillValue);
+    $("#sentLetter").attr('data-progress', sentValue);
+    $("#getLetter").attr('data-progress', getValue);
+    $("#completeApply").attr('data-progress', completeValue);
+
+    // $("#filledForm .percent").text($("#filledForm").attr("data-progress")+"%");
+    // $("#sentLetter .percent").text($("#sentLetter").attr("data-progress")+"%");
+    // $("#getLetter .c").text($("#getLetter").attr("data-progress")+"%");
+    // $("#completeApply .percent").text($("#completeApply").attr("data-progress")+"%");
+    
+  }
+  // setTimeout(window.setsize(0), 0);
+  setTimeout(window.setsize(), 200);
+ 
   $("#previous-btn").click(function(){
     var nameArr = ["王小明","黃小明","張小明","江小明"];
     var gradeArr = ["50/120","48/120","51/120","49/120"];
@@ -423,22 +494,22 @@ $(document).ready(function(){
     }
   });
 
-  $(".student").click(function(e){
-    // console.log($(this).attr("id"));
-    $("#student-ans").css("display","block");
-    var id = $(this).attr("id");
-    var name = {"userid1":"王小明",
-          "userid2":"黃小明",
-          "userid3":"張小明",
-          "userid4":"江小明"
-        };
-    var grade = {"userid1":"50/120",
-      "userid2":"48/120",
-      "userid3":"51/120",
-      "userid4":"49/120"
-    };
-    $("th#name").html(name[id]);
-    $("td#grade").html(grade[id]);
+  // $(".student").click(function(e){
+  //   // console.log($(this).attr("id"));
+  //   $("#student-ans").css("display","block");
+  //   var id = $(this).attr("id");
+  //   var name = {"userid1":"王小明",
+  //         "userid2":"黃小明",
+  //         "userid3":"張小明",
+  //         "userid4":"江小明"
+  //       };
+  //   var grade = {"userid1":"50/120",
+  //     "userid2":"48/120",
+  //     "userid3":"51/120",
+  //     "userid4":"49/120"
+  //   };
+  //   $("th#name").html(name[id]);
+  //   $("td#grade").html(grade[id]);
     // $.ajax({ 
     //   url: '/projects/<%= projID %>/invite-letter',
     //   data: {title: $("#letter-title").val(), content: $("#letter-content").val()},
@@ -449,7 +520,9 @@ $(document).ready(function(){
     // }).fail(function() {
     //     console.log('Fail');
     // });
-  });
+  // });
+});
+
 </script>
      
 </body>

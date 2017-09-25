@@ -130,6 +130,7 @@ exports.projCreate = (req, res, next) => {
 };
 
 exports.projAddPost = (req, res, next) => {
+  console.log(req.body);
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
       //if (req.body.announcement.length < 1) {    //  must to filled the blank
@@ -140,7 +141,7 @@ exports.projAddPost = (req, res, next) => {
         });
         */
       //}
-
+      console.log(req.files);
       if (JSON.stringify(req.files) !== '{}') {
         const file = req.files.file;
         const stream = fs.createReadStream(file.path);
@@ -159,29 +160,32 @@ exports.projAddPost = (req, res, next) => {
         })
           .send((err, data) => {
               // delete temp file
+              //  上傳完畢或是碰到錯誤
+            if (err) {
+              console.log(err);
+            } else {
+              proj.announcement.push({
+                title: req.body.title,
+                text: req.body.text,
+                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
+                timestamp: req.body.timestamp,
+              });
+              // console.log(proj.announcement);
+            }
+            return proj.save();
             fs.unlink(file.path, (error) => {
               if (err) {
                 console.error(error);
               }
               console.log('Temp File Delete');
             });
-              //  上傳完畢或是碰到錯誤
-            if (err) {
-              console.log(err);
-            } else {
-              proj.announcement.push({
-                title: req.body.announcement.title,
-                text: req.body.announcement.text,
-                file: `https://s3.us-east-2.amazonaws.com/rmd-letter/${req.params.projID}/${file.originalFilename}`,
-                timestamp: req.body.announcement.timestamp,
-              });
-            }
           });
       } else {
         proj.announcement.push(req.body);
+        // console.log(proj.announcement);
+        return proj.save();
       }
-
-      return proj.save();
+      
     })
     .then((proj) => {
       res.send('success');
@@ -195,18 +199,22 @@ exports.projAddPost = (req, res, next) => {
 exports.projAnnouncementEdit = (req, res, next) => {
   Projects.findById(req.params.projID).exec()
     .then((proj) => {
-      if (req.body.announcement.length < 1) {    //  must to filled the blank
+      // if (req.body.announcement.length < 1) {    //  must to filled the blank
         /*
         res.render('projectEdit', {
           hbr: req.body.hbr,
           proj
         });
         */
-      }
+      // }
       proj.announcement.forEach((body, index) => {
+
+        if (body == null){
+          return;
+        }
         if (body._id == req.params.announcementID) { // must be == not ===
-          proj.announcement[index].title = req.body.announcement.title;
-          proj.announcement[index].text = req.body.announcement.text;
+          proj.announcement[index].title = req.body.title;
+          proj.announcement[index].text = req.body.text;
 
           if (JSON.stringify(req.files) !== '{}') {
             const file = req.files.file;
@@ -233,6 +241,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
                   }
                   console.log('Temp File Delete');
                 });
+
                   //  上傳完畢或是碰到錯誤
                 if (err) {
                   console.log(err);
@@ -248,7 +257,7 @@ exports.projAnnouncementEdit = (req, res, next) => {
       });
     })
     .then((proj) => {
-      res.rend('OK');  //  回到detail
+      res.send('OK');  //  回到detail
     })
     .catch((err) => {
       console.log(err);
@@ -717,7 +726,8 @@ exports.fillStudentRemark = (req, res, next) => {
       return ans.save();
     })
     .then((ans) => {
-      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+      res.send("success");
+      // res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
     })
     .catch((err) => {
       res.send(err);
@@ -731,7 +741,8 @@ exports.updateStudentRemark = (req, res, next) => {
       return ans.save();
     })
     .then((ans) => {
-      res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
+      res.send("success");
+      // res.redirect(`/projects/${req.params.projID}/${req.params.stuID}/student-form`);
     })
     .catch((err) => {
       res.send(err);
