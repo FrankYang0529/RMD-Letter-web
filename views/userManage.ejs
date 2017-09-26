@@ -57,16 +57,25 @@
 	</footer> -->
 <script>
 $("#update-profile-btn").click(function(){
+	if($("input[name=displayName]").val() == ""){
+		$("input[name=displayName]").val($("input[name=displayName]").attr('placeholder'));
+	}
+	if($("input[name=email]").val() == ""){
+		$("input[name=email]").val($("input[name=email]").attr('placeholder'));
+	}
+	if($("input[name=gravatar]").val() == ""){
+		$("input[name=gravatar]").val($("input[name=gravatar]").attr('placeholder'));
+	}
 	$.ajax({ 
-    url: '/users/me',
-    data: $("#updateProfile").serialize(),
-    type: 'put'
-  }).done(function(responseData) {
-      console.log('Done: ', responseData);
-      // location.reload();
-  }).fail(function() {
-      console.log('Fail');
-  });
+	   url: '/users/me',
+	   data: $("#updateProfile").serialize(),
+	   type: 'put'
+	 }).done(function(responseData) {
+	     console.log('Done: ', responseData);
+	     location.reload();
+	 }).fail(function() {
+	     console.log('Fail');
+	 });
 });
 
 </script>
