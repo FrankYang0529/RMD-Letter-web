@@ -341,7 +341,7 @@ exports.sentLetter = (req, res, next) => {
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
     lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
-    lt = lt.replace(/\[@教授名稱\]/g, rmdPerson.name);
+    lt = lt.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
     lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
     // mail config

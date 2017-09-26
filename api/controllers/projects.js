@@ -117,7 +117,7 @@ exports.projCreate = (req, res, next) => {
     new InviteLetter({
       projID: proj._id,
       title: `${proj.titleZh}推薦信填寫`,
-      content: '學生請老師填寫推薦信\n 謝謝!',
+      content: '[@學生名稱] 請 [@推薦人名稱]老師填寫推薦信\n謝謝!',
     }).save();
 
     new RecommendedPerson({
@@ -624,6 +624,7 @@ exports.addRmdPerson = (req, res, next) => {
         email: req.body.email,
         serviceUnit: req.body.serviceUnit,
         jobTitle: req.body.jobTitle,
+        phone: req.body.phone,
         verification: req.body.verification
       };
       // console.log(rmdPerson);

@@ -220,7 +220,10 @@
                                                 <th>
                                                     <%= question.questionTitle %></th>
                                                 <td>
-                                                    <%= answer.choices[0].option %>
+                                                        <% answer.choices.forEach( function (choice, index) { 
+                                                            if (index === 0) { %>
+                                                            <%= answer.choices[index].option %>
+                                                        <%  }}); %>
                                                 </td>
                                             </tr>
                                             <%          } else if (question.questionType == 'multiple') {  %>
@@ -245,7 +248,7 @@
                                                                 <%= question.questionTitle %>
                                                             </th>
                                                             <td class="file">
-                                                                <a href="<%= answer.file_url %>">
+                                                                <a href="<%= answer.file_url %>" target="_blank">
                                                                     <%= answer.text %>
                                                                 </a>
                                                             </td>

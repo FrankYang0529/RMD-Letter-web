@@ -130,10 +130,9 @@
                                         <% if (typeof announcement.file == 'undefined' || announcement.file <= 1) { %>
                                             <span class="insideContent">目前並無任何附加檔案</span>
                                         <% } else {
-                                            /* announcement.file =  'https://s3.us-east-2.amazonaws.com/rmd-letter/proposal_final.pdf'; */
-                                            const fileName = announcement.file.substring(announcement.file.lastIndexOf("/") + 1, announcement.file.length); 
+                                            const fileName = announcement.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/"+proj._id+"/", ""); 
                                         %>
-                                            <span class="insideContent">點此下載： </span><a href="<%= announcement.file %>"> <%= fileName %></a>
+                                            <span class="insideContent">點此下載： </span><a href="<%= announcement.file %>" download> <%= fileName %></a>
                                             <iframe src="http://docs.google.com/gview?url=<%= announcement.file %>&embedded=true" 
                                             style="width:600px; height:760px; padding-left: 50px;margin-top: 10px;" frameborder="0"></iframe>
                                         <% } %>
