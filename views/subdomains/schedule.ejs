@@ -140,15 +140,21 @@
                                                     <td><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                                                 </tr>
                                     <%          } else {            
+                                                    let filled = false;
                                                     rmdlts.forEach(function (rmdlt) {
-                                                        if (rmdlt.rmdPersonID == rmdPerson.rmdPersonID) { %>
+                                                        if (rmdlt.rmdPersonID == rmdPerson.rmdPersonID) { 
+                                                            filled = true;
+                                                        }
+                                                    });
+                                                    if (filled) {                        
+                                    %>
                                                         <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                                                 </tr>
-                                    <%                  } else {  %>
+                                    <%              } else {  %>
                                                         <td><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
                                                 </tr>
-                                    <%                  }
-                                                    });
+                                    <%              }
+                                                    
                                                 }
                                                 
                                             });
