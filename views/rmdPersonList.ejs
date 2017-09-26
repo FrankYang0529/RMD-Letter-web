@@ -49,14 +49,15 @@
           <li class="w3-bar w3-hover-light-gray">
           <!-- <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">&#062;</span> -->
           <% if(person.verification == true){%>
-          <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small">
+          <img id="<%= person._id %>" src="/img/checked-on.svg" class="w3-bar-item w3-circle w3-hide-small" style="margin-top: 20px;">
           <% }else{ %>
-          <img id="<%= person._id %>" src="/img/checked.svg" onclick="verify(id);" class="w3-bar-item w3-circle w3-hide-small">
+          <img id="<%= person._id %>" src="/img/checked.svg" onclick="verify(id);" class="w3-bar-item w3-circle w3-hide-small" style="margin-top: 20px;">
           <% } %>
           <div class="w3-bar-item">
             <span class="w3-large"><%=  person.name %></span><br>
-            <span><%=  person.serviceUnit%> - <%=person.jobTitle%></span><br>
-            <span><%=  person.phone %> - <%=  person.email%></span><br>
+            <span><%=  person.serviceUnit%>  <%=person.jobTitle%></span><br>
+            <span><i class="fa fa-phone w3-medium"></i> <%=  person.phone %>  </span><br>
+            <span><i class="fa fa-envelope w3-medium"></i> <%=  person.email%></span><br>
           </div>
           </li>
         </a>
@@ -67,8 +68,8 @@
         <% } %>
 
 
-        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-light-gray">
-          <span class="w3-bar-item w3-button w3-hover-light-gray w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
+        <a id="addRmdBtn"><li class="w3-bar w3-button w3-hover-blue-gray">
+          <span class="w3-bar-item w3-button w3-hover-blue-gray w3-xlarge w3-right"><i class="fa fa-angle-down" style="font-size:50px"></i></span>
           <img src="/img/user-3.svg" class="w3-bar-item w3-circle w3-hide-small">
           <div class="w3-bar-item">
             <span class="w3-large">新增推薦人</span><br>
@@ -79,28 +80,30 @@
       <div id="addRmdForm" class="w3-card-4"  style="display: none;">
         <form id="person" class="w3-container" style="padding: 10px;" action="/projects/<%= projID %>/rmd-person" method="post">
           <p>      
-          <label class="w3-text-blue"><b>服務單位</b></label>
+          <label class="w3-text-blue-gray"><b>服務單位</b></label>
           <input class="w3-input w3-border" name="serviceUnit" type="text"></p>
           <p>
-          <label class="w3-text-blue"><b>姓名</b></label>
+          <label class="w3-text-blue-gray"><b>姓名</b></label>
           <input class="w3-input w3-border" name="name" type="text"></p>
           <p>      
-          <label class="w3-text-blue"><b>職稱</b></label>
+          <label class="w3-text-blue-gray"><b>職稱</b></label>
           <input class="w3-input w3-border" name="jobTitle" type="text"></p>
           <p>      
-          <label class="w3-text-blue"><b>電子信箱</b></label>
+          <label class="w3-text-blue-gray"><b>電子信箱</b></label>
           <input class="w3-input w3-border" name="email" type="text"></p>
           <p>
-          <label class="w3-text-blue"><b>聯絡電話</b></label>
+          <label class="w3-text-blue-gray"><b>聯絡電話</b></label>
           <input class="w3-input w3-border" name="phone" type="text"></p>
           <p>         
-          <label class="w3-text-blue"><b>驗證</b></label>
+          <label class="w3-text-blue-gray"><b>驗證</b></label>
           <label class="switch" style="margin-top: 10px;">
             <input name="verification" type="checkbox" value="true" >
             <span class="slider round"></span>
           </label></p>
-          <p>      
-          <button form="person" class="w3-btn w3-blue w3-right" style="margin: 20px;">新增</button></p>     
+          <p>   
+          
+          <button form="person" class="w3-btn w3-padding w3-blue-gray w3-right" style="margin: 20px;"><i class="fa fa-male fa-fw w3-margin-right" style="font-size: 20px;"></i>新增</button>
+          </p>     
         </form>
       </div>
     </div>

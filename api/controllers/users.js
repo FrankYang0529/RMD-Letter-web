@@ -105,7 +105,8 @@ exports.updateProfile = function (req, res, next) {
 
   req.user.save()
     .then(function (user) {
-      res.redirect('/users/me');
+      res.send("success");
+      // res.redirect('/users/me');
     })
     .catch(function (err) {
       console.log(err);

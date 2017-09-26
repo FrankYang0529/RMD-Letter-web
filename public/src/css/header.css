@@ -19,8 +19,8 @@ header{
   width: 100%;
   top: 0;
   left: 0;
-  background-color: #DCDCDC;
-  /*background-color: rgba(255,255,255,0.5);*/
+  /*background-color: #DCDCDC;*/
+  background-color: rgba(0,0,0,0.5);
   z-index: 5;
 }
 
@@ -67,16 +67,18 @@ header .navbar #user img{
 }	
 
 header .navbar a:hover, .offcanvas a:focus{
-  color: #7C7D7F;    
+  /*color: #7C7D7F;    */
+  color: white;
 }
 
 header .navbar a#user:hover, .offcanvas a:focus{
-  border: 1px solid #7C7D7F;
+  /*border: 1px solid #7C7D7F;*/
+  border: 1px solid white;
 }
 
 header .navbar a#user:hover img, .offcanvas a:focus img{
 	height: 20px;
-	content: url("/../img/user-hover.svg");
+	content: url("/../img/user-hover-white.svg");
 }
 
 footer{

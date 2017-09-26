@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/css/menu.css">
 	<link rel="stylesheet" type="text/css" href="/css/content.css">
 	<link rel="stylesheet" type="text/css" href="/css/form.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/js/menu.js"></script>
 </head>
@@ -36,16 +37,16 @@
 		<h1 id="title">帳戶管理</h1>
 		<div class="w3-container form">
 		  <div class="w3-card-4">
-		  	<form action="/users/me" method="put">
+		  	<form id="updateProfile">
 			    <div class="w3-container">
-			      <h2><input class="w3-input" type="text" placeholder='<%= name %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= name %>'"></h2>
+			      <h2><input class="w3-input" type="text" name="displayName"  placeholder='<%= name %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= name %>'"></h2>
 		 	      <label>使用者帳號</label>
-			      <input class="w3-input" type="text" placeholder='<%= username %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= username %>'">
+			      <input class="w3-input" type="text" name="username" placeholder='<%= username %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= username %>'" disabled>
 			      <label>e-mail</label>
-			      <input class="w3-input" type="e-mail" placeholder='<%= email %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= email %>'">
+			      <input class="w3-input" type="e-mail" name="email" placeholder='<%= email %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= email %>'">
 			      <label>gravitar</label>  
-			      <input class="w3-input" type="url" value="https://www.npmjs.com/package/gravatar" placeholder='<%= gravatar %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= gravatar %>'">
-			      <button class="w3-btn w3-blue-grey submit">儲存修改</button>
+			      <input class="w3-input" type="url" name="gravatar" placeholder='<%= gravatar %>' onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= gravatar %>'">
+			      <button id="update-profile-btn" class="w3-btn w3-padding w3-blue-gray w3-right" style="margin: 20px;"><i class="fa fa-save fa-fw w3-margin-right" style="font-size: 20px;"></i>儲存修改</button>
 			    </div>
 			  </form>
 		  </div>
@@ -54,6 +55,21 @@
 <!-- 	<footer>
 	  <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 	</footer> -->
-     
+<script>
+$("#update-profile-btn").click(function(){
+	$.ajax({ 
+    url: '/users/me',
+    data: $("#updateProfile").serialize(),
+    type: 'put'
+  }).done(function(responseData) {
+      console.log('Done: ', responseData);
+      // location.reload();
+  }).fail(function() {
+      console.log('Fail');
+  });
+});
+
+</script>
+
 </body>
 </html> 
