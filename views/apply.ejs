@@ -126,7 +126,7 @@
       <div class="w3-responsive w3-card-4">
         <table class="w3-table w3-striped w3-hoverable w3-centered">
           <thead>
-            <tr class="w3-teal">
+            <tr class="w3-blue-grey">
               <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
               <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
               <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
@@ -189,17 +189,18 @@
       <div class="w3-container">
         <div class="w3-responsive w3-card-4">
           <table id="total-student-data" class="w3-table w3-striped w3-hoverable  student-data">
-            <thead class="w3-teal">
+            <thead class="w3-blue-grey">
               <tr>
                 <th><p style="width: max-content;">姓名</p></th>
                 <% studentform.forEach(function(form){ %>
                 <% form.questions.forEach(function(q){ %>
-                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <th><p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
                 <% });%>
                 <% });%>
+                <th><p style="width: max-content;">推薦人姓名</p></th>
                 <% letterform.forEach(function(form){ %>
                 <% form.questions.forEach(function(q){ %>
-                <th><p style="width: max-content;"><%= q.questionTitle %></p></th>
+                <th><p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
                 <% });%>
                 <% });%>
                 <th>備註</th>
@@ -208,13 +209,15 @@
             <tbody>
               <% students.forEach(function(student) {%>
               <% var id = student._id; %>
+              <% var rmdPerson = student.sentLetter %>
+              <% var ltCount = student.sentLetter.length %>
               <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
               <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
               <tr id="stuid<%= student._id %>">
-                <th><p style="width: max-content;"><%= student.displayName %></p></th>
+                <th rowspan="<%= ltCount %>"><p style="width: max-content;"><%= student.displayName %></p></th>
                 <% if(form.length < 1){ %>
                 <% for (i = 0; i < studentform[0].questions.length; i++) { %> 
-                <td></td>
+                <td rowspan="<%= ltCount %>"></td>
                 <% } %>
                 <% }else{ %>
                 <% form.forEach(function(element){ %>                
@@ -223,13 +226,13 @@
                 <%   return q._id == data.question_id; %>
                 <% }); %>
                 <% if( target.questionType == "text"){ %>
-                <td><p style="width: 100px;"><%= data.text %></p></td>
+                <td rowspan="<%= ltCount %>"><p style="width: 150px;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
-                <td><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
+                <td rowspan="<%= ltCount %>"><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
-                <td><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
+                <td rowspan="<%= ltCount %>"><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
                 <% }else{ %>
-                <td>
+                <td rowspan="<%= ltCount %>">
                 <% var flag = 0; %> 
                 <% data.choices.forEach(function(option){ %>
                 <% if(flag == 1){ %>
@@ -247,19 +250,41 @@
                 <% } %>
 
                 <% if(letters.length < 1){ %>
-                <% for (i = 0; i < letterform[0].questions.length; i++) { %> 
+                <% for (i = 0; i <= letterform[0].questions.length; i++) { %> 
                 <td></td>
+
                 <% } %>
+                <td rowspan="<%= ltCount %>">
+                  <% if(form.length == 0){ %>
+                  <textarea disabled style="width: 500px; height:200px;background-color: inherit;">-</textarea>
+                  <% }else{ %>
+                  <textarea class="remark-btn" style="width: 500px; height:200px;background-color: inherit;"><%= form[0].remark %></textarea>
+                  <% }%>
+                </td>
+              </tr>
                 <% }else{ %>
-                <% letters.forEach(function(element){ %>                
+                
+                <% var ltIndex = 0; %>
+                <% letters.forEach(function(element){ %>
+
+                <% var person = rmdPerson.find(function(e){return e.rmdPersonID == element.rmdPersonID});%>
+                
+                <% ltIndex = ltIndex + 1; %>
+                <% if(ltIndex == 1) { %>
+                
+                <td><%= person.rmdPersonName %></td>
+
+                <% }else{ %>
+                <tr><td><%= person.rmdPersonName %></td>
+                <% } %>
                 <% element.answers.forEach(function(data){ %>
-                <% var target = studentform[0].questions.find(function(q) { %>
+                <% var target = letterform[0].questions.find(function(q) { %>
                 <%   return q._id == data.question_id; %>
                 <% }); %>
                 <% if( target.questionType == "text"){ %>
-                <td><p style="width: max-content; word-wrap: break-word;overflow-wrap: break-word;"><%= data.text %></p></td>
+                <td><p style="width: 150px; word-wrap: break-word;overflow-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
-                <td><p style="width: max-content;word-wrap: break-word;overflow-wrap: break-word;"><%= data.text %></p></td>
+                <td><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
                 <td><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
                 <% }else{ %>
@@ -276,17 +301,24 @@
                 </td>
                 <% } %>
                 <% }); %>
-                <% }); %>
-                <% } %>
-                </p>
-                <td>
+
+                <% if(ltIndex != 1) { %>
+                </tr>
+                <% }else{ %>
+                <td rowspan="<%= ltCount %>">
                   <% if(form.length == 0){ %>
-                  <textarea disabled style="width: 500px; height:100px;background-color: inherit;">-</textarea>
+                  <textarea disabled style="width: 500px; height:200px;background-color: inherit;">-</textarea>
                   <% }else{ %>
-                  <textarea class="remark-btn" style="width: 500px; height:100px;background-color: inherit;"><%= form[0].remark %></textarea>
+                  <textarea class="remark-btn" style="width: 500px; height:200px;background-color: inherit;"><%= form[0].remark %></textarea>
                   <% }%>
                 </td>
               </tr>
+
+                <% } %>
+                <% }); %>
+                <% } %>
+                
+                
               <% });%>
             </tbody>
           </table>

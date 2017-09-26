@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/content.css">
   <link rel="stylesheet" type="text/css" href="/css/form.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -85,10 +85,10 @@
               <hr>
               <label>發布報名網站</label>
               <label class="switch">
-                <% if(project.isDeployed == "true"){ %>
-                  <input type="checkbox" id="deployed" checked>
+                <% if(project.isDeployed == true){ %>
+                  <input type="checkbox" id="deployed" checked disabled="disabled">
                 <% }else{ %>
-                  <input type="checkbox" id="deployed" >
+                  <input type="checkbox" id="deployed">
                 <% } %>
                 <span class="slider round"></span>
               </label>
@@ -120,7 +120,7 @@
     	        <div class="w3-container">
     	        	<textarea id="newPostContent" form="announce-create" name="text" class="w3-input w3-text-grey w3-opacity w3-border-top" style="height: 400px; outline: none;">公告內容</textarea>
                 <input type="file" id="file" name="file">
-    			    	<div form="announce-create" id="announce-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin: 20px;">新增 ❯</div>
+    			    	<div form="announce-create" id="announce-btn" class="w3-btn w3-padding w3-blue-gray w3-right" style="width:120px; margin: 20px;">新增 ❯</div>
     	        </div>
             </form>
           </div>
@@ -169,7 +169,8 @@
                 <% }else{ %>
                 <input type="file" id="file<%= post._id %>" name="file">
                 <% } %>
-                <div id="btn<%= post._id %>" form="update-post" class="w3-btn w3-padding w3-grey w3-right announce-edit-btn" style=" margin: 20px; padding: auto 10px;"><i class="fa fa-floppy-o fa-fw w3-margin-right" style="font-size: 18px;"></i>儲存修改</div>
+                <div id="btn<%= post._id %>" form="update-post" class="w3-btn w3-padding w3-blue-grey w3-right announce-edit-btn" style=" margin: 20px; "><i class="fa fa-floppy-o fa-fw w3-margin-right w3-text-white" style="font-size: 18px;"></i>儲存修改</div>
+
               </div>
               <hr>
             </div>
@@ -386,6 +387,7 @@
         type: 'get'
       }).done(function(responseData) {
           console.log('Done'/*, responseData*/);
+          location.reload();
       }).fail(function() {
           console.log('Fail');
       });

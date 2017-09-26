@@ -46,17 +46,9 @@
 
             td {
                 border-right: 2px solid #ddd;
-                border-top: 2px solid #ddd !important;    
-            }
-
-            pre {
-                font-family: Microsoft JhengHei !important;
-                background-color: white;
-                border: none;
-                border-radius: none;
-                font-size: 14px;
-                padding: 0px;
-                margin-bottom: 0;
+                border-top: 2px solid #ddd !important;  
+                word-wrap: break-word;
+                overflow-wrap: break-word;  
             }
 
             .btn-student {
@@ -95,7 +87,6 @@
                         cancelButtonColor: '#d33',
                         confirmButtonText: '是, 送出!'
                     }).then(function () {
-
                         $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
                             let answer = [];
                             const BreakException = {};
@@ -138,7 +129,8 @@
                                         });
                                     }
                                 });
-
+                                console.log('aaaa');
+                                
 
 
                                 $.ajax({
@@ -166,6 +158,9 @@
                                                 },
                                             );
                                     },
+                                    error: (err) => {
+                                        console.log(err);
+                                    }
                                 });
                             } catch (e) { //  required missing
                                 if (e !== BreakException) throw e;
@@ -211,8 +206,12 @@
                                         <tr>
                                             <th>
                                                 <%= question.questionTitle %></th>
-                                            <td style="word-wrap: break-word; overflow-wrap: break-word;">
-                                                    <%= answer.text %>
+                                            <td>
+                                                    <p style=" white-space: pre-wrap;
+                                                    white-space: -moz-pre-wrap;    
+                                                    white-space: -pre-wrap;  
+                                                    white-space: -o-pre-wrap;    
+                                                    word-wrap: break-word;"><%= answer.text %></p>
                                             </td>
                                         </tr>
                                         <%          } else if (question.questionType == 'single') { %>
