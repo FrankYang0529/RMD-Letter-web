@@ -142,7 +142,7 @@
               </h6>
               <p><%= post.text %></p>
               <% if(post.file !=""){ %>
-              <p><i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i><a href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/<%= projID %>/", "") %></a></p>
+              <p><i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i><a href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/"+projID+"/", "") %></a></p>
               <% } %>
               <hr>
             </div>
@@ -163,7 +163,7 @@
                 <p>
                   <i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i>
                   <input type="file" id="file<%= post._id %>" name="file" style="display:none;" value="<%= post.file %>">
-                  <a id="oldfile<%= post._id %>" href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/<%= projID %>/", "") %> </a>
+                  <a id="oldfile<%= post._id %>" href="<%= post.file %>"><%= post.file.replace("https://s3.us-east-2.amazonaws.com/rmd-letter/"+projID+"/", "") %> </a>
                   <i class="fa fa-remove fa-fw w3-margin-right w3-text-gray w3-hover-white remove-file" style="font-size: 12px;" onclick="$('#file<%= post._id %>').css('display', 'inline'); $('#oldfile<%= post._id %>').remove(); $(this).css('display','none');" ></i>
                 </p>
                 <% }else{ %>
