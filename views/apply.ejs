@@ -40,11 +40,12 @@
   <div id="content" class="apply open">
     <h1 id="title">報名管理</h1>
 
+
     <div class="circle-parent">
       <% var totalStudent = students.length; %>
-      <% var fillForm = studentdata.length %>
-      <% var sendLetter = students.filter( function(item){return (item.sentLetter==2);} ).length; %>
-      <% var receiveLetter = lettercontent.length %>
+      <% var fillForm = studentdata.length; %>
+      <% var sendLetter = students.filter( function(item){return (item.sentLetter.length>=2);} ).length; %>
+      <% var receiveLetter = lettercontent.length; %>
 
       <% if (totalStudent == 0){ %>
       <% var fillPercent = 0;  %>
@@ -251,7 +252,7 @@
                 <td></td>
                 <% } %>
                 <% }else{ %>
-                <% letter.forEach(function(element){ %>                
+                <% letters.forEach(function(element){ %>                
                 <% element.answers.forEach(function(data){ %>
                 <% var target = studentform[0].questions.find(function(q) { %>
                 <%   return q._id == data.question_id; %>
@@ -294,74 +295,6 @@
       </div>
     </div>
 
-    <% var name = {"userid1":"王小明","userid2":"黃小明","userid3":"張小明","userid4":"江小明"}; %>    
-    <div id="student-ans" class="w3-container" style="margin-top: 30px; display: none;">
-      <h2>詳細資料</h2>
-      <div class="w3-card-4">
-        <table class="w3-table w3-striped">
-          <thead>
-            <tr class="w3-light-grey">
-              <th>姓名</th>
-              <th id="name"><%= name["userid2"] %></th>
-              <th>畢業學校</th>
-              <th>成大資訊</th>
-            </tr>
-          </thead>
-            <tr>
-              <td>電話</td>
-              <td>06-2757575</td>
-              <td>手機</td>
-              <td>0911222333</td>
-            </tr>
-            <tr>
-              <td>地址</td>
-              <td colspan="3">台南市東區大學路1號</td>
-            </tr>
-            <tr>
-              <td>e-mail</td>
-              <td colspan="3">abcde@gmail.com</td>
-            </tr>
-            <tr>
-              <td>在學成績</td>
-              <td>王大明</td>
-              <td>系所排名</td>
-              <td>成大資訊</td>
-            </tr>
-            <tr>
-              <td>在學成績</td>
-              <td>89.4</td>
-              <td>系所排名</td>
-              <td id="grade">50/120</td>
-            </tr>
-            <tr>
-              <td colspan="2">推薦信1</td>
-              <td>推薦人1</td>
-              <td>王小明</td>
-            </tr>
-            <tr>
-              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容1</td>
-            </tr>
-            <tr>
-              <td colspan="2">推薦信2</td>
-              <td>推薦人2</td>
-              <td>王鐘銘</td>
-            </tr>
-            <tr>
-              <td colspan="4">推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容推薦信內容2</td>
-            </tr>
-            <tr>
-              <td colspan="1">備註</td>
-              <td colspan="3"><input type="text"></td>
-            </tr>
-        </table>
-        <p></p>
-      </div>
-      <div class="w3-bar" style="margin-top: 50px;">
-        <button id="previous-btn" class="w3-button w3-left w3-light-gray w3-hover-teal">&laquo; Previous</button>
-        <button id="next-btn" class="w3-button w3-right w3-light-gray w3-hover-teal">Next &raquo;</button>
-      </div>
-    </div>
-
   </div>
 <!--   <footer>
     <div>Icons made by <a href="https://www.flaticon.com/authors/zurb" title="Zurb">Zurb</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -369,62 +302,6 @@
 
 <script>
 $(document).ready(function(){
-
-
-
-  // $("#testBtn").click(function(){
-  //   let url="/projects"; 
-
-  //   fetch(url)
-  //   .then(res => res.json())
-  //   .then((out) => {
-  //     console.log('Checkout this JSON! ', out);
-  //   })
-  //   .catch(err => console.error(err));
-
-  // });
-
-  // $("#testBtn").click(function(){
-  //   $.ajax({
-  //       url: '/projects',
-  //       type: "GET",
-  //       dataType: "jsonp",
-  //       async: false,
-  //       success: function(msg)  {
-  //           JsonpCallback(msg);
-  //       },
-  //       error: function()  {
-  //           ErrorFunction();
-  //       }
-  //   });
-  // });
-
-  // function JsonpCallback(json)  {
-  //     document.getElementById('summary').innerHTML = json.result;
-  // }
-
-  // $.get( "/projects", function( data ) {
-  //   $("#summary").html( data );
-  //   alert( "Load was performed." );
-  // });
-
-  // $.get( "/projects", function(data) {
-  //   //alert( "success");
-  //   console.log($("#summary").text());
-  //   console.log("data", data);
-  //   data.forEach(function(element){
-  //     console.log(element.ownerID);
-  //   });
-  // })
-  //   .done(function() {
-  //     alert( "second success" );
-  //   })
-  //   .fail(function() {
-  //     alert( "error" );
-  //   })
-  //   .always(function() {
-  //     alert( "finished" );
-  //   });
 
   $(".remark-btn").on('change', function postinput(){
     var value = $(this).val();
@@ -443,84 +320,21 @@ $(document).ready(function(){
     });
   });
 
-  window.setsize = function() {
-    // var val = Math.floor(Math.random() * 100);
-    // $('.ko-progress-circle').attr('data-progress', val);
-    // $(".percent").text($(".ko-progress-circle").attr("data-progress")+"%");      
+  window.setsize = function() {    
 
     var fillValue = parseInt($(".fillPercent").text().slice(0,-1));
-    var sentValue = parseInt($(".sentLetter").text().slice(0,-1));
-    var getValue = parseInt($(".getLetter").text().slice(0,-1));
-    var completeValue = parseInt($(".completeApply").text().slice(0,-1));
+    var sentValue = parseInt($(".sendPercent").text().slice(0,-1));
+    var getValue = parseInt($(".receivePercent").text().slice(0,-1));
+    var completeValue = parseInt($(".completePercent").text().slice(0,-1));
 
     $("#filledForm").attr('data-progress', fillValue);
     $("#sentLetter").attr('data-progress', sentValue);
     $("#getLetter").attr('data-progress', getValue);
     $("#completeApply").attr('data-progress', completeValue);
-
-    // $("#filledForm .percent").text($("#filledForm").attr("data-progress")+"%");
-    // $("#sentLetter .percent").text($("#sentLetter").attr("data-progress")+"%");
-    // $("#getLetter .c").text($("#getLetter").attr("data-progress")+"%");
-    // $("#completeApply .percent").text($("#completeApply").attr("data-progress")+"%");
     
   }
-  // setTimeout(window.setsize(0), 0);
   setTimeout(window.setsize(), 200);
- 
-  $("#previous-btn").click(function(){
-    var nameArr = ["王小明","黃小明","張小明","江小明"];
-    var gradeArr = ["50/120","48/120","51/120","49/120"];
 
-    var studentName = $("th#name").html();
-    var index = nameArr.findIndex(function(element){
-      return element == studentName;
-    });
-    if(index > 0){
-      $("th#name").html(nameArr[index-1]);
-      $("td#grade").html(gradeArr[index-1]);
-    }
-  });
-
-  $("#next-btn").click(function(){
-    var nameArr = ["王小明","黃小明","張小明","江小明"];
-    var gradeArr = ["50/120","48/120","51/120","49/120"];
-    var studentName = $("th#name").html();
-    var index = nameArr.findIndex(function(element){
-      return element == studentName;
-    });
-    if(index < nameArr.length-1){
-      $("th#name").html(nameArr[index+1]);
-      $("td#grade").html(gradeArr[index+1]);
-    }
-  });
-
-  // $(".student").click(function(e){
-  //   // console.log($(this).attr("id"));
-  //   $("#student-ans").css("display","block");
-  //   var id = $(this).attr("id");
-  //   var name = {"userid1":"王小明",
-  //         "userid2":"黃小明",
-  //         "userid3":"張小明",
-  //         "userid4":"江小明"
-  //       };
-  //   var grade = {"userid1":"50/120",
-  //     "userid2":"48/120",
-  //     "userid3":"51/120",
-  //     "userid4":"49/120"
-  //   };
-  //   $("th#name").html(name[id]);
-  //   $("td#grade").html(grade[id]);
-    // $.ajax({ 
-    //   url: '/projects/<%= projID %>/invite-letter',
-    //   data: {title: $("#letter-title").val(), content: $("#letter-content").val()},
-    //   type: 'put'
-    // }).done(function(responseData) {
-    //     console.log('Done: ', responseData);
-    //     location.reload();
-    // }).fail(function() {
-    //     console.log('Fail');
-    // });
-  // });
 });
 
 </script>
