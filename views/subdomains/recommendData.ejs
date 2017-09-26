@@ -67,19 +67,11 @@
                 border: 2px solid #ddd;
             }
 
-            pre {
-                font-family: Microsoft JhengHei !important;
-                background-color: white;
-                border: none;
-                border-radius: none;
-                font-size: 14px;
-                padding: 0px;
-                margin-bottom: 0;
-            }
-
             td {
                 border-right: 2px solid #ddd;
                 border-top: 2px solid #ddd !important;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
         </style>
 
@@ -154,7 +146,7 @@
                                 } else if (td.hasClass('file')) {
                                     content = td.children('a').attr('href');
                                 } else if (td.hasClass('area')) {
-                                    content = td.children('pre').html();
+                                    content = td.children('p').html();
                                 }else {
                                     content = td.html();
                                 }
@@ -229,7 +221,11 @@
                                                                                         <%= question.questionTitle %>
                                                                                     </th>
                                                                                     <td class="area">
-                                                                                        <pre><%= answer.text %></pre>
+                                                                                        <p style=" white-space: pre-wrap;
+                                                                                        white-space: -moz-pre-wrap;    
+                                                                                        white-space: -pre-wrap;  
+                                                                                        white-space: -o-pre-wrap;    
+                                                                                        word-wrap: break-word;"><%= answer.text %></p>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <%          } else if (question.questionType == 'single') { %>

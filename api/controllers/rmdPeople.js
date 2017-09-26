@@ -60,14 +60,3 @@ exports.fillIn = (req, res, next) => {
     return res.send('done');
   });
 };
-
-exports.updateAns = (req, res, next) => {
-  RmdLtFormAnswer.findOne({ stuID: req.params.stuID, projID: req.params.projID, rmdPersonID: req.params.rmdPersonID }).exec()
-  .then((answers) => {
-    answers.answers = JSON.parse(req.body.answers);
-    answers.save();
-  })
-  .catch((err) => {
-    res.send(err);
-  });
-};

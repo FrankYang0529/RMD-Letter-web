@@ -254,11 +254,11 @@
                 <% }else{ %>
                 <% letters.forEach(function(element){ %>                
                 <% element.answers.forEach(function(data){ %>
-                <% var target = studentform[0].questions.find(function(q) { %>
+                <% var target = letterform[0].questions.find(function(q) { %>
                 <%   return q._id == data.question_id; %>
                 <% }); %>
                 <% if( target.questionType == "text"){ %>
-                <td><p style="width: max-content;><%= data.text %></p></td>
+                <td><p style="width: max-content;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
                 <td><p style="width:500px;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
