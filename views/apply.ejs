@@ -226,7 +226,7 @@
                 <% }else if(target.questionType == "textArea"){ %>
                 <td><p style="width:500px;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
-                <td><a href="<%= data.file_url %>"><%= data.file_url %></a></td>
+                <td><a href="<%= data.file_url %>"><%= data.text %></a></td>
                 <% }else{ %>
                 <td>
                 <% var flag = 0; %>
