@@ -188,7 +188,7 @@
       </div>
       <div class="w3-container">
         <div class="w3-responsive w3-card-4">
-          <table id="total-student-data" class="w3-table w3-striped w3-hoverable w3-centered student-data">
+          <table id="total-student-data" class="w3-table w3-striped w3-hoverable  student-data">
             <thead class="w3-teal">
               <tr>
                 <th><p style="width: max-content;">姓名</p></th>
@@ -223,14 +223,14 @@
                 <%   return q._id == data.question_id; %>
                 <% }); %>
                 <% if( target.questionType == "text"){ %>
-                <td><p style="width: max-content;"><%= data.text %></p></td>
+                <td><p style="width: 100px;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
-                <td><p style="width:500px;"><%= data.text %></p></td>
+                <td><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
                 <td><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
                 <% }else{ %>
                 <td>
-                <% var flag = 0; %>
+                <% var flag = 0; %> 
                 <% data.choices.forEach(function(option){ %>
                 <% if(flag == 1){ %>
                 、
@@ -241,7 +241,6 @@
                 <% }); %>
                 </td>
                 <% } %>
-
 
                 <% }); %>
                 <% }); %>
@@ -258,9 +257,9 @@
                 <%   return q._id == data.question_id; %>
                 <% }); %>
                 <% if( target.questionType == "text"){ %>
-                <td><p style="width: max-content;><%= data.text %></p></td>
+                <td><p style="width: max-content; word-wrap: break-word;overflow-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
-                <td><p style="width:500px;"><%= data.text %></p></td>
+                <td><p style="width: max-content;word-wrap: break-word;overflow-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
                 <td><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
                 <% }else{ %>
