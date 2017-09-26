@@ -254,6 +254,8 @@ function updateStudentForm() {
 }
 
 function sendLetter(rmdPersonID) {
+  console.log('send: '+ rmdPersonID);
+
   $.get('/projects/student-form-answer', (data) => {
     if (data === null) {
       swal({
