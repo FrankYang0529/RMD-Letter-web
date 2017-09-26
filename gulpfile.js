@@ -22,7 +22,10 @@ gulp.task('hello', function(){
 gulp.task('watch', function () {
   gulp.watch('public/src/js/*.js', ['minify-js']);
   gulp.watch('public/src/css/*.css', ['minify-css']);
-  gulp.watch('public/src/img/*', ['minify-img']);  
+  gulp.watch('public/src/img/*', ['minify-img']);
+  gulp.watch('public/src/subdomain/js/*.js', ['minify-sub-js']);
+  gulp.watch('public/src/subdomain/css/*.css', ['minify-sub-css']);
+  gulp.watch('public/src/subdomain/img/*', ['minify-img-sub']);   
 });
 
 gulp.task('minify-js', function (cb) {
