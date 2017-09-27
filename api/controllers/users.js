@@ -5,18 +5,7 @@ const Promise = require('bluebird');
 //    not api
 
 exports.index = function (req, res, next) {
-  res.format({
-    default: () => {
-      //TODO
-      res.render('projectList', {
-        log: 'logout',
-        username: req.user.username,
-        name: req.user.displayName,
-        gravatar: req.user.gravatar,
-        email: req.user.email
-      });
-    }
-  });
+  res.redirect('/users/me');
 };
 
 exports.login = function (req, res, next) {
