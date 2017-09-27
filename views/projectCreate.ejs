@@ -18,6 +18,7 @@
 
 <header>
   <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+  <span style="color:black; padding-left: 45px; font-size:large; position:relative; top:60px;">Welcome, <%= username %></span>
   <div class="navbar">
     <a href=""><img src="/img/black-mail.svg"/></a>
     <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
@@ -26,6 +27,7 @@
 
   <div id="menu" class="sidenav" style="width: 250px;">
     <span class="close" onclick="toggleNav()">&#9776;</span>
+    <span style="color:white; padding-left: 45px; font-size:large; top:60px;">Welcome, <%= username %></span>
     <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
     <a href="/projects" id="prjList" onclick="clickMenu(id);"><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
     <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 

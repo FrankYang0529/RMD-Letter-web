@@ -20,6 +20,7 @@ exports.createPage = (req, res, next) => {
     body: '',
     error: '',
     subdomainName: '',
+    username: req.user.displayName
   });
 };
 
@@ -57,7 +58,7 @@ exports.projectList = (req, res, next) => {
         default: () => {
           /* TODO*/
           res.render('projectList', {
-            username: req.user.username,
+            username: req.user.displayName,
             projects: projs
           });
           
@@ -78,6 +79,7 @@ exports.projDetail = (req, res, next) => {
         // },
         default: () => {
           res.render('projectEdit', {
+            username: req.user.displayName,
             project: proj,
             projID: req.params.projID
           });
@@ -475,13 +477,15 @@ exports.stuFormDetail = (req, res, next) => {
         default: () => {
           if (form == null){
             res.render('studentFormCreate', {
-              projID: req.params.projID
+              projID: req.params.projID,
+              username: req.user.displayName
             });
           }
           else{
             res.render('studentForm', {
               form,
-              projID: req.params.projID
+              projID: req.params.projID,
+              username: req.user.displayName
             });
           }
         },
@@ -534,14 +538,16 @@ exports.rmdLtFormDetail = (req, res, next) => {
         if (form == null){
           res.render('rmdFormCreate', {
             letter,
-            projID: req.params.projID
+            projID: req.params.projID,
+            username: req.user.displayName
           });
         }
         else{
           res.render('rmdForm', {
             form,
             letter,
-            projID: req.params.projID
+            projID: req.params.projID,
+            username: req.user.displayName
           });
         }
       },
@@ -626,7 +632,8 @@ exports.rmdPersonList = (req, res, next) => {
            // TODO
           res.render('rmdPersonList', {
             personList,
-            projID: req.params.projID
+            projID: req.params.projID,
+            username: req.user.displayName
           });
         },
       });
@@ -696,6 +703,7 @@ exports.studentList = (req, res, next) => {
     res.format({
       default: () => {
         res.render('apply', {
+          username: req.user.displayName,
           projID: req.params.projID,
           students,
           studentform,
