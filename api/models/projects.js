@@ -17,6 +17,7 @@ const Projects = new Schema({
   phone: String,
   startTime: Date,
   endTime: Date,
+  rmdTime: Date,
   subdomainName: { type: String, required: true, unique: true },
   isDeployed: Boolean,
 });

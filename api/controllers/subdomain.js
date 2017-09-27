@@ -338,17 +338,21 @@ exports.sentLetter = (req, res, next) => {
 
   return Promise.join(b, c, (letter, rmdPersonList) => {
     let lt = letter.content;
+    let title = letter.title;
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
     lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
     lt = lt.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
+    title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
+    title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
     lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
+
 
     // mail config
     const mailOptions = {
       from: 'j70915@gmail.com',
       to: rmdPerson.email,
-      subject: letter.title,
+      subject: title,
       text: lt,
     };
     console.log('send success');

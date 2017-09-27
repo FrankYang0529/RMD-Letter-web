@@ -109,6 +109,7 @@ exports.projCreate = (req, res, next) => {
     phone: req.body.phone,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
+    rmdTime: req.body.rmdTime,
     subdomainName: req.body.subdomainName,
     isDeployed: false,
   }).save((err, proj) => { //  存入db
@@ -374,6 +375,29 @@ exports.projDeadlineEdit = (req, res, next) => {
       proj.startTime = req.body.startTime;
       proj.endTime = req.body.endTime;
 
+      return proj.save();
+    })
+    .then((proj) => {
+      res.send('success');
+      // res.redirect(`/projects/${proj._id}`);  //  回到detail
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.projRMDTimeEdit = (req, res, next) => {
+  Projects.findById(req.params.projID).exec()
+    .then((proj) => {
+      if (req.body.rmdTime.length < 1) {    //  must to filled the blank
+        /*
+        res.render('projectEdit', {
+          titleZh: req.body.TitleZh,
+          proj
+        });
+        */
+      }
+      proj.rmdTime = req.body.rmdTime;
       return proj.save();
     })
     .then((proj) => {
