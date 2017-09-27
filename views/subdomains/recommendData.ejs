@@ -26,33 +26,87 @@
 
 <body>
     <div class="wrapper" style=" height:100%; width:100%;">
-        <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <h1>
-                        <%= proj.titleZh %>
-                    </h1>
-                </div>
+            <nav class="navbar navbar-default navbar-fixed-top" style="background: #93B1C6; height: 88px;">
+                    <div class="container-fluid">
+                      <!-- Brand and toggle get grouped for better mobile display -->
+                      <%
+                      function addDays(theDate, days) {
+                        return new Date(theDate.getTime() + days*24*60*60*1000);
+                      }
+                    
+                      const endTime = addDays(proj.endTime, 1);          
+                      %>
+                      <div class="navbar-header">
+                        <h1><%= proj.titleZh %></h1>
+                      </div>
+                  
+                        <ul class="nav navbar-nav navbar-right">
+                                <% if ( typeof user == 'undefined' ) { %>
+                                    <li><a href="/users/login">登入</a> </li>
+                                    <%   if (endTime > new Date()) { %>
+                                        <li><a href="/users">註冊</a> </li>
+                                    <% } %>
+                                            <li><a href="#" onclick="intro()">使用說明</a></li>
+                                            <li><a href="#" onclick="contact()">連絡我們</a></li>
+                                <% } else { %>
+                                    <li id="display-name"><%= user.displayName %>， 您好</li>
+                                    <li><a href="/users/logout">登出</a> </li>
+                                    <%   if (endTime > new Date()) { %>
+                                        <li><a href="/users/me">個人資料</a> </li>
+                                    <%   }  %>
+                                            <li><a href="#" onclick="intro()">使用說明</a></li>
+                                            <li><a href="#" onclick="contact()">連絡我們</a></li>
+                                <% } %>
 
-                <ul class="nav navbar-nav navbar-right">
-                    <% if ( typeof user == 'undefined' ) { %>
-                        <li><a href="/users/login">登入</a> </li>
-                        <li><a href="/users">註冊</a> </li>
-                        <li><a href="#" onclick="intro()">使用說明</a></li>
-                        <li><a href="#" onclick="contact()">連絡我們</a></li>
-                        <% } else { %>
-                            <li id="display-name">
-                                <%= user.displayName %>， 您好</li>
-                            <li><a href="/users/logout">登出</a> </li>
-                            <li><a href="/users/me">個人資料</a> </li>
-                            <li><a href="#" onclick="intro()">使用說明</a></li>
-                            <li><a href="#" onclick="contact()">聯絡我們</a></li>
-                            <% } %>
-
-                </ul>
-            </div>
-        </nav>
+                        </ul>
+                    </div>
+                  </nav>
+                  
+        <div style="padding-top: 88px;">
+                <% if ( typeof user != 'undefined' ) { %>
+                    <nav class="navbar navbar-default operater-navbar" style="background: white;">
+                        <div class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
+                                
+                                <%   if (endTime > new Date()) { %>
+                                    <li><a href="/" class="dropdown-toggle">系所公告</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="header_bottomlime">
+                                            <a href="/recommendData">我的資料</a>
+                                        </li>
+                                        <li class="header_bottomlime">
+                                            <a href="/fill-student-form">填寫資料</a>
+                                        </li>
+                                        <li class="header_bottomlime">
+                                            <a href="/update-student-form">修改資料</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li class="header_bottomlime">
+                                                <a href="/projects/rmd-person">推薦人名單</a>
+                                            </li>
+                                            <li class="header_bottomlime">
+                                                <a href="/projects/addRmdPerson">新增推薦人</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/progress">進度查詢</a></li>
+                                <%  } else { %>
+                                    <li><a href="/" class="dropdown-toggle">系所公告</a></li>
+                                <li><a class="dropdown-toggle" href="/recommendData">我的資料</a></li>
+                                <li><a href="/progress">進度查詢</a></li>
+                                <%  }  %>
+                                
+                                
+                            </ul>
+                        </div>
+                    </nav>
+                    <% } %>
 
         <style>
             th {
@@ -74,43 +128,6 @@
                 overflow-wrap: break-word;
             }
         </style>
-
-        <div style="padding-top: 88px;">
-            <% if ( typeof user != 'undefined' ) { %>
-                <nav class="navbar navbar-default operater-navbar" style="background: white;">
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav" style="width: 100%;text-align: center;">
-                            <li><a href="/" class="dropdown-toggle">系所公告</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦資料<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li class="header_bottomlime">
-                                        <a href="/recommendData">我的資料</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/fill-student-form">填寫資料</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/update-student-form">修改資料</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">推薦申請<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li class="header_bottomlime">
-                                        <a href="/projects/rmd-person">推薦人名單</a>
-                                    </li>
-                                    <li class="header_bottomlime">
-                                        <a href="/projects/addRmdPerson">新增推薦人</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="/progress">進度查詢</a></li>
-                        </ul>
-                    </div>
-                </nav>
-                <% } %>
                     <script>
                         function contact() {
                             swal({

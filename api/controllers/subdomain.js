@@ -11,6 +11,7 @@ const StudentForm = require('../models/stuForms');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const flash = require('connect-flash');
+const StudentAccount = require('../models/stuAccount');
 const s3 = new AWS.S3();
 
 // mail config
@@ -249,14 +250,24 @@ exports.update_profile = (req, res, next) => {
     });
     */
   }
-  req.user.displayName = req.body.displayName;
-  req.user.email = req.body.email;
-  //  req.user.gravatar = req.body.gravatar;
 
-  req.user.save()
-    .catch((err) => {
-      res.send('duplicate email');
-    });
+  StudentAccount.find({ subdomain: req.vhost[0], email: req.body.email }).exec()
+    .then((student) => {
+      if (student.length > 0) {
+        res.send(404);
+      } else {
+        req.user.displayName = req.body.displayName;
+        req.user.email = req.body.email;
+
+        req.user.save()
+          .then(()=>{
+            res.send('OK');
+          })
+          .catch((err) => {
+            res.send('duplicate email');
+          });
+      }
+    })
 };
 
 exports.changePassword = (req, res, next) => {

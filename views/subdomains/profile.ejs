@@ -8,6 +8,8 @@
           <!-- 最新編譯和最佳化的 JavaScript -->
           <script type="text/javascript" src="//code.jquery.com/jquery-3.2.0.min.js"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
         </head>
         
         <body>
@@ -62,7 +64,7 @@
           </div>
           <script>
               function send(id, displayName, email) {
-                $(`#update-${id}`).val('修改');
+                
                 
                 if(id === 'displayName') {
                     $.ajax({
@@ -72,13 +74,33 @@
                             displayName: $(`#answer-${id}`).val(),
                             email: email,
                         },
+                        success: () => {
+                            $(`#update-${id}`).val('修改');
+                            $(`#update-${id}`).attr('onclick', `modify("${id}","${$(`#answer-${id}`).val()}","${email}")`);
+                            if ($('#answer-email').length === 0){
+                                $('#update-email').attr('onclick', `modify("email","${$(`#answer-${id}`).val()}","${email}")`);
+                            } else {
+                                $('#update-email').attr('onclick', `send("email","${$(`#answer-${id}`).val()}","${email}")`);
+                            }
+                            setTimeout(()=>{
+                                $(`#${id}`).html($(`#answer-${id}`).val());
+                            }, 100);
+                        },
+                        error: () => {
+                            swal({
+                                type: 'error',
+                                html:
+                                    '<h3>更新失敗</h3>'+
+                                    '<p>此信箱已經被註冊</p>',
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                confirmButtonText: '我知道了',
+                                confirmButtonAriaLabel: '我知道了',
+                            });
+                        }
                     });
-                    $(`#update-${id}`).attr('onclick', `modify("${id}","${$(`#answer-${id}`).val()}","${email}")`);
-                    if ($('#answer-email').length === 0){
-                        $('#update-email').attr('onclick', `modify("email","${$(`#answer-${id}`).val()}","${email}")`);
-                    } else {
-                        $('#update-email').attr('onclick', `send("email","${$(`#answer-${id}`).val()}","${email}")`);
-                    }
+                   
                 } else {
                     $.ajax({
                         url: '/users/me',
@@ -87,18 +109,35 @@
                             displayName: displayName,
                             email: $(`#answer-${id}`).val(),
                         },
+                        success: () => {
+                            $(`#update-${id}`).val('修改');
+                            $(`#update-${id}`).attr('onclick', `modify("${id}","${displayName}","${$(`#answer-${id}`).val()}")`);
+                            if ($('#answer-displayName').length === 0){
+                                $('#update-displayName').attr('onclick', `modify("displayName","${$(`#answer-${id}`).val()}","${email}")`);
+                            } else {
+                                $('#update-displayName').attr('onclick', `send("displayName","${$(`#answer-${id}`).val()}","${email}")`);
+                            }
+                            setTimeout(()=>{
+                                $(`#${id}`).html($(`#answer-${id}`).val());
+                            }, 100);
+                        },
+                        error: () => {
+                            swal({
+                                type: 'error',
+                                html:
+                                    '<h3>更新失敗</h3>'+
+                                    '<p>此信箱已經被註冊</p>',
+                                showCloseButton: true,
+                                showCancelButton: false,
+                                focusConfirm: false,
+                                confirmButtonText: '我知道了',
+                                confirmButtonAriaLabel: '我知道了',
+                            });
+                        }
                     });
-                    $(`#update-${id}`).attr('onclick', `send("${id}","${displayName}","${$(`#answer-${id}`).val()}")`);
-                    if ($('#answer-displayName').length === 0){
-                        $('#update-displayName').attr('onclick', `modify("displayName","${$(`#answer-${id}`).val()}","${email}")`);
-                    } else {
-                        $('#update-displayName').attr('onclick', `send("displayName","${$(`#answer-${id}`).val()}","${email}")`);
-                    }
                 }
 
-                setTimeout(()=>{
-                    $(`#${id}`).html($(`#answer-${id}`).val());
-                }, 100);
+                
               }
 
               function modify(id, displayName, email) {

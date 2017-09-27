@@ -22,11 +22,10 @@ exports.studentLoggedIn = function (req, res, next) {
 }
 
 exports.timeLimit = function (req, res, next) {
-  console.log(new Date());
   Projects.findOne({ subdomainName: req.vhost[0] }).exec()
   .then((proj) => {
-    proj.endTime.setDate(proj.endTime.getDate() + 1);
-    if (proj.endTime < new Date()) {
+    const endTime = addDays(proj.endTime, 1); 
+    if (endTime < new Date()) {
       res.render('subdomains/outOfDate',{
         proj,
         user: req.user,
@@ -40,3 +39,8 @@ exports.timeLimit = function (req, res, next) {
     res.send(err);
   });
 }
+
+function addDays(theDate, days) {
+  return new Date(theDate.getTime() + days*24*60*60*1000);
+}
+

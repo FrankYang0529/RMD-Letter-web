@@ -19,14 +19,14 @@ router.get('/announcement/:announcementID', subroutes.announcementDetail);
 router.get('/progress', Policy.studentLoggedIn, subroutes.scheduleView);
 
 //  register
-router.get('/users', subroutes.registerPage);
-router.post('/users', passport.authenticate('stu-local-signup', {
+router.get('/users', Policy.timeLimit, subroutes.registerPage);
+router.post('/users', Policy.timeLimit, passport.authenticate('stu-local-signup', {
     successRedirect: '/',
     failureRedirect: '/users',
     failureFlash: true,
   })
 );
-router.put('/users', subroutes.changePassword);
+router.put('/users', Policy.timeLimit, subroutes.changePassword);
 
 //  login/logout
 router.get('/users/login', subroutes.login);
@@ -34,8 +34,8 @@ router.post('/users/login', subroutes.auth, subroutes.loginForm);
 router.get('/users/logout', subroutes.logout);
 
 //  profile
-router.get('/users/me', Policy.studentLoggedIn, subroutes.profile);
-router.put('/users/me', Policy.studentLoggedIn, subroutes.update_profile);
+router.get('/users/me', Policy.studentLoggedIn, Policy.timeLimit, subroutes.profile);
+router.put('/users/me', Policy.studentLoggedIn, Policy.timeLimit, subroutes.update_profile);
 
 //  add recommended person
 router.get('/projects/rmd-person', Policy.studentLoggedIn, Policy.timeLimit, subroutes.rmdPersonList);
