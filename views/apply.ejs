@@ -20,6 +20,7 @@
 <body>
   <header>
     <span id="menuButton" onclick="toggleNav()">&#9776;</span>
+    <span style="color:black; padding-left: 45px; font-size:large; position:relative; top:60px;">Welcome, <%= username %></span>
     <div class="navbar">
       <a href=""><img src="/img/black-mail.svg"/></a>
       <a href='/users/logout' id="user">Logout<img src="/img/user.svg"/></a>
@@ -28,6 +29,7 @@
   
   <div id="menu" class="sidenav" style="width: 250px;">
     <span class="close" onclick="toggleNav()">&#9776;</span>
+    <span style="color:white; padding-left: 45px; font-size:large;">Welcome, <%= username %></span>
     <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
     <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
     <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
@@ -47,6 +49,16 @@
       <% var sendLetter = students.filter( function(item){return (item.sentLetter.length>=2);} ).length; %>
       <% var receiveLetter = lettercontent.length; %>
 
+      <% var rmdCount = 0; %>
+      <% students.forEach(function(student) { %>
+      <% var id = student._id; %>
+      <% var letter =  lettercontent.filter( function(item){return (item.stuID==student._id);} );%>
+      
+      <% if( letter.length>=2 ){ %>
+      <% rmdCount = rmdCount + 1; %>
+      <% } %>
+      <% });%>
+
       <% if (totalStudent == 0){ %>
       <% var fillPercent = 0;  %>
       <% var sendPercent = 0; %>
@@ -55,7 +67,7 @@
       <% }else{ %>
       <% var fillPercent =  Math.round(fillForm/totalStudent * 1000) /10 ; %>
       <% var sendPercent = Math.round(sendLetter/totalStudent * 1000) /10 ; %>
-      <% var receivePercent = Math.round(receiveLetter/totalStudent * 1000) /10 ; %>
+      <% var receivePercent = Math.round(rmdCount/totalStudent * 1000) /10 ; %>
       <% var completePercent =  Math.min(fillPercent, sendPercent, receivePercent);%>
       <% }%>
 
@@ -142,7 +154,6 @@
             <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
             <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
             <% var sentLt = student.sentLetter; %>
-            <% var complete = false; %>
             <tr class="student">
               <th><%= student.displayName %></th>
               <td><%= student.email %></td>
@@ -163,12 +174,11 @@
               <!-- <td><%= sentLt.length %>/2</td> -->
               <td><b><%= letters.length %>/2</b></td>
 
-              <!-- <td><%= complete %></td> -->
               <td>
-              <% if(complete == false){ %>
-              <i class="fa fa-square-o" style="font-size:24px"></i>
-              <% }else{ %>
+              <% if(letters.length >= 2){ %>
               <i class="fa fa-check-square-o" style="font-size:24px"></i>
+              <% }else{ %>
+              <i class="fa fa-square-o" style="font-size:24px"></i>
               <% } %>  
               </td>
               <td><a href="#stuid<%= student._id %>">❯</a></td>
