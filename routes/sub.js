@@ -16,7 +16,7 @@ router.get('/projects/addRmdPerson', Policy.studentLoggedIn, subroutes.addRmdPer
 router.get('/announcement/:announcementID', subroutes.announcementDetail);
 
 //  get recommended letter schedule
-router.get('/schedule', Policy.studentLoggedIn, subroutes.scheduleView);
+router.get('/progress', Policy.studentLoggedIn, subroutes.scheduleView);
 
 //  register
 router.get('/users', subroutes.registerPage);

@@ -336,15 +336,17 @@ exports.sentLetter = (req, res, next) => {
   const b = a.then((proj) => inviteLetter.findOne({ projID: proj._id }).exec());
   const c = a.then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec());
 
-  return Promise.join(b, c, (letter, rmdPersonList) => {
+  return Promise.join(b, c, a, (letter, rmdPersonList, proj) => {
     let lt = letter.content;
     let title = letter.title;
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
     lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
     lt = lt.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
+    lt = lt.replace(/\[@推薦信截止日期\]/g, proj.rmdTime);
     title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
     title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
+    title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime);
     lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
 
