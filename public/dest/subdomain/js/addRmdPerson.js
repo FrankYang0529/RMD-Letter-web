@@ -178,6 +178,7 @@ function updateStudentForm() {
         let answer = [];
         let postData = new FormData();
         const BreakException = {};
+        const SizeException = {};
 
         try {
           data.questions.forEach((question) => {
@@ -216,6 +217,9 @@ function updateStudentForm() {
               if (question.require && !$(`.${question._id}`)[0].files[0]) {
                 throw BreakException;
               }
+              if ($(`.${question._id}`)[0].files[0].size > 1024 * 1024 * 30) {
+                throw SizeException;
+              }
               postData.append(question._id, $(`.${question._id}`)[0].files[0]);
 
               answer.push({
@@ -252,16 +256,27 @@ function updateStudentForm() {
             },
           });
         } catch (e) {  //  required missing
-          if (e !== BreakException) throw e;
-          swal({
-            type: 'error',
-            html: '<p>請確認所有必填選項都已經填寫</p>',
-            showCloseButton: true,
-            showCancelButton: false,
-            focusConfirm: false,
-            confirmButtonText: '我知道了',
-            confirmButtonAriaLabel: '我知道了',
-          });
+          if (e == BreakException) {
+            swal({
+              type: 'error',
+              html: '<p>請確認所有必填選項都已經填寫</p>',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '我知道了',
+              confirmButtonAriaLabel: '我知道了',
+            });
+          } else {
+            swal({
+              type: 'error',
+              html: '<p>上傳檔案大於限制大小30MB</p>',
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '我知道了',
+              confirmButtonAriaLabel: '我知道了',
+            });
+          }
         }
       });
     }
