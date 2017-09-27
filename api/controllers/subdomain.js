@@ -343,10 +343,10 @@ exports.sentLetter = (req, res, next) => {
 
     lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
     lt = lt.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
-    lt = lt.replace(/\[@推薦信截止日期\]/g, proj.rmdTime);
+    lt = lt.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
     title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
     title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
-    title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime);
+    title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
     lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
 

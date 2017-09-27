@@ -158,7 +158,7 @@
 		  <div class="w3-card-4">
 		    <form id="letter-edit" class="w3-container" action="/projects/<%= projID %>/invite-letter" method="put">
 		    	<h2><input type="text" id="letter-title" name="title" value="<%= letter.title %>" placeholder="<%= letter.title %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= letter.title %>'"></h2>
-		    	<p class="w3-small w3-right">[@推薦人名稱] [@學生名稱]</p>
+		    	<p class="w3-small w3-right">神秘代號：[@推薦人名稱] [@學生名稱] [@推薦信截止日期]</p>
 		    	<textarea id="letter-content" form="letter-edit" name="content" class="w3-input w3-border rmdlt" value="test"><%= letter.content %></textarea>
 		    	<div id="letter-btn" class="w3-btn w3-padding w3-grey w3-right" style="width:120px; margin-bottom: 10px;">儲存 ❯</div>
 		    </form>

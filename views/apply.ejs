@@ -235,14 +235,14 @@
                 <td rowspan="<%= ltCount %>">
                 <% var flag = 0; %> 
                 <% data.choices.forEach(function(option){ %>
-                <% if(flag == 1){ %>
-                、
+                <% if(flag == 1){ %><span>
+                /<%= option.option %>
                 <% }else{ %>
                 <% flag = 1; %>
-                <% } %>
                 <%= option.option %>
+                <% } %>
                 <% }); %>
-                </td>
+                </span></td>
                 <% } %>
 
                 <% }); %>
