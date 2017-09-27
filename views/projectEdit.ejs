@@ -77,6 +77,8 @@
               -
               <input class="w3-input" type="text" name = 'endTime' id = 'endTime' value='<%= project.endTime.toLocaleDateString(); %>' placeholder='<%= project.endTime.toLocaleDateString(); %>' onfocus="(this.type='date')" onblur="(this.type='text');"></p>
 
+              <p><i class="fa fa fa-calendar-times-o fa-fw w3-margin-right w3-large w3-text-theme"></i><input class="w3-input" type="text" name = 'rmdTime' id = 'rmdTime' value='<%= project.rmdTime.toLocaleDateString(); %>' placeholder='<%= project.rmdTime.toLocaleDateString(); %>' onfocus="(this.type='date')" onblur="(this.type='text');"></p>
+
               <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-theme"></i><input id="email" class="w3-input" type="e-mail" value="<%= project.email %>" placeholder="<%= project.email %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.email %>'"></p>
 
               <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-theme"></i><input id="phone" class="w3-input" type="tel" value="<%= project.phone %>" placeholder="<%= project.phone %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= project.phone %>'"></p>
@@ -200,7 +202,6 @@
     
 
   }
-
 
   $(".show-post").click(function(){
     var showID = "#"+$(this).parent().attr("id");
@@ -336,6 +337,22 @@
         console.log('Fail');
     });
   });
+
+  $("#rmdTime").on('change', function postinput(){
+    var value = $(this).val();
+    console.log(value);
+    $.ajax({ 
+      url: '/projects/<%= projID %>/rmd-time',
+      data: { rmdTime: value},
+      type: 'put'
+    }).done(function(responseData) {
+        console.log('Done: ', responseData);
+        // location.reload();
+    }).fail(function() {
+        console.log('Fail');
+    });
+  });
+
 
   $("#phone").on('change', function postinput(){
     var value = $(this).val();

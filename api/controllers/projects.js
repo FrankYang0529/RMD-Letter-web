@@ -118,7 +118,7 @@ exports.projCreate = (req, res, next) => {
     new InviteLetter({
       projID: proj._id,
       title: `${proj.titleZh}推薦信填寫`,
-      content: '[@學生名稱] 請 [@推薦人名稱]老師填寫推薦信\n謝謝!',
+      content: '[@學生名稱] 請 [@推薦人名稱]老師填寫推薦信\n謝謝!\n請注意截止日期至：[@推薦信截止日期]。',
     }).save();
 
     new RecommendedPerson({
