@@ -155,7 +155,7 @@
             <div id="edit<%= post._id %>" class="w3-container" style="display: none;">
               <span class="edit-post w3-bar-item w3-button w3-xlarge w3-right w3-text-gray w3-hover-white fa fa-mail-reply"></span>
               <h5>
-                <input type="text" id="title<%= post._id %>" name="title" value="" placeholder="<%= post.title %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= post.title %>'" style="outline: none;border: none;">
+                <input type="text" id="title<%= post._id %>" name="title" value="<%= post.title %>" placeholder="<%= post.title %>" onfocus="this.placeholder = ''" onblur="this.placeholder = '<%= post.title %>'" style="outline: none;border: none;">
               </h5>
 
               <h6 class="w3-text-theme">
@@ -163,7 +163,7 @@
               </h6>
               
               <div class="w3-container">
-                <textarea id="text<%= post._id %>" form="update-post" name="text" class="w3-input w3-text-grey w3-border-top" style="height: 650px; outline: none;">原公告內容<%= post.text %></textarea>
+                <textarea id="text<%= post._id %>" form="update-post" name="text" class="w3-input w3-text-grey w3-border-top" style="height: 650px; outline: none;"><%= post.text %></textarea>
                 <% if(post.file !=""){ %>
                 <p>
                   <i class="fa fa-paperclip fa-fw w3-margin-right w3-text-theme" style="font-size: 18px;"></i>
