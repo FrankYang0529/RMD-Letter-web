@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.9.0/sweetalert2.min.css">
     <script type="text/javascript" src="/subdomain/js/addRmdPerson.js"></script>
+    <script type="text/javascript" src="/subdomain/js/bootstrap-filestyle.min.js"> </script>
 
     <title><%= proj.titleZh %></title>
 
@@ -26,7 +27,7 @@
                       <!-- Brand and toggle get grouped for better mobile display -->
                       <%
                       function addDays(theDate, days) {
-                        return new Date(theDate.getTime() + days*24*60*60*1000);
+                        return new Date(theDate.getTime() + days*24*60*60*1000 - 8*60*60*1000);
                       }
                     
                       const endTime = addDays(proj.endTime, 1);          
@@ -117,9 +118,13 @@
                                 });
                             }
                        </script>
+                    <style>
+                            .bootstrap-filestyle > input {
+                                background: white !important;
+                            }
+                        </style>
 
-
-        <div class="custom-container">
+        <div class="custom-container" style="width: 850px !important;">
             <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                 <div class="row" style="margin-top:12px;">
                     
@@ -170,7 +175,7 @@
                                                 <% } else if (question.questionType === 'textArea') { %>
                                                     <textarea  class="form-control <%= question._id %>"></textarea>
                                                 <%  } else if (question.questionType === 'file') { %>
-                                                    <input class="form-control <%= question._id %>" type="file">
+                                                    <input class="form-control <%= question._id %> filestyle" type="file" data-buttonText="檔案上傳" data-placeholder="請上傳PDF格式之檔案">
                                                 <%  } else { 
                                                         question.options.forEach(function(option) {
                                                             if (question.questionType === 'single') {
@@ -193,6 +198,7 @@
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button class="btn btn-default" onclick="updateStudentForm()">送出
                                 </button>
+<span>* 送出後請稍等，切勿重複送出!</span>
                             </div>
                         </div>
                             </div>

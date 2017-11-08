@@ -698,8 +698,9 @@ exports.studentList = (req, res, next) => {
   const c = RmdLtForms.find({ projID: req.params.projID }).exec();
   const d = StuFormAns.find({ projID: req.params.projID }).exec();
   const e = RmdLtFormAns.find({ projID: req.params.projID }).exec();
+  const f = RecommendedPerson.findOne({ projID: req.params.projID }).exec();
 
-  return Promise.join(a, b, c, d, e, (students, studentform, letterform, studentdata, lettercontent) => {
+  return Promise.join(a, b, c, d, e, f, (students, studentform, letterform, studentdata, lettercontent, rmdpeople) => {
     res.format({
       default: () => {
         res.render('apply', {
@@ -709,7 +710,8 @@ exports.studentList = (req, res, next) => {
           studentform,
           letterform,
           studentdata,
-          lettercontent
+          lettercontent,
+	  rmdpeople
         });
       },
     });
@@ -731,6 +733,46 @@ exports.studentList = (req, res, next) => {
   //       },
   //     });
   //   });
+};
+
+exports.studentRmdDetail = (req, res, next) => {
+  const a = StuAccount.findById(req.params.stuID).exec();    
+  const b = StuForms.findOne({ projID: req.params.projID }).exec();
+  const c = RmdLtForms.findOne({ projID: req.params.projID }).exec();
+  const d = StuFormAns.findOne({ projID: req.params.projID, stuID: req.params.stuID }).exec();
+  const e = RmdLtFormAns.find({ projID: req.params.projID, stuID: req.params.stuID }).exec();
+  const f = RecommendedPerson.findOne({ projID: req.params.projID }).exec();
+
+  return Promise.join(a, b, c, d, e, f, (students, studentform, letterform, studentdata, lettercontent, rmdPersonList) => {
+    const rmdPerson = [];
+
+    for(let i=0;i<lettercontent.length;i++){
+      for(let j=0;j<rmdPersonList.person.length;j++){
+	if(rmdPersonList.person[j]._id == lettercontent[i].rmdPersonID){	
+          	console.log(rmdPersonList.person[j]);
+		rmdPerson.push(rmdPersonList.person[j]);
+	}
+      }
+    }
+
+
+console.log(rmdPerson);
+    
+    res.format({
+      default: () => {
+        res.render('rmdltDetail', {
+          username: req.user.displayName,
+          projID: req.params.projID,
+          students,
+          studentform,
+          letterform,
+          studentdata,
+          lettercontent,
+          rmdPerson,
+        });
+      },
+    });
+  });
 };
 
 exports.filledStudentForm = (req, res, next) => {

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
   <meta charset="utf-8">
@@ -33,9 +32,9 @@
     <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
     <a href="/projects" id="prjList" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/folder.svg" />專案清單</a>
     <a href="/projects/<%= projID %>" id="prjManage" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/desk.svg" />專案管理</a>
-    <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
+<!--    <a href="/projects/<%= projID %>/student-form" id="studentForm" onclick="clickMenu(id);" ><img class="menuIcon" src="/img/student.svg" />學生報名表編輯</a>
     <a href="/projects/<%= projID %>/rmdletter-form" id="letterForm" onclick="clickMenu(id);"><img class="menuIcon" src="/img/diploma.svg" />推薦信表單編輯</a>
-    <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
+ -->   <a href="/projects/<%= projID %>/rmd-person" id="rmdPerson" onclick="clickMenu(id);"><img class="menuIcon" src="/img/medal.svg" />推薦人管理</a>
     <a href="/projects/<%= projID %>/student" id="apply" onclick="clickMenu(id);" class="selectedMenu"><img class="menuIcon" src="/img/notepad.svg" />報名管理</a>
     <a href="/users/me" id="userManage" onclick="clickMenu(id);"><img class="menuIcon" src="/img/scissors.svg" />帳戶管理</a> 
   </div>
@@ -48,6 +47,14 @@
       <% var fillForm = studentdata.length; %>
       <% var sendLetter = students.filter( function(item){return (item.sentLetter.length>=2);} ).length; %>
       <% var receiveLetter = lettercontent.length; %>
+
+      <% var formCount =0; %>
+      <% students.forEach(function(student){ %>
+      <% var f = studentdata.filter(function(item){return (item.stuID == student._id);}); %>
+      <% if( f.length>0 ){ %>
+      <% formCount = formCount + 1; %>
+      <% } %>
+      <% }); %>
 
       <% var rmdCount = 0; %>
       <% students.forEach(function(student) { %>
@@ -65,7 +72,7 @@
       <% var receivePercent = 0; %>
       <% var completePercent = 0; %>
       <% }else{ %>
-      <% var fillPercent =  Math.round(fillForm/totalStudent * 1000) /10 ; %>
+      <% var fillPercent =  Math.round(formCount/totalStudent * 1000) /10 ; %>
       <% var sendPercent = Math.round(sendLetter/totalStudent * 1000) /10 ; %>
       <% var receivePercent = Math.round(rmdCount/totalStudent * 1000) /10 ; %>
       <% var completePercent =  Math.min(fillPercent, sendPercent, receivePercent);%>
@@ -73,6 +80,7 @@
 
       <div class="w3-container">
         <h2>總報名人數：<%= totalStudent %></h2>
+	<h5>完成報名人數：<%= rmdCount %></h5>
       </div>
 
       <div id="filledForm" class="ko-progress-circle" data-progress="0">
@@ -133,6 +141,7 @@
       
     </div>
 
+    <% if(studentdata.length >= 1){ %>
     <div class="w3-container" style="margin-top:50px;">
       <h2>學生報名狀況</h2>
       <div class="w3-responsive w3-card-4">
@@ -140,7 +149,7 @@
           <thead>
             <tr class="w3-blue-grey">
               <th><i class="fa fa-user-circle-o" style="font-size:17px; "> 姓名</i></th>
-              <th><i class="fa fa-envelope" style="font-size:17px; "> 電子信箱</i></th>
+              <th><i class="fa fa-address-card" style="font-size:17px; "> 報名流水號</th>
               <th><i class="fa fa-drivers-license-o" style="font-size:17px; "> 學生表單</i></th>
               <th><i class="fa fa-send" style="font-size:17px; "> 邀請推薦人</i></th>
               <th><i class="fa fa-thumbs-up" style="font-size:17px; "> 推薦人填寫</i></th>
@@ -153,10 +162,16 @@
             <% var id = student._id; %>
             <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
             <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
-            <% var sentLt = student.sentLetter; %>
+            <% var flow = studentform[0].questions.find( function(item){ return item.questionTitle=='報名流水號'}); %>
+	    <% if (form[0] != null){%>
+	    <% var flowid = form[0].answers.find( function(item){ return item.question_id==flow._id}).text; %>
+	    <% }else{%>
+	    <% var flowid = "-";%>
+	    <% } %>
+	    <% var sentLt = student.sentLetter; %>
             <tr class="student">
               <th><%= student.displayName %></th>
-              <td><%= student.email %></td>
+              <td><%= flowid %></td>
               <td>
               <% if(form.length == 0 ){ %>
               <i class="fa fa-square-o" style="font-size:24px"></i>
@@ -181,13 +196,15 @@
               <i class="fa fa-square-o" style="font-size:24px"></i>
               <% } %>  
               </td>
-              <td><a href="#stuid<%= student._id %>">❯</a></td>
+              <td><a href="/projects/<%= projID %>/student/<%= student._id %>" target="_blank">❯</a></td>
             </tr>
             <% });%>
           </tbody>
         </table>
       </div>
     </div>
+
+
 
     <br>
 
@@ -204,13 +221,30 @@
                 <th><p style="width: max-content;">姓名</p></th>
                 <% studentform.forEach(function(form){ %>
                 <% form.questions.forEach(function(q){ %>
-                <th><p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
+                <th>
+                <% if(q.questionType == "file"){%>
+                  <p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
+                <th><p style="width: 0px; display: none;">檔案連結</p>
+                <% }else{ %>
+                  <p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p>
+                <% } %>
+                </th>
                 <% });%>
                 <% });%>
                 <th><p style="width: max-content;">推薦人姓名</p></th>
-                <% letterform.forEach(function(form){ %>
+        	<th style="display:none;"><p style="display: none;">推薦人驗證</p></th>
+		<th><p style="width: max-content;">推薦人服務單位</p></th>
+		<th><p style="width: max-content;">推薦人職稱</p></th>        
+		<% letterform.forEach(function(form){ %>
                 <% form.questions.forEach(function(q){ %>
-                <th><p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
+                <th>
+                <% if(q.questionType == "file"){%>
+                  <p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p></th>
+                <th><p style="width: 0px; display: none;">檔案連結</p>
+                <% }else{ %>
+                  <p style="width: 150px;white-space: pre-wrap;word-wrap: break-word;"><%= q.questionTitle %></p>
+                <% } %>
+                </th>
                 <% });%>
                 <% });%>
                 <th>備註</th>
@@ -223,26 +257,38 @@
               <% var ltCount = student.sentLetter.length %>
               <% var form =  studentdata.filter( function(item){return (item.stuID==id);} );%>
               <% var letters = lettercontent.filter( function(item){return (item.stuID==id);} );%>
+	      <% var lettersNum = letters.length; %>
+
               <tr id="stuid<%= student._id %>">
-                <th rowspan="<%= ltCount %>"><p style="width: max-content;"><%= student.displayName %></p></th>
+                <th rowspan="1">
+                  <p style="width: max-content;"><%= student.displayName %></p>
+                </th>
+		<% var cnt = 0;%>
                 <% if(form.length < 1){ %>
-                <% for (i = 0; i < studentform[0].questions.length; i++) { %> 
-                <td rowspan="<%= ltCount %>"></td>
+                <% studentform[0].questions.forEach(function(q) { %> 
+		<td></td>
+		<% if(q.questionType == "file"){ %>
+                <td rowspan="1"></td>
                 <% } %>
+		<% }); %>
                 <% }else{ %>
                 <% form.forEach(function(element){ %>                
-                <% element.answers.forEach(function(data){ %>
-                <% var target = studentform[0].questions.find(function(q) { %>
+                <% cnt = cnt + 1%>
+		<% if (cnt == 1) {%>
+		
+		<% element.answers.forEach(function(data){ %>
+		<% var target = studentform[0].questions.find(function(q) { %>
                 <%   return q._id == data.question_id; %>
                 <% }); %>
-                <% if( target.questionType == "text"){ %>
-                <td rowspan="<%= ltCount %>"><p style="width: 150px;"><%= data.text %></p></td>
+		<% if( target.questionType == "text"){ %>
+                <td rowspan="1"><p style="width: 150px;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "textArea"){ %>
-                <td rowspan="<%= ltCount %>"><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
+                <td rowspan="1"><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
-                <td rowspan="<%= ltCount %>"><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
+                <td rowspan="1"><a href="<%= data.file_url.replace(/\+/, '%2B') %>"><%= data.text %></a></td>
+                <td rowspan="1"><span style="display:none;">=HYPERLINK("<%= data.file_url %>","<%= data.text %>")</span></td>
                 <% }else{ %>
-                <td rowspan="<%= ltCount %>">
+                <td rowspan="1">
                 <% var flag = 0; %> 
                 <% data.choices.forEach(function(option){ %>
                 <% if(flag == 1){ %><span>
@@ -254,39 +300,86 @@
                 <% }); %>
                 </span></td>
                 <% } %>
-
                 <% }); %>
+		<% } %>
                 <% }); %>
                 <% } %>
 
                 <% if(letters.length < 1){ %>
-                <% for (i = 0; i <= letterform[0].questions.length; i++) { %> 
+		<td></td><td style="display:none;"></td><td></td><td></td>
+                <% letterform[0].questions.forEach(function(q){%>
                 <td></td>
-
+                <% if(q.questionType == "file"){ %>
+                <td></td>
                 <% } %>
-                <td rowspan="<%= ltCount %>">
-                  <% if(form.length == 0){ %>
+                <% }); %>
+		<% if(lettersNum <= 1){
+                  var commentSpan = 1;
+                } else{
+                  var commentSpan = lettersNum;
+                }%>
+
+                <td rowspan="<%= commentSpan %>">
+                <% if(form.length == 0){ %>
                   <textarea disabled style="width: 500px; height:200px;background-color: inherit;">-</textarea>
-                  <% }else{ %>
+                <% }else{ %>
                   <textarea class="remark-btn" style="width: 500px; height:200px;background-color: inherit;"><%= form[0].remark %></textarea>
                   <% }%>
                 </td>
               </tr>
                 <% }else{ %>
-                
+
                 <% var ltIndex = 0; %>
                 <% letters.forEach(function(element){ %>
 
                 <% var person = rmdPerson.find(function(e){return e.rmdPersonID == element.rmdPersonID});%>
-                
+                <% var rmdData =  rmdpeople.person.find(function(e){return e._id == element.rmdPersonID});%>
                 <% ltIndex = ltIndex + 1; %>
                 <% if(ltIndex == 1) { %>
-                
-                <td><%= person.rmdPersonName %></td>
+		<% if (person!=null){%>
+                <td><%= person.rmdPersonName %>
+                <% }else{%>
+                <td><%= rmdData.name %>
+                <% }%>
+                <% if(rmdData.verification == true){ %>
+                <i class="fa fa-check-circle"></i>
+                <% } %>  
+                </td>
 
-                <% }else{ %>
-                <tr><td><%= person.rmdPersonName %></td>
+                <% if(rmdData.verification == false){ %>
+                <td style="display: none;">未驗證</td>
+                <% } else{ %>
+                <td style="display: none;">已驗證</td>
                 <% } %>
+ 
+                <% }else{ %>
+
+                <tr>
+                <th></th>
+                <% studentform[0].questions.forEach(function(q){%>
+                <td></td>
+                <% if(q.questionType == "file"){ %>
+                <td></td>
+                <% } %>
+                <% }); %>
+		<% if (person!=null){%>
+		<td><%= person.rmdPersonName %>
+		<% }else{%>
+		<td><%= rmdData.name %>
+		<% }%>
+                <% if(rmdData.verification == true){ %>
+                <i class="fa fa-check-circle"></i>
+                <% } %>  
+                </td>
+
+                <% if(rmdData.verification == false){ %>
+                <td style="display: none;">未驗證</td>
+                <% } else{ %>
+                <td style="display: none;">已驗證</td>
+                <% } %>
+                <% } %>
+		<td><%= rmdData.serviceUnit %></td>
+		<td><%= rmdData.jobTitle %></td>
                 <% element.answers.forEach(function(data){ %>
                 <% var target = letterform[0].questions.find(function(q) { %>
                 <%   return q._id == data.question_id; %>
@@ -296,7 +389,8 @@
                 <% }else if(target.questionType == "textArea"){ %>
                 <td><p style="width:400px;white-space: pre-wrap;word-wrap: break-word;"><%= data.text %></p></td>
                 <% }else if(target.questionType == "file"){ %>
-                <td><a href="<%= data.file_url %>" target="_blank"><%= data.text %></a></td>
+                <td rowspan="1"><a href="<%= data.file_url.replace(/\+/, '%2B') %>"><%= data.text %></a></td>
+                <td rowspan="1"><span style="display:none;">=HYPERLINK("<%= data.file_url %>","<%= data.text %>")</span></td>
                 <% }else{ %>
                 <td>
                 <% var flag = 0; %>
@@ -315,9 +409,9 @@
                 <% if(ltIndex != 1) { %>
                 </tr>
                 <% }else{ %>
-                <td rowspan="<%= ltCount %>">
+                <td rowspan="<%= lettersNum %>">
                   <% if(form.length == 0){ %>
-                  <textarea disabled style="width: 500px; height:200px;background-color: inherit;">-</textarea>
+                  <div style="width: 500px; height:200px;background-color: inherit;">-</div>
                   <% }else{ %>
                   <textarea class="remark-btn" style="width: 500px; height:200px;background-color: inherit;"><%= form[0].remark %></textarea>
                   <% }%>
@@ -335,6 +429,8 @@
         </div>
       </div>
     </div>
+
+    <% } %>
 
   </div>
 <!--   <footer>
@@ -377,8 +473,6 @@ $(document).ready(function(){
   setTimeout(window.setsize(), 200);
 
 });
-
 </script>
-     
 </body>
-</html> 
+</html>

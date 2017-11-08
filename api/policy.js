@@ -40,7 +40,25 @@ exports.timeLimit = function (req, res, next) {
   });
 }
 
+exports.rmdPersonTimeLimit = function (req, res, next) {
+  Projects.findById(req.params.projID).exec()
+  .then((proj) => {
+    const endTime = addDays(proj.rmdTime, 1); 
+    if (endTime < new Date()) {
+      res.render('subdomains/rmdOutOfDate',{
+        proj,
+      });
+    } else {
+      console.log('OKOKOK');
+      next();
+    }
+  })
+  .catch((err) => {
+    res.send(err);
+  });
+}
+
 function addDays(theDate, days) {
-  return new Date(theDate.getTime() + days*24*60*60*1000);
+  return new Date(theDate.getTime() + days*24*60*60*1000 - 8*60*60*1000); // for timezone offset GMT+8
 }
 

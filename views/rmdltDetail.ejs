@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= students.displayName %>的推薦信</title>	
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+<% var flow = studentform.questions.find(function(item){ return (item.questionTitle == '報名流水號' )}); %>
+<% if(studentdata !=null){ %>
+<% var flowid = studentdata.answers.find( function(item){ return item.question_id==flow._id}).text; %>
+<% }else{ %>
+<% var flowid = ""; %>
+<% } %>
+
+<div class="w3-container" style="margin-top:20px; margin-left:5%; width:90%;">
+  <h2 style="text-align:center;"><%= students.displayName %></h2>
+  <h5 style="text-align:center;"><%= flowid %></h5>
+<% rmdPerson.forEach(function(person){ %>
+<% var letter = lettercontent.find(function(item){ return (item.rmdPersonID == person. _id) }); %>  
+<div class="w3-responsive w3-card-4" style="margin-top:50px; margin-bottom:50px;">
+  <table class="w3-table w3-striped w3-bordered w3-left">
+<thead>
+  <tr class="w3-blue">
+    <th style="width:25%;">推薦人</th>
+    <th style="width:25%;"><%= person.name %></th>
+    <th style="width:25%;"><%= person.serviceUnit%></th>
+    <th style="width:25%;"><%= person.jobTitle%></th>
+  </tr>
+</thead>
+<tbody>
+  <% var flag = 0; %>
+  <% var index = 0; %>
+  <% letterform.questions.forEach(function(q,index){ %>
+
+  <% var qid = q._id; %>
+  <% var qtype = q.questionType; %>
+  <% var target = letter.answers.find(function(item){ return(item.question_id == qid) }); %>
+
+  <% if(qtype == "textArea"){ %>
+  <%   if(flag == 1){ %>
+    <td colspan="2"></td>
+  </tr>
+  <%   } %>
+  <tr>
+    <td colspan="1"><%= q.questionTitle %></td>
+    <td colspan="3"><%= target.text %></td>
+  </tr>
+  <% flag = 0; %>
+
+  <% }else if(qtype == "text" ){ %>
+<% if( index ==7 ) { %>
+<tr><td colspan="1"><%= q.questionTitle %></td>
+<td colspan="3"><%= target.text %></td></tr>
+<% flag=0 } else { %> 
+<% if(flag == 0){ %>
+  <tr>
+    <td><%= q.questionTitle %></td>
+    <td><%= target.text %></td>
+  <% flag = 1; %>
+  <%   }else{ %>
+    <td><%= q.questionTitle %></td>
+    <td><%= target.text %></td>
+  </tr>
+  <% flag = 0; %>
+  <%   }}%>
+
+  <% }else if(qtype == "file"){ %>
+  <%   if(flag == 0){ %>
+  <tr>
+    <td><%= q.questionTitle %></td>
+    <td><a href="<%= target.file_url %>"><%= target.text %></a></td>
+  <% flag = 1; %>
+  <%   }else{ %>
+    <td><%= q.questionTitle %></td>
+    <td><a href="<%= target.file_url %>"><%= target.text %></a></td>
+  </tr>
+  <% flag = 0;%>
+  <%   }%>
+
+  <% }else{ %>
+   <% if(index == 0){  %>
+    <tr><td colspan="1"><%=q.questionTitle %></td>
+<td colspan="3">
+    <% var cnt = 0; %>
+    <% target.choices.forEach(function(option){ %>
+    <% if(cnt == 1){ %>
+    、
+    <% }else{ %>
+    <% cnt = 1; %>
+    <% } %>
+    <%= option.option %>
+    <% }); %>
+    </td>
+
+</tr>
+<% } else {%>
+<%   if(flag == 0){ %>
+  <tr>
+    <td><%= q.questionTitle %></td>
+    <td>
+    <% var cnt = 0; %>
+    <% target.choices.forEach(function(option){ %>
+    <% if(cnt == 1){ %>
+    、
+    <% }else{ %>
+    <% cnt = 1; %>
+    <% } %>
+    <%= option.option %>
+    <% }); %>
+    </td>
+
+  <% flag = 1; %>
+  <% }else{ %>
+    <td><%= q.questionTitle %></td>
+    <td>
+    <% var cnt = 0; %>
+    <% target.choices.forEach(function(option){ %>
+    <% if(cnt == 1){ %>
+    、
+    <% }else{ %>
+    <% cnt = 1; %>
+    <% } %>
+    <%= option.option %>
+    <% }); %>
+    </td>
+  </tr>
+  <% flag = 0; %>
+  <%   }%>
+  <% } %>
+  <% } %>
+  <% }); %>
+<% if(index==0){ %>
+<td colspan="2"></td></tr>
+<% index = 1; %>
+<% } %>
+</tbody>
+</table>
+<br>
+</div>
+<% }); %>
+</div>
+</body>
+</html> 
+

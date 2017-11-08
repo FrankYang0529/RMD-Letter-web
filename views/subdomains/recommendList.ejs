@@ -26,7 +26,7 @@
                       <!-- Brand and toggle get grouped for better mobile display -->
                       <%
                       function addDays(theDate, days) {
-                        return new Date(theDate.getTime() + days*24*60*60*1000);
+                        return new Date(theDate.getTime() + days*24*60*60*1000 - 8*60*60*1000);
                       }
                     
                       const endTime = addDays(proj.endTime, 1);          
@@ -154,8 +154,7 @@
                     
                        </script>
 
-
-        <div class="custom-container" style="width:800px !important;">
+        <div class="custom-container" style="width: 1100px !important;">
             <div style="padding-left: 10px;padding-right: 10px;padding-top: 2px;">
                 <div class="row" style="margin-top:12px;">
                     
@@ -189,7 +188,7 @@
                                                         </thead>
                                                         <% personList.forEach( function (person) { %>
                                                         <tr>
-                                                            <td><span class="glyphicon glyphicon-envelope send-letter" aria-hidden="true" onclick="sendLetter('<%= person._id %>')"></span></td>
+                                                            <td><span style="cursor:pointer" class="glyphicon glyphicon-envelope send-letter" aria-hidden="true" onclick="sendLetter('<%= person._id %>')"></span></td>
                                                             <% if (person.verification) { %>
                                                                 <td><%= person.name %>&nbsp;<span class="glyphicon glyphicon-ok-sign verification" data-toggle="tooltip" data-placement="top" title="已認證過的推薦人" aria-hidden="true"></span></td>
                                                             <% } else { %>

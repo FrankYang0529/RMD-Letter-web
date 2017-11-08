@@ -16,7 +16,6 @@ const s3 = new AWS.S3();
 
 // mail config
 const nodemailer = require('nodemailer');
-
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -253,7 +252,7 @@ exports.update_profile = (req, res, next) => {
 
   StudentAccount.find({ subdomain: req.vhost[0], email: req.body.email }).exec()
     .then((student) => {
-      if (student.length > 0) {
+      if (student.length > 1) {
         res.send(404);
       } else {
         req.user.displayName = req.body.displayName;
@@ -299,7 +298,6 @@ exports.rmdPersonList = (req, res, next) => {
   return projs
     .then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec())
     .then((personList) => {
-      console.log(personList);
       res.format({
         default: () => {
           res.render('subdomains/recommendList', {
@@ -358,12 +356,11 @@ exports.sentLetter = (req, res, next) => {
     title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
     title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
     title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
-    lt = `${lt}\n http://localhost:3000/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
-
+    lt = `${lt}\n http://rmdltr.csie.ncku.edu.tw/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
 
     // mail config
     const mailOptions = {
-      from: 'j70915@gmail.com',
+      from: 'your account',
       to: rmdPerson.email,
       subject: title,
       text: lt,
@@ -414,44 +411,50 @@ exports.studentForm = (req, res, next) => {
         answers.forEach((answer, index) => {
           if (answer.file_url === 'file') {
             const file = req.files[answer.question_id];
-            const stream = fs.createReadStream(file.path);
 
+            if (file) {
+              const stream = fs.createReadStream(file.path);
 
-            const params = {
-              Bucket: 'rmd-letter',
-              Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
-              ACL: 'public-read',  //  檔案權限
-              Body: stream,
-              ContentType: file.type,
-            };
+              const params = {
+                Bucket: 'rmd-letter',
+                Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
+                ACL: 'public-read',  //  檔案權限
+                Body: stream,
+                ContentType: file.type,
+              };
 
+              answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
+              answers[index].text = file.originalFilename;
 
-            s3.upload(params).on('httpUploadProgress', (progress) => {
-                //  上傳進度
-              console.log(`${progress.loaded} of ${progress.total} bytes`);
-            })
-              .send((err, data) => {
-                  // delete temp file
-                fs.unlink(file.path, (error) => {
+              s3.upload(params).on('httpUploadProgress', (progress) => {
+                  //  上傳進度
+                console.log(`${progress.loaded} of ${progress.total} bytes`);
+              })
+                .send((err, data) => {
+                    // delete temp file
+                  fs.unlink(file.path, (error) => {
+                    if (err) {
+                      console.error(error);
+                    }
+                    console.log('Temp File Delete');
+                  });
+                    //  上傳完畢或是碰到錯誤
                   if (err) {
-                    console.error(error);
+                    return res.send(err);
                   }
-                  console.log('Temp File Delete');
                 });
-                  //  上傳完畢或是碰到錯誤
-                if (err) {
-                  console.log(err);
-                } else {
-                  answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
-                  answers[index].text = file.originalFilename;
-                  return new StudentFormAnswer({
-                    projID: proj._id,
-                    stuID: req.user._id,
-                    remark: '',
-                    answers,
-                  }).save();
-                }
-              });
+              } else {
+                answers[index].file_url = '';
+                answers[index].text = '';
+              }
+          }
+          if (index === answers.length -1){
+            return new StudentFormAnswer({
+              projID: proj._id,
+              stuID: req.user._id,
+              remark: '',
+              answers,
+            }).save();
           }
         });
       } else {
@@ -481,38 +484,46 @@ exports.updateStudentForm = (req, res, next) => {
       answers.forEach((answer, index) => {
         if (answer.file_url === 'file') {
           const file = req.files[answer.question_id];
-          const stream = fs.createReadStream(file.path);
 
-          const params = {
-            Bucket: 'rmd-letter',
-            Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
-            ACL: 'public-read',  //  檔案權限
-            Body: stream,
-            ContentType: file.type,
-          };
+          if (file) {
+            const stream = fs.createReadStream(file.path);
 
-          s3.upload(params, (err) => { console.log('in'); console.log(err); }).on('httpUploadProgress', (progress) => {
-            //  上傳進度
-            console.log(`${progress.loaded} of ${progress.total} bytes`);
-          })
-            .send((err, data) => {
-              // delete temp file
-              fs.unlink(file.path, (error) => {
+            const params = {
+              Bucket: 'rmd-letter',
+              Key: `${proj._id}/${req.user._id}/${file.originalFilename}`, //  檔案名稱
+              ACL: 'public-read',  //  檔案權限
+              Body: stream,
+              ContentType: file.type,
+            };
+
+            answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
+            answers[index].text = file.originalFilename;
+
+            s3.upload(params, (err) => { console.log('in'); console.log(err); }).on('httpUploadProgress', (progress) => {
+              //  上傳進度
+              console.log(`${progress.loaded} of ${progress.total} bytes`);
+            })
+              .send((err, data) => {
+                // delete temp file
+                fs.unlink(file.path, (error) => {
+                  if (err) {
+                    console.error(error);
+                  }
+                  console.log('Temp File Delete');
+                });
+                //  上傳完畢或是碰到錯誤
                 if (err) {
-                  console.error(error);
+                  return res.send(err);
                 }
-                console.log('Temp File Delete');
               });
-              //  上傳完畢或是碰到錯誤
-              if (err) {
-                console.log(err);
-              } else {
-                answers[index].file_url = `https://s3.us-east-2.amazonaws.com/rmd-letter/${proj._id}/${req.user._id}/${file.originalFilename}`;
-                answers[index].text = file.originalFilename;
-                answerList.answers = answers;
-                return answerList.save();
-              }
-            });
+            } else {
+              answers[index].file_url = '';
+              answers[index].text = '';
+            }
+        }
+        if (index === answers.length -1){
+          answerList.answers = answers;
+          return answerList.save();
         }
       });
     } else {

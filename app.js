@@ -83,8 +83,8 @@ app.set('view engine', 'ejs');
 //  uncomment after placing your favicon in /public
 //  app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '30mb'}));
+app.use(bodyParser.urlencoded({limit: '30mb', extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public', 'dest')));
 
@@ -96,7 +96,7 @@ const subroutes = require('./routes/sub');
 const projects = require('./routes/projects');
 const rmdPeople = require('./routes/rmdPeople');
 
-app.use(vhost('*.localhost', subroutes));
+app.use(vhost('*.rmdltr.csie.ncku.edu.tw', subroutes));
 
 app.use('/', routes);
 app.use('/users', users);

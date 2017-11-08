@@ -55,6 +55,8 @@ router.post('/:projID/rmd-person/:personID', Policy.loggedIn, routes.modifyVerif
 //  get student list
 router.get('/:projID/student', Policy.loggedIn, routes.studentList);
 
+router.get('/:projID/student/:stuID', Policy.loggedIn, routes.studentRmdDetail);
+
 //  get filled student form
 router.get('/:projID/:stuID/student-form', Policy.loggedIn, routes.filledStudentForm);
 

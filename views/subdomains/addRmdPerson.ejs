@@ -26,7 +26,7 @@
                       <!-- Brand and toggle get grouped for better mobile display -->
                       <%
                       function addDays(theDate, days) {
-                        return new Date(theDate.getTime() + days*24*60*60*1000);
+                        return new Date(theDate.getTime() + days*24*60*60*1000 - 8*60*60*1000);
                       }
                     
                       const endTime = addDays(proj.endTime, 1);          

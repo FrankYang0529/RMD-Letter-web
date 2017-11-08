@@ -49,6 +49,7 @@ function submitStudentForm() {
         confirmButtonAriaLabel: '我知道了',
       });
     } else {
+     $("body").css("cursor", "progress");
       $.getJSON('/projects/student-form', (data) => {
         let answer = [];
         let postData = new FormData();
@@ -94,7 +95,7 @@ function submitStudentForm() {
               if (question.require && !$(`.${question._id}`)[0].files[0]) {
                 throw BreakException;
               }
-              if ($(`.${question._id}`)[0].files[0].size > 1024 * 1024 * 30) {
+              if ($(`.${question._id}`)[0].files[0] && $(`.${question._id}`)[0].files[0].size > 1024 * 1024 * 30) {
                 throw SizeException;
               }
               postData.append(question._id, $(`.${question._id}`)[0].files[0]);
@@ -118,6 +119,7 @@ function submitStudentForm() {
             processData: false,
             contentType: false,
             success: () => {
+            $("body").css("cursor", "default");
               swal({
                 type: 'success',
                 html: '<h3>成功填寫完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
@@ -132,6 +134,7 @@ function submitStudentForm() {
             },
           });
         } catch (e) {  //  required missing
+          $("body").css("cursor", "default");
           if (e == BreakException) {
             swal({
               type: 'error',
@@ -173,7 +176,7 @@ function updateStudentForm() {
         confirmButtonAriaLabel: '我知道了',
       });
     } else {
-
+      $("body").css("cursor", "progress");
       $.getJSON('/projects/student-form', (data) => {
         let answer = [];
         let postData = new FormData();
@@ -217,7 +220,7 @@ function updateStudentForm() {
               if (question.require && !$(`.${question._id}`)[0].files[0]) {
                 throw BreakException;
               }
-              if ($(`.${question._id}`)[0].files[0].size > 1024 * 1024 * 30) {
+              if ($(`.${question._id}`)[0].files[0] && $(`.${question._id}`)[0].files[0].size > 1024 * 1024 * 30) {
                 throw SizeException;
               }
               postData.append(question._id, $(`.${question._id}`)[0].files[0]);
@@ -242,6 +245,7 @@ function updateStudentForm() {
             contentType: false,
             success: () => {
               console.log('success');
+                $("body").css("cursor", "default");
               swal({
                 type: 'success',
                 html: '<h3>成功修改完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
@@ -256,6 +260,7 @@ function updateStudentForm() {
             },
           });
         } catch (e) {  //  required missing
+             $("body").css("cursor", "default");
           if (e == BreakException) {
             swal({
               type: 'error',
@@ -298,6 +303,14 @@ function sendLetter(rmdPersonID) {
         confirmButtonAriaLabel: '我知道了',
       });
     } else {
+    swal({
+                        title: '確定送出推薦信邀請?',
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '是, 送出!'
+                    }).then(function () {
       $.get('/projects/letter-number', (student) => {
         if (student.number >= 3) {
           swal({
@@ -323,6 +336,7 @@ function sendLetter(rmdPersonID) {
           $.get(`/projects/${rmdPersonID}/send-letter`);
         }
       });
+      });
     }
   });
 }
@@ -343,32 +357,32 @@ function intro(type, content) {
       text: '看清楚公告事項，不錯過任何訊息',
       imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step1.png',
       customClass: 'swal-wide',
-      imageWidth: 620,
-      imageHeight: 355,
+      imageWidth: 750,
+      imageHeight: 426,
     },
     {
       title: 'Step 2',
       text: '填寫個人推薦資料',
       imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step2.png',
       customClass: 'swal-wide',
-      imageWidth: 620,
-      imageHeight: 355,
+      imageWidth: 744,
+      imageHeight: 426,
     },
     {
       title: 'Step 3',
       text: '寄信給推薦人!',
       imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step3.png',
       customClass: 'swal-wide',
-      imageWidth: 380,
-      imageHeight: 315,
+      imageWidth: 494,
+      imageHeight: 410,
     },
     {
       title: 'Step 4',
       text: '時刻確認你的推薦信進度',
       imageUrl: 'https://s3.us-east-2.amazonaws.com/rmd-letter/step-img/step4.png',
       customClass: 'swal-wide',
-      imageWidth: 380,
-      imageHeight: 315,
+      imageWidth: 494,
+      imageHeight: 410,
     },
   ];
 
