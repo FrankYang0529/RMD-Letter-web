@@ -159,7 +159,7 @@
                                         content = content + $(this).html();
                                     })
                                 } else if (td.hasClass('file')) {
-                                    content = { text: td.children('a').html(), link: encodeURI(td.children('a').attr('href')) };
+                                    content = { text: td.children('a').html(), link: encodeURI(td.children('a').attr('href')).replace(/\+/, '%2B') };
                                 } else if (td.hasClass('area')) {
                                     content = td.children('p').html();
                                 }else {
@@ -275,7 +275,7 @@
                                                                                                     <%= question.questionTitle %>
                                                                                                 </th>
                                                                                                 <td class="file">
-                                                                                                    <a href="<%= answer.file_url.replace(/\+/, '%2B') %>" target="_blank">
+                                                                                                    <a href="<%= encodeURI(answer.file_url).replace(/\+/, '%2B') %>" target="_blank">
                                                                                                         <%= answer.text %>
                                                                                                     </a>
                                                                                                 </td>

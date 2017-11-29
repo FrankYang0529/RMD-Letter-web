@@ -298,7 +298,7 @@
                                                                 <%= question.questionTitle %>
                                                             </th>
                                                             <td class="file">
-                                                                <a href="<%= answer.file_url.replace(/\+/g, '%2B') %>" target="_blank">
+                                                                <a href="<%= encodeURI(answer.file_url).replace(/\+/g, '%2B') %>" target="_blank">
                                                                     <%= answer.text %>
                                                                 </a>
                                                             </td>
