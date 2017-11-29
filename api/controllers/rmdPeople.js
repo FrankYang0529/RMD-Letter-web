@@ -5,6 +5,7 @@ const Promise = require('bluebird');
 const Projects = require('../models/projects');
 const StudentForm = require('../models/stuForms');
 const StudentAccounts = require('../models/stuAccount');
+const RecommendedPerson = require('../models/rmdPerson');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const s3 = new AWS.S3();
@@ -135,5 +136,33 @@ exports.fillIn = (req, res, next) => {
 };
 
 exports.sendEmail = (req, res, next) => {
-  
+  const a = Projects.findById(req.params.projID).exec();
+  const b = StudentAccounts.findById(req.params.stuID).exec();
+  const c = RecommendedPerson.findOne({ projID: req.params.projID }).exec();
+
+  return Promise.join(a, b, c, (proj, student, rmdPersonList) => {
+      const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
+
+      // mail config
+      const mailOptions = {
+        from: 'your account',
+        to: student.email,
+        subject: `${proj.titleZh}通知`,
+        html: `<h3>${student.displayName}同學 您好：</h3><br>
+               <p><b>${rmdPerson.name}</b> 已經回復您的推薦信請求<p>
+               <p>可以上推薦信網站再次確認<p><br>
+               <p><a href="http://${proj.subdomainName}.localhost:3000/progress">${proj.titleZh}系統</a></p><br>
+               <p style="color:red;">※此封郵件為系統發送之通知郵件，請勿直接回覆此郵件。</p>`,
+      };
+      console.log('send success');
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(`Email sent: ${info.response}`);
+        }
+      });
+    })
+
+
 };

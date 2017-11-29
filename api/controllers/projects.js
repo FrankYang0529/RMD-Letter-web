@@ -624,19 +624,13 @@ exports.updateInvitelt = (req, res, next) => {
 exports.rmdPersonList = (req, res, next) => {
   RecommendedPerson.findOne({ projID: req.params.projID }).exec()
     .then((personList) => {
-      res.format({
-        // 'application/json': () => {
-        //   res.send(personList);
-        // },
-        default: () => {
-           // TODO
+      
           res.render('rmdPersonList', {
             personList,
             projID: req.params.projID,
             username: req.user.displayName
           });
-        },
-      });
+      
     })
     .catch((err) => {
       res.send(err);

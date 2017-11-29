@@ -293,19 +293,14 @@ exports.changePassword = (req, res, next) => {
 };
 
 exports.rmdPersonList = (req, res, next) => {
-  const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();
-
+  const projs = Projects.findOne({ subdomainName: req.vhost[0] }).exec();  
   return projs
     .then((proj) => RecommendedPerson.findOne({ projID: proj._id }).exec())
     .then((personList) => {
-      res.format({
-        default: () => {
-          res.render('subdomains/recommendList', {
-            user: req.user,
-            proj: projs.value(),
-            personList: personList.person,
-          });
-        },
+      res.render('subdomains/recommendList', {
+        user: req.user,
+        proj: projs.value(),
+        personList: personList.person,
       });
     })
     .catch((err) => {
@@ -350,20 +345,26 @@ exports.sentLetter = (req, res, next) => {
     let title = letter.title;
     const rmdPerson = rmdPersonList.person.id(req.params.rmdPersonID); // get 'person' subdocument
 
-    lt = lt.replace(/\[@學生名稱\]/g, req.user.displayName);
-    lt = lt.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
-    lt = lt.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
+    lt = lt.replace(/\[@學生名稱\]/g, `<b>${req.user.displayName}</b>`);
+    lt = lt.replace(/\[@推薦人名稱\]/g, `<b>${rmdPerson.name}</b>`);
+    lt = lt.replace(/\[@推薦信截止日期\]/g, `<span style="color:red;">${proj.rmdTime.toLocaleDateString()}</span>`);
+    lt = lt.replace(/\r\n|\r|\n/g, '<br>');
     title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
     title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
     title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
-    lt = `${lt}\n http://rmdltr.csie.ncku.edu.tw/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}`;
-
+    lt = `<p>${lt}</p><p style="color:red;">※注意瀏覽器是否符合附件之規格</p><br> <p><a href="http://rmdltr.csie.ncku.edu.tw/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}">${proj.titleZh}推薦信填寫 - ${req.user.displayName}同學</a></p>`;
+    
     // mail config
     const mailOptions = {
       from: 'your account',
       to: rmdPerson.email,
       subject: title,
-      text: lt,
+      html: lt,
+      attachments: [{
+        filename: '瀏覽器規格.pdf',
+        path: 'public/dest/img/瀏覽器規格.pdf',
+        contentType: 'application/pdf'
+      }]
     };
     console.log('send success');
     transporter.sendMail(mailOptions, (error, info) => {
