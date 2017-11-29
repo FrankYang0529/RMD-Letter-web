@@ -13,4 +13,7 @@ router.get('/get-form-answer/:projID/:rmdPersonID/:stuID', Policy.rmdPersonTimeL
 router.get('/:projID/:rmdPersonID/:stuID', Policy.rmdPersonTimeLimit, routes.fillInPage);
 router.post('/:projID/:rmdPersonID/:stuID', Policy.rmdPersonTimeLimit, multipartyMiddleware,  routes.fillIn);
 
+//  send email if rmd-letter finished
+router.get('/:projID/:rmdPersonID/:stuID/a/send-email', Policy.rmdPersonTimeLimit, routes.sendEmail);
+
 module.exports = router;

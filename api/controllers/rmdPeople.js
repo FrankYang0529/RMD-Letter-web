@@ -9,6 +9,15 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const s3 = new AWS.S3();
 
+// mail config
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'your account',
+    pass: 'your password',
+  },
+});
 
 exports.fillInPage = (req, res, next) => {
   const a = Projects.findById(req.params.projID).exec();
@@ -123,4 +132,8 @@ exports.fillIn = (req, res, next) => {
     });
   }
 
+};
+
+exports.sendEmail = (req, res, next) => {
+  
 };

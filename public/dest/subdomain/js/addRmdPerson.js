@@ -139,6 +139,7 @@ function submitStudentForm() {
           });
         } catch (e) {  //  required missing
           $("body").css("cursor", "default");
+          $("#form-submit-btn").prop('disabled', false);
           if (e == BreakException) {
             swal({
               type: 'error',
@@ -168,6 +169,7 @@ function submitStudentForm() {
 }
 
 function updateStudentForm() {
+  $("#form-update-btn").prop('disabled', true);
   $.get('/projects/student-form-answer', function (data) {
     if (data == null) { //  student-form had been done
       swal({
@@ -249,7 +251,8 @@ function updateStudentForm() {
             contentType: false,
             success: () => {
               console.log('success');
-                $("body").css("cursor", "default");
+              $("body").css("cursor", "default");
+              $("#form-update-btn").prop('disabled', false);
               swal({
                 type: 'success',
                 html: '<h3>成功修改完畢!</h3><p>檔案上傳較慢，如資料尚未更新請稍後再重新整理</p>',
@@ -266,7 +269,8 @@ function updateStudentForm() {
             },
           });
         } catch (e) {  //  required missing
-             $("body").css("cursor", "default");
+          $("#form-update-btn").prop('disabled', false);
+          $("body").css("cursor", "default");
           if (e == BreakException) {
             swal({
               type: 'error',

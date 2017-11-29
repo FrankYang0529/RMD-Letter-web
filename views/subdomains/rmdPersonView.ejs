@@ -99,7 +99,8 @@
                         cancelButtonColor: '#d33',
                         confirmButtonText: '是, 送出!'
                     }).then(function () {
-                                           $("body").css("cursor", "progress");
+                        $("#rmd-form-submit-btn").prop('disabled', true);
+                        $("body").css("cursor", "progress");
                         $.getJSON(`/rmd-person/get-form/${projID}`, (data) => {
                             let answer = [];
                             let postData = new FormData();
@@ -171,7 +172,10 @@
                                     processData: false,
                                     contentType: false,
                                     success: () => {
+                                        $("#rmd-form-submit-btn").prop('disabled', false);
                                         $("body").css("cursor", "default");
+                                        $.get(`${window.location.href}/a/send-letter`);
+
                                         swal({
                                                 type: 'success',
                                                 html: '<p>成功填寫完畢!</p><p>跳轉中請稍後...</p',
@@ -192,10 +196,12 @@
                                     },
                                     error: (err) => {
                                         console.log(err);
-                                           $("body").css("cursor", "default");
+                                        $("#rmd-form-submit-btn").prop('disabled', false);
+                                        $("body").css("cursor", "default");
                                     }
                                 });
                             } catch (e) { //  required missing
+                                $("#rmd-form-submit-btn").prop('disabled', false);
                                 $("body").css("cursor", "default");
                                 if (e == BreakException) {
                                     swal({
@@ -380,7 +386,7 @@
                                                     <% }}); %>
                                         </form>
                                         <div class="col-sm-offset-4 col-sm-8">
-                                            <button class="btn btn-default" onclick="submitRmdLtForm('<%= proj._id %>')">送出
+                                            <button class="btn btn-default" id="rmd-form-submit-btn" onclick="submitRmdLtForm('<%= proj._id %>')">送出
                                             </button>
 <span>* 送出後請稍等，切勿重複送出!</span>
                                         </div>
