@@ -37,6 +37,7 @@ function submitAddPerson() {
 }
 
 function submitStudentForm() {
+  $("#form-submit-btn").prop('disabled', true);
   $.get('/projects/student-form-answer', function (data) {
     if (data !== null) { //  student-form had been done
       swal({
@@ -119,6 +120,7 @@ function submitStudentForm() {
             processData: false,
             contentType: false,
             success: () => {
+            $("#form-submit-btn").prop('disabled', false);
             $("body").css("cursor", "default");
               swal({
                 type: 'success',
@@ -129,6 +131,8 @@ function submitStudentForm() {
                 confirmButtonText: '我知道了',
                 confirmButtonAriaLabel: '我知道了',
               }).then(() => {
+                document.location.href = '/recommendData';
+              }).catch(() => {
                 document.location.href = '/recommendData';
               });
             },
@@ -255,6 +259,8 @@ function updateStudentForm() {
                 confirmButtonText: '關閉',
                 confirmButtonAriaLabel: '關閉',
               }).then(() => {
+                document.location.href = '/recommendData';
+              }).catch(() => {
                 document.location.href = '/recommendData';
               });
             },

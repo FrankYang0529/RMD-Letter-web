@@ -96,7 +96,8 @@ const subroutes = require('./routes/sub');
 const projects = require('./routes/projects');
 const rmdPeople = require('./routes/rmdPeople');
 
-app.use(vhost('*.rmdltr.csie.ncku.edu.tw', subroutes));
+//app.use(vhost('*.rmdltr.csie.ncku.edu.tw', subroutes));
+app.use(vhost('*.localhost', subroutes));
 
 app.use('/', routes);
 app.use('/users', users);
