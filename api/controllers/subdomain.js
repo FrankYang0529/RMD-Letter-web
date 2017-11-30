@@ -352,7 +352,7 @@ exports.sentLetter = (req, res, next) => {
     title = title.replace(/\[@學生名稱\]/g, req.user.displayName);
     title = title.replace(/\[@推薦人名稱\]/g, rmdPerson.name);
     title = title.replace(/\[@推薦信截止日期\]/g, proj.rmdTime.toLocaleDateString());
-    lt = `<h3>${rmdPerson.name} 您好：</h3><br><p>${lt}</p><p style="color:red;">※注意瀏覽器是否符合附件之規格</p><br> <p><a href="http://rmdltr.csie.ncku.edu.tw/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}">${proj.titleZh}推薦信填寫 - ${req.user.displayName}同學</a></p>`;
+    lt = `<h3>${rmdPerson.name} 您好：</h3><br><p>${lt}</p><p style="color:red;">※注意瀏覽器是否符合附件之規格</p><br> <p><a href="http://rmdltr.csie.ncku.edu.tw/rmd-person/${rmdPersonList.projID}/${req.params.rmdPersonID}/${req.user._id}">${proj.titleZh}推薦信填寫 - ${req.user.displayName}同學</a></p><br><p style="color:red;">※此封郵件為系統發送之通知郵件，請勿直接回覆此郵件。</p>`;
     
     // mail config
     const mailOptions = {
